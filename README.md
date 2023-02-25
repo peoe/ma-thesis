@@ -7,7 +7,6 @@
 
 This is the GitHub repository holding all files and documents relevant to the thesis.
 
-It contains among others:
 <details open="open">
   <summary><h2 style="display: inline-block">Table of Contents</h2></summary>
   <ol>
