@@ -1,0 +1,37 @@
+\documentclass[
+openany % omit new pages after \part and \chapter
+]
+{book}
+
+%        Encoding        %
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+%        Plotting        %
+\input{config/templates/tikz.tex}
+\input{config/templates/colors.tex}
+\input{config/templates/images.tex}
+
+%        Document handling        %
+\usepackage[hidelinks]{hyperref}
+\hypersetup{
+    pdftitle={All Pairs Shortest Paths with Real Weights in O(n 3/log(n)) Time}
+}
+\usepackage{soul} % hyphenation for underline etc
+\usepackage{enumitem}
+\usepackage{csquotes}
+\usepackage{setspace}
+\onehalfspacing{}
+\input{config/templates/date.tex}
+\usepackage{todonotes}
+\newcommand{\itodo}[1]{\todo[inline]{#1}}
+
+%        Tables        %
+\usepackage{tabularx}
+
+%        Math        %
+\input{config/templates/math.tex}
+
+%        Bibliography        %
+\usepackage[backend=biber, style=alphabetic]{biblatex}
+\addbibresource{bibliography.bib}

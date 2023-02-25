@@ -1,0 +1,22 @@
+name: YMMOR Build
+on:
+  push:
+    branches:
+      - ymmor
+
+jobs:
+  BundleBuild:
+    name: Build ymmor presentation using latexmk
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v3
+      - name: Build document
+        uses: xu-cheng/latex-action@v2
+        with:
+          root_file: pres.tex
+      - name: Upload PDF artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: YMMORPres
+          path: pres.pdf

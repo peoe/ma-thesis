@@ -1,0 +1,22 @@
+name: Bundle Build
+on:
+  push:
+    branches:
+      - bundle
+
+jobs:
+  BundleBuild:
+    name: Build bundle using latexmk
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v3
+      - name: Build document
+        uses: xu-cheng/latex-action@v2
+        with:
+          root_file: bundle.tex
+      - name: Upload PDF artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: Bundle
+          path: bundle.pdf

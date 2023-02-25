@@ -1,0 +1,39 @@
+%        Math imports        %
+
+%        Symbols        %
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{marvosym} % lightning symbol
+\usepackage{textcomp} % interrobang
+
+\newcommand{\bb}[1]{\mathbb{#1}}
+\newcommand{\fk}[1]{\mathfrak{#1}}
+
+%        Theorems        %
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+
+%        Commands        %
+\usepackage{interval}
+\intervalconfig{soft open fences}
+
+\newcommand{\abs}[2][]{\left\lvert#2\right\rvert_{#1}}
+\newcommand{\power}[1]{\mathcal{P}\left(#1\right)}
+\newcommand{\sset}[1]{\left\{\,#1\,\right\}}
+\newcommand{\iset}[2]{\left\{\,#1\mid#2\,\right\}}
+\newcommand{\ISET}[2]{\iset{#1}{\text{#2}}}
+
+%        Operators        %
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+%        Algorithms        %
+\usepackage[noline, noend]{algorithm2e}
