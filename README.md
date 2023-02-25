@@ -46,7 +46,7 @@ The code used to generate all experiments for the thesis. -->
 [bundle-url]: https://github.com/peoe/ma-thesis/actions?query=branch%3Abundle+workflow%3A%22Bundle+Build%22+
 [thesis-shield]: https://img.shields.io/github/actions/workflow/status/peoe/ma-thesis/thesis.yaml?branch=thesis&label=Thesis&style=for-the-badge
 [thesis-url]: https://github.com/peoe/ma-thesis/actions?query=branch%3Athesis+workflow%3A%22Thesis+Build%22+
-[ymmor-shield]: https://img.shields.io/github/actions/workflow/status/peoe/ma-thesis/ymmor.yaml?branch=ymmor&label=YMMOR 2023&style=for-the-badge
+[ymmor-shield]: https://img.shields.io/github/actions/workflow/status/peoe/ma-thesis/ymmor.yaml?branch=ymmor&label=YMMOR%202023&style=for-the-badge
 [ymmor-url]: https://github.com/peoe/ma-thesis/actions?query=branch%3Aymmor+workflow%3A%22YMMOR+Build%22+
 <!-- [code-shield]: 
 #[code-url]: -->
