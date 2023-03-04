@@ -17,8 +17,10 @@
 		"**/*.fdb_latexmk": true,
 		"**/*.fls": true,
 		"**/*.out": true,
+		"**/*.synctex.gz": true,
 		".vscode": true,
 		".github": true,
 		"titlepage.pdf": true
-	}
+	},
+	"cmake.configureOnOpen": false
 }
