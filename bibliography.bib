@@ -12,6 +12,20 @@
    volume = {15},
    year = {2014},
 }
+@article{Barnett2022,
+   abstract = {A quadratic approximation manifold is presented for performing nonlinear, projection-based, model order reduction (PMOR). It constitutes a departure from the traditional affine subspace approximation that is aimed at mitigating the Kolmogorov barrier for nonlinear PMOR, particularly for convection-dominated transport problems. It builds on the data-driven approach underlying the traditional construction of projection-based reduced-order models (PROMs); is application-independent; is linearization-free; and therefore is robust for highly nonlinear problems. Most importantly, this approximation leads to quadratic PROMs that deliver the same accuracy as their traditional counterparts using however a much smaller dimension – typically, n2∼n1, where n2 and n1 denote the dimensions of the quadratic and traditional PROMs, respectively. The computational advantages of the proposed high-order approach to nonlinear PMOR over the traditional approach are highlighted for the detached-eddy simulation-based prediction of the Ahmed body turbulent wake flow, which is a popular CFD benchmark problem in the automotive industry. For a fixed accuracy level, these advantages include: a reduction of the total offline computational cost by a factor greater than five; a reduction of its online wall clock time by a factor greater than 32; and a reduction of the wall clock time of the underlying high-dimensional model by a factor greater than two orders of magnitude.},
+   author = {Joshua Barnett and Charbel Farhat},
+   doi = {10.1016/J.JCP.2022.111348},
+   issn = {0021-9991},
+   journal = {Journal of Computational Physics},
+   keywords = {Ahmed body,Kolmogorov n-width,Model reduction,Petrov-Galerkin,Physics-based machine learning,Quadratic manifold},
+   month = {9},
+   pages = {111348},
+   publisher = {Academic Press},
+   title = {Quadratic approximation manifold for mitigating the Kolmogorov barrier in nonlinear projection-based model order reduction},
+   volume = {464},
+   year = {2022},
+}
 @article{Beattie2011,
    abstract = {Port-Hamiltonian systems result from port-based network modeling of physical systems and constitute an important class of passive nonlinear state-space systems. In this paper, we develop a framework for model reduction of large-scale multi-input/multi-output nonlinear port-Hamiltonian systems that retains the port-Hamiltonian structure in the reduced order models. Within this framework, reduced order models are determined by the selection of two families of approximating subspaces. We consider two approaches deriving from a) a POD-based selection of subspaces, and b) an an H2-based quasi-optimal selection of subspaces. We compare performance of the reduced order models on a nonlinear lossy LC ladder network. © 2011 IEEE.},
    author = {Christopher Beattie and Serkan Gugercin},
@@ -151,6 +165,17 @@ approaches.},
    volume = {51},
    year = {2018},
 }
+@article{Duindam2009,
+   abstract = {Energy exchange is a major foundation of the dynamics of physical systems, and, hence, in the study of complex multi-domain systems, methodologies that explicitly describe the topology of energy exchanges are instrumental in structuring the modeling and the computation of the system's dynamics and its control. This book is the outcome of the European Project "Geoplex" (FP5 IST-2001-34166) that studied and extended such system modeling and control methodologies. This unique book starts from the basic concept of port-based modeling, and extends it to port-Hamiltonian systems. This generic paradigm is applied to various physical domains, showing its power and unifying flexibility for real multi-domain systems. © 2009 Springer-Verlag Berlin Heidelberg.},
+   author = {Vincent Duindam and Alessandro Macchelli and Stefano Stramigioli and Herman Bruyninckx},
+   doi = {10.1007/978-3-642-03196-0/COVER},
+   isbn = {9783642031953},
+   journal = {Modeling and Control of Complex Physical Systems: The Port-Hamiltonian Approach},
+   pages = {1-423},
+   publisher = {Springer Berlin Heidelberg},
+   title = {Modeling and control of complex physical systems: The port-hamiltonian approach},
+   year = {2009},
+}
 @article{Egger2018,
    abstract = {We consider the discretization and subsequent model reduction of a system of partial differential-algebraic equations describing the propagation of pressure waves in a pipeline network. Important p...},
    author = {H. Egger and T. Kugler and B. Liljegren-Sailer and N. Marheineke and V. Mehrmann},
@@ -261,7 +286,7 @@ approaches.},
    author = {Shobhit Jain and Paolo Tiso and Johannes B. Rutzmoser and Daniel J. Rixen},
    doi = {10.1016/J.COMPSTRUC.2017.04.005},
    issn = {0045-7949},
-   journal = {Computers & Structures},
+   journal = {Computers \& Structures},
    keywords = {Geometric nonlinearities,Nonlinear manifold,Reduced-order modeling,Structural dynamics},
    month = {8},
    pages = {80-94},
@@ -413,6 +438,33 @@ Apart from the port-Hamiltonian approximation of the flow problem, another topic
    volume = {2019-December},
    year = {2019},
 }
+@article{Mehrmann2022,
+   abstract = {The modeling framework of port-Hamiltonian descriptor systems and their use
+in numerical simulation and control are discussed. The structure is ideal for
+automated network-based modeling since it is invariant under power-conserving
+interconnection, congruence transformations, and Galerkin projection. Moreover,
+stability and passivity properties are easily shown. Condensed forms under
+orthogonal transformations present easy analysis tools for existence,
+uniqueness, regularity, and numerical methods to check these properties. After recalling the concepts for general linear and nonlinear descriptor
+systems, we demonstrate that many difficulties that arise in general descriptor
+systems can be easily overcome within the port-Hamiltonian framework. The
+properties of port-Hamiltonian descriptor systems are analyzed,
+time-discretization, and numerical linear algebra techniques are discussed.
+Structure-preserving regularization procedures for descriptor systems are
+presented to make them suitable for simulation and control. Model reduction
+techniques that preserve the structure and stabilization and optimal control
+techniques are discussed. The properties of port-Hamiltonian descriptor systems and their use in
+modeling simulation and control methods are illustrated with several examples
+from different physical domains. The survey concludes with open problems and
+research topics that deserve further attention.},
+   author = {Volker Mehrmann and Benjamin Unger},
+   doi = {10.48550/arxiv.2201.06590},
+   keywords = {37M99,49M05,65L80,65P99,93A15,93A30,93B11,93B17,93B52,Dirac structure,condensed form,descriptor system,differential-algebraic equation,energy-based modeling,feedback control AMS subject classification: 37J06,interconnectability,linear system solves,optimal control,passivity,port-Hamiltonian systems,stability,structure-preserving model-order reduction,time discretization},
+   month = {1},
+   title = {Control of port-Hamiltonian differential-algebraic systems and applications},
+   url = {https://arxiv.org/abs/2201.06590v1},
+   year = {2022},
+}
 @article{Morandin2022,
    abstract = {We present a novel physics-informed system identification method to construct
 a passive linear time-invariant system. In more detail, for a given quadratic
@@ -524,7 +576,7 @@ which the dynamics is evolved in time with a long-short term memory network.},
    author = {J. B. Rutzmoser and D. J. Rixen and P. Tiso and S. Jain},
    doi = {10.1016/J.COMPSTRUC.2017.06.003},
    issn = {0045-7949},
-   journal = {Computers & Structures},
+   journal = {Computers \& Structures},
    keywords = {Geometric nonlinearity,Modal derivatives,Model order reduction,Quadratic manifold,Structural dynamics},
    month = {11},
    pages = {196-209},
@@ -538,7 +590,7 @@ which the dynamics is evolved in time with a long-short term memory network.},
    author = {M. Salvador and L. Dedè and A. Manzoni},
    doi = {10.1016/J.CAMWA.2021.11.001},
    issn = {0898-1221},
-   journal = {Computers & Mathematics with Applications},
+   journal = {Computers \& Mathematics with Applications},
    keywords = {Kernel proper orthogonal decomposition,Neural networks,Parametrized PDEs,Proper orthogonal decomposition,Reduced order modeling},
    month = {12},
    pages = {1-13},
@@ -626,6 +678,16 @@ which the dynamics is evolved in time with a long-short term memory network.},
    title = {Hamiltonian operator inference: Physics-preserving learning of reduced-order models for canonical Hamiltonian systems},
    volume = {431},
    year = {2022},
+}
+@article{Tatsis2019,
+   abstract = {Slender structures with high stiffness-to-weight ratio form the main bearing element of modern engineering. This renders geometrical non-linear effects a key feature to be considered throughout the whole life-time of diverse structural components, such as Wind Turbine (WT) blades. Although the Finite Element (FE) method constitutes a well-established tool for the analysis of such systems, the resulting models are often prohibitively expensive in terms of computational resources and thus cannot be implemented in the design. The problem of state estimation for condition diagnostics and control applications is therefore rendered a challenging and intricate task when it comes to systems experiencing geometrical non-linearities. This is firstly due to the computationally demanding FE models associated with such systems and, secondly, to the requirement that estimation methods must consider non-linear phenomena. The problem is further pronounced in online applications, where real-time performance is required, as is commonly the case in structural health monitoring (SHM). Within this context, the focus is on computationally efficient models that operate on subspaces of significantly smaller size as compared to the full-order problem and which can be tailored to the framework of non-linear state estimation. This study proposes the implementation of physics-based reduced-order models (ROMs) for response prediction of systems featuring geometrically non-linear effects. In so doing, the concept of modal derivatives is adopted and combined with a flexible multibody approach in order to capture secondorder effects, e.g. twist-bend coupling, that arise as the system departs from the linear regime. In identifying the vibration response of such structures, the ROMs are compounded with the unscented Kalman filter (UKF) for the non-linear state estimation. The outlined approach is tested on the real-time response prediction of a WT blade, assuming that a limited number of artificial vibration measurements is available. The effectiveness of the scheme is assessed as a tool for online SHM and vibration control.},
+   author = {K. Tatsis and L. Wu and P. Tiso and E. Chatzi},
+   isbn = {9781138626331},
+   journal = {Life-Cycle Analysis and Assessment in Civil Engineering: Towards an Integrated Vision - Proceedings of the 6th International Symposium on Life-Cycle Civil Engineering, IALCCE 2018},
+   pages = {219-227},
+   publisher = {CRC Press/Balkema},
+   title = {State estimation of geometrically non-linear systems using reduced-order models},
+   year = {2019},
 }
 @article{VanDerSchaft2014,
    abstract = {An up-to-date survey of the theory of port-Hamiltonian systems is given, emphasizing novel developments and relationships with other formalisms. Port-Hamiltonian systems theory yields a systematic framework for network modeling of multi-physics systems. Examples from different areas show the range of applicability. While the emphasis is on modeling and analysis, the last part provides a brief introduction to control of port-Hamiltonian systems.},
