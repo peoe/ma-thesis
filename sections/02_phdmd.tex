@@ -1,3 +1,95 @@
 \section{DMD for pH Systems}
 
 \itodo{write on~\cite{Morandin2022}}
+
+\subsection{pH Systems}
+
+For the definition of pH Systems we take a cue from~\cite{Duindam2009, VanDerSchaft2014, Mehrmann2022}.
+pH Systems can be stated in many different forms.
+In particular, the Input-State-Output form in Equation~\eqref{eq:input-state-output}, cf.~\cite[Section~2.4]{VanDerSchaft2014} and~\cite[Section~2.2.3]{Duindam2009}, and the Input-State-Output form with direct feed-through in Equation~\eqref{eq:input-state-output-direct-feed}, cf.~\cite[Section~2.2.4]{Duindam2009} are of interest:
+\begin{equation}\label{eq:input-state-output}
+    \begin{aligned}
+        \dot{x} &= (J(x) - R(x)) \partial_x H(x) + G(x) u, \\
+        y &= G(x)\trans \partial_x H(x),
+    \end{aligned}
+\end{equation}
+and
+\begin{equation}\label{eq:input-state-output-direct-feed}
+	\begin{aligned}
+        \dot{x} &= (J(x) - R(x)) \partial_x H(x) + (G(x) - P(x)) u , \\
+        y &= {(G(x) + P(x))}\trans \partial_x H(x) + (S(x) - N(x)) u.
+    \end{aligned}
+\end{equation}
+In these equations, $x$ represents the internal state, $y$ is the output, $u$ stands in for the control, and $H$ is the Hamiltonian representing the total energy of the described system.
+
+When dealing with passive models it is beneficial to consider the \emph{dissipation inequality}
+\begin{equation}
+    \partial_t H(x(t)) \leq y(t)\trans u(t).
+\end{equation}
+If a model satisfies this inequality, then the coupling of it to another passive model will also be a passive system.
+Further, the stability of inferred systems can be guaranteed
+\itodo{properties of matrices}
+\itodo{find source/description for passive models}
+\itodo{nonlinear dissipative pH descriptor system~\cite[Section~4]{Mehrmann2022}}
+
+\subsection{phDMD for linear pH Systems}
+
+For linear pH Systems with a Hamiltonian of the form $H(x) = \frac{1}{2} x\trans H x$ we can equivalently write Equation~\eqref{eq:input-state-output-direct-feed} as
+\begin{equation}\label{eq:lin-ph-system}
+    \begin{aligned}
+        H \dot{x} &= (J - R) x + (G - P) u, \\
+        y &= {(G + P)}\trans x + (S - N) u.
+    \end{aligned}
+\end{equation}
+This system is then discretized using the implicit midpoint rule and $u((i + \frac{1}{2}) \Delta t) \approx \frac{u_{i + 1} + u_i}{2}$, cf.~\cite{Morandin2022}:
+\begin{equation}\label{eq:discrete-lin-ph-system}
+    \begin{aligned}
+        H \frac{x_{i + 1} - x_i}{\Delta t} &= (J - R) \frac{x_{i + 1} + x_i}{2} + (G - P) \frac{u_{i + 1} + u_i}{2}, \\
+        \frac{y_{i + 1} + y_i}{2} &= {(G + P)}\trans \frac{x_{i + 1} + x_i}{2} + (S - N) \frac{u_{i + 1} + u_i}{2}.
+    \end{aligned}
+\end{equation}
+Here, $J = -J\trans, N = -N\trans, \mcl{R} = \begin{bmatrix}
+    R & P \\
+    P\trans & S
+\end{bmatrix} \succcurlyeq 0$.
+Equivalently we get
+\begin{equation}\label{eq:disc-lin-ph-block-structure}
+    \begin{bmatrix}
+        H \frac{x_{i + 1} - x_i}{\Delta t} \\
+        -\frac{y_{i + 1} + y_i}{2}
+    \end{bmatrix}
+    = (\mcl{J} - \mcl{R}) \begin{bmatrix}
+        \frac{x_{i + 1} + x_i}{2} \\
+        \frac{u_{i + 1} + u_i}{2}
+    \end{bmatrix},
+\end{equation}
+with the discrete Hamiltonian $\Delta H_i = {\left( \frac{y_{i + 1} + y_i}{2} \right)}\trans H \left( \frac{x_{i + 1} - x_i}{\Delta t} \right)$.
+Then, the \emph{discrete-time dissipation inequality} holds (cf.~\cite[Lemma~2.6]{Morandin2022}):
+\begin{equation}
+    \Delta H_i \leq {\left( \frac{y_{i + 1} + y_i}{2} \right)}\trans \left( \frac{u_{i + 1} + u_i}{2} \right).
+\end{equation}
+
+From here, we consider the data matrices
+\begin{align*}
+    \dot{X} &= \frac{1}{\Delta t} {\left( x_{i + 1} - x_i \right)}_{i = 0}^{k - 1} \in \bb{R}^{n \times k}, X = \frac{1}{2} {\left( x_{i + 1} + x_i \right)}_{i = 0}^{k - 1} \in \bb{R}^{n \times k}, \\
+    U &= \frac{1}{2} {\left( u_{i + 1} + u_i \right)}_{i = 0}^{k - 1} \in \bb{R}^{m \times k}, Y = \frac{1}{2} {\left( y_{i + 1} + y_i \right)}_{i = 0}^{k - 1} \in \bb{R}^{m \times k}. \\
+\end{align*}
+Given any matrix $H \succ 0$, and a reduced basis $\varPhi \in \bb{R}^{n \times r}$, we want to find matrices $\mcl{J} = -\mcl{J}\trans, \mcl{R} \in \bb{R}^{k \times k}$ that minimize the norm
+\begin{equation}\label{eq:phdmd-lst-problem}
+    \norm[F]{\mcl{Z} - (\mcl{J} - \mcl{R})\mcl{T}},
+    \mcl{Z} =
+    \begin{bmatrix}
+        \varPhi\trans H \varPhi \varPhi\trans \dot{X} \\
+        - Y
+    \end{bmatrix},
+    \mcl{T} =
+    \begin{bmatrix}
+        \varPhi\trans X \\
+        U
+    \end{bmatrix}.
+\end{equation}
+
+If we know either $\mcl{J}$ or $\mcl{R}$, we can simply solve for the other matrix.
+This fives rise to an iterative solution algorithm for this problem in~\cite[Section~3.2]{Morandin2022}.
+The authors note that the initialization of both matrices drastically impacts performance and thus derive a similar but additionally weighted problem.
+The solutions of this can then be used as either initialization for $\mcl{J}, \mcl{R}$ or by themselves, cf.~\cite[Section~3.4]{Morandin2022}.

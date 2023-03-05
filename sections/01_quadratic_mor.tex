@@ -1,3 +1,50 @@
 \section{MOR on Quadratically Embedded Manifolds}
 
-\itodo{write on~\cite{Geelen2023}}
+Quadratically embedded manifolds are employed in an attempt to address approximation constraints enforced by slowly decaying Kolmogorov $n$-widths, cf.~\cite{Geelen2023, Barnett2022}.
+Large parts of the theoretical work are inspired by~\cite{Jain2017, Rutzmoser2017, Tatsis2019}.
+The following is adapted from~\cite{Geelen2023}, though~\cite{Barnett2022} comes to essentially the same results.
+
+We want to estimate the high-dimensional full order state $\mbf{x}(t) \in \bb{R}^n, n \in \bb{N}$ by a reduced order state $\mbf{x}_r(t) \in \bb{R}^r, r \in \bb{N}, r \ll n$ using a transformation function $\mbf{\Gamma}: \bb{R}^r \rightarrow \bb{R}^n$:
+\begin{equation}
+    \mbf{x}(t) \approx \mbf{\Gamma}(\mbf{x}_r(t)).
+\end{equation}
+Usually, $\mbf{\Gamma}$ takes the form of the linear projection onto the ROM\@.
+Here, another approach is of interest: using quadratic terms alongside the linear approximation.
+Using the Kronecker product with redundant terms
+\[
+    (x_1, \dots, x_r) \otimes (x_1, \dots, x_r) \mapsto (x_1^2, x_1 x_2, \dots, x_1 x_r, x_2 x_1, x_2^2, \dots, x_r^2) \in \bb{R}^{r^2},
+\]
+we formulate
+\begin{equation}
+    \mbf{\Gamma}(\mbf{x}_r(t)) \approx \mbf{x}_{\textsc{ref}} + \mbf{V} \mbf{x}_r(t) + \overline{\mbf{V}}(\mbf{x}_r(t) \otimes \mbf{x}_r(t)).
+\end{equation}
+In practice we can of course omit all terms in the Kronecker product which appear twice because $x_1 x_2 = x_2 x_1$.
+A bit of abuse of notation results in the \emph{Kronecker product} with redundant terms removed from the final vector
+\[
+    (x_1, \dots, x_r) \otimes (x_1, \dots, x_r) \mapsto (x_1^2, x_1 x_2, \dots, x_1 x_r, x_2^2, \dots, x_r^2) \in \bb{R}^{\frac{r (r + 1)}{2}}.
+\]
+
+\begin{assumption}
+    The linear projection matrix $\mbf{V}$ has been precomputed before constructing the quadratic approximation manifold.
+    Simultaneous optimization is much harder to solve, cf.~\cite[Remark~1]{Geelen2023}.
+\end{assumption}
+
+By solving a least squares problem we can now determine the map $\overline{\mbf{V}}$ in the form of a matrix in $\bb{R}^{\frac{r (r + 1)}{2} \times \frac{r (r + 1)}{2}}$.
+We compute
+\begin{equation}
+    \overline{\mbf{V}} = \mbf{E} \mbf{W}\trans (\mbf{W} \mbf{W}\trans + \omega \mbf{id})\inv \in \bb{R}^{n \times \frac{r (r + 1)}{2}},
+\end{equation}
+where $\omega > 0$ is the regularization parameter, $\mbf{E}$ is the error matrix defined by
+\begin{align*}
+	\mbf{E} &= (\mbf{id} - \mbf{V} \mbf{V}\trans)(\mbf{X} - \mbf{X}_{\textsc{ref}}) \in \bb{R}^{n \times k}, \\
+    \mbf{X} &= {\left( \mbf{x}(t_i) \right)}_{1 = 1}^k, \mbf{X}_\textsc{ref} = {\left( \mbf{x}_\textsc{ref} \right)}_{1 = 1}^k \in \bb{R}^{n \times k},
+\end{align*}
+and $\mbf{W}$ is the reduced data matrix generated using the non-redundant Kronecker product
+\[
+    \mbf{W} = {\left( \mbf{x}_r(t_i) \otimes \mbf{x}_r(t_i) \right)}_{i = 1}^k \in \bb{R}^{\frac{r (r + 1)}{2} \times k}.
+\]
+
+Furthermore, adjustments to allow sparsity induction through column selection are mentioned in~\cite[Section~2.3]{Geelen2023}.
+These quasi-quadratic manifolds have favourable computational properties (sparse!), whilst lacking the same approximative powers as quadratic manifolds.
+
+\itodo{\textsc{\href{https://github.com/Willcox-Research-Group/rom-operator-inference-Python3}{Operator Inference Python Package}} by the Willcox Research Group might have some potential in implementation}
