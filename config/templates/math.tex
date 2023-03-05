@@ -6,18 +6,27 @@
 \usepackage{marvosym} % lightning symbol
 \usepackage{textcomp} % interrobang
 
-\newcommand{\bb}[1]{\mathbb{#1}}
-\newcommand{\fk}[1]{\mathfrak{#1}}
-
 %        Commands        %
 \usepackage{interval}
 \intervalconfig{soft open fences}
 
 \newcommand{\abs}[2][]{\left\lvert#2\right\rvert_{#1}}
-\newcommand{\power}[1]{\mathcal{P}\left(#1\right)}
+\newcommand{\norm}[2][]{\left\lVert#2\right\rVert_{#1}}
+
+%        Set Commands        %
 \newcommand{\sset}[1]{\left\{\,#1\,\right\}}
 \newcommand{\iset}[2]{\left\{\,#1\mid#2\,\right\}}
 \newcommand{\ISET}[2]{\iset{#1}{\text{#2}}}
+
+%        Matrix Commands        %
+\newcommand{\trans}{^{\mkern-1.5mu \mathsf{T}}}
+\newcommand{\inv}{^{-1}}
+
+%        Typesetting Commands        %
+\newcommand{\bb}[1]{\mathbb{#1}}
+\newcommand{\fk}[1]{\mathfrak{#1}}
+\newcommand{\mbf}[1]{\mathbf{#1}}
+\newcommand{\mcl}[1]{\mathcal{#1}}
 
 %        Operators        %
 \DeclareMathOperator*{\argmax}{arg\,max}
