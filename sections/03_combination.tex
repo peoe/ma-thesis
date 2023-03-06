@@ -1,3 +1,118 @@
 \section{Combining Both Approaches}
 
-\itodo{highlight problems and options}
+When constructing a quadratic manifold in a pH system, many approaches might be taken:
+\begin{enumerate}
+    \item ``quadraticize'' the state variables $\varPhi\trans \mbf{X}$ and $\varPhi\trans H \varPhi \varPhi\trans \dot{\mbf{X}}$,
+    \item ``quadraticize'' the control variables $\mbf{U}$,
+    \item ``quadraticize'' the output variables $\mbf{Y}$, or
+    \item any viable combination of these.
+\end{enumerate}
+
+If we quadraticize the state variables we get the terms $\underline{\mbf{X}}, \underline{\dot{\mbf{X}}} \in \bb{R}^{r \times \frac{k (k + 1)}{2}}$.
+Analogously, $\underline{\mbf{Y}}, \underline{\mbf{U}} \in \bb{R}^{m \times \frac{k (k + 1)}{2}}$.
+We further define the concatenated vectors
+\[
+    \dot{\mcl{X}} =
+    \begin{bmatrix}
+        \varPhi\trans H \varPhi \varPhi\trans \mbf{\dot{X}} \\
+        \underline{\dot{\mbf{X}}}
+    \end{bmatrix},
+    \mcl{X} =
+    \begin{bmatrix}
+        \varPhi\trans \mbf{X} \\
+        \underline{\mbf{X}}
+    \end{bmatrix},
+    \mcl{Y} =
+    \begin{bmatrix}
+        \mcl{Y} \\
+        \underline{\mcl{Y}}
+    \end{bmatrix},
+    \mcl{U} =
+    \begin{bmatrix}
+        \mbf{U} \\
+        \underline{\mcl{U}}
+    \end{bmatrix}.
+\]
+
+\subsection{Quadraticizing State Vectors}\label{subseq:quad-state-vecs}
+
+If we only consider $\underline{\mbf{X}}$ and $\underline{\dot{\mbf{X}}}$ in the system we get
+\begin{equation*}
+    \mathcal{Z} =
+    \begin{bmatrix}
+        \underline{\dot{\mbf{X}}} \\
+        -\mbf{Y}
+    \end{bmatrix},
+    \mathcal{T} =
+    \begin{bmatrix}
+        \underline{\mbf{X}} \\
+        \mbf{U}
+    \end{bmatrix} \in \bb{R}^{(r + m) \times \frac{k (k + 1)}{2}}
+\end{equation*}
+or
+\begin{equation*}
+    \mathcal{Z} =
+    \begin{bmatrix}
+        \varPhi\trans H \varPhi \varPhi\trans \mbf{\dot{X}} \\
+        \underline{\dot{\mbf{X}}} \\
+        -\mbf{Y}
+    \end{bmatrix},
+    \mathcal{T} =
+    \begin{bmatrix}
+        \varPhi\trans H \varPhi \varPhi\trans \mbf{X} \\
+        \underline{\mbf{X}} \\
+        \mbf{U}
+    \end{bmatrix} \in \bb{R}^{(r + r + m) \times \frac{k (k + 1)}{2}}.
+\end{equation*}
+In both cases we would need to pad $\varPhi\trans H \varPhi \varPhi\trans \mbf{\dot{X}} \in \bb{R}^{r \times k}$ and $-\mbf{Y} \in \bb{R}^{m \times k}$ because the simple data dimensions no longer align with the quadratic ones.
+It is also important to note that we somehow need to handle the quadraticized Hamiltonian.
+
+\subsection{Quadraticizing Control and Output}
+
+If we only consider $\underline{\mbf{U}}, \underline{\mbf{Y}}$, we basically run into the same issue as in Subsection~\ref{subseq:quad-state-vecs} though padding of the (normal) Hamiltonian.
+
+\subsection{Quadraticizing State and Control/Output}
+
+If we consider $\underline{\mbf{X}}, \underline{\dot{\mbf{X}}} \in \bb{R}^{r \times \frac{k (k + 1)}{2}}, \underline{\mbf{U}}, \underline{\mbf{Y}} \in \bb{R}^{m \times \frac{k (k + 1)}{2}}$ we can construct the following system:
+\begin{equation*}
+    \begin{bmatrix}
+        \underline{\dot{\mbf{X}}} \\
+        -\underline{\mbf{Y}}
+    \end{bmatrix}
+    = (\mcl{J} - \mcl{R})
+    \begin{bmatrix}
+        \underline{\mbf{X}} \\
+        \underline{\mbf{U}}
+    \end{bmatrix},
+\end{equation*}
+where $\mcl{J} = -\mcl{J}\trans, \mcl{R} \succcurlyeq 0 \in \bb{R}^{(r + m) \times (r + m)}$.
+
+In particular, using the concatenated terms instead one can obtain
+\begin{equation}\label{eq:concatenated-quadratic-ph-formulation}
+    \begin{bmatrix}
+        \dot{\mcl{X}} \\
+        -\mcl{Y}
+    \end{bmatrix}
+    = (\mcl{J} - \mcl{R})
+    \begin{bmatrix}
+        \mcl{X} \\
+        \mcl{U}
+    \end{bmatrix}.
+\end{equation}
+This formulation allows for the direct recovery of the normal output variable $\mbf{Y}$ via correctly indexing the left hand side.
+
+\subsection{Sequential vs.\ Simultaneaous Approximation}
+
+The essential part of Equation~\eqref{eq:concatenated-quadratic-ph-formulation} is that this allows for both a sequential approach as well as a simultaneous approach:
+\begin{itemize}
+    \item In the simultaneous case, we just run phDMD~\cite{Morandin2022} on Equation~\eqref{eq:concatenated-quadratic-ph-formulation}.
+    \item In the sequential approach, we first compute the solutions $\mcl{J}_\textsc{lin}, \mcl{R}_\textsc{lin}$ of Problem~\eqref{eq:phdmd-lst-problem}. Then plugging these into $\mcl{J} = \begin{bmatrix}
+        \mcl{J}_\textsc{lin} & \mcl{J}_1 \\
+        \mcl{J}_2 & \mcl{J}_3
+    \end{bmatrix}, \mcl{R} = \begin{bmatrix}
+        \mcl{R}_\textsc{lin} & \mcl{R}_1 \\
+        \mcl{R}_2 & \mcl{R}_3
+    \end{bmatrix}$, we compute the remaining matrices again using phDMD\@.
+\end{itemize}
+
+\itodo{non-quadratic Hamiltonians}

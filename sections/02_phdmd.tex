@@ -1,7 +1,5 @@
 \section{DMD for pH Systems}
 
-\itodo{write on~\cite{Morandin2022}}
-
 \subsection{pH Systems}
 
 For the definition of pH Systems we take a cue from~\cite{Duindam2009, VanDerSchaft2014, Mehrmann2022}.
@@ -74,19 +72,19 @@ From here, we consider the data matrices
     \dot{X} &= \frac{1}{\Delta t} {\left( x_{i + 1} - x_i \right)}_{i = 0}^{k - 1} \in \bb{R}^{n \times k}, X = \frac{1}{2} {\left( x_{i + 1} + x_i \right)}_{i = 0}^{k - 1} \in \bb{R}^{n \times k}, \\
     U &= \frac{1}{2} {\left( u_{i + 1} + u_i \right)}_{i = 0}^{k - 1} \in \bb{R}^{m \times k}, Y = \frac{1}{2} {\left( y_{i + 1} + y_i \right)}_{i = 0}^{k - 1} \in \bb{R}^{m \times k}. \\
 \end{align*}
-Given any matrix $H \succ 0$, and a reduced basis $\varPhi \in \bb{R}^{n \times r}$, we want to find matrices $\mcl{J} = -\mcl{J}\trans, \mcl{R} \in \bb{R}^{k \times k}$ that minimize the norm
+Given any matrix $H \succ 0$, and a reduced basis $\varPhi \in \bb{R}^{n \times r}$, we want to find matrices $\mcl{J} = -\mcl{J}\trans, \mcl{R} \succcurlyeq 0 \in \bb{R}^{(n + m) \times (n + m)}$ that minimize the norm
 \begin{equation}\label{eq:phdmd-lst-problem}
     \norm[F]{\mcl{Z} - (\mcl{J} - \mcl{R})\mcl{T}},
     \mcl{Z} =
     \begin{bmatrix}
         \varPhi\trans H \varPhi \varPhi\trans \dot{X} \\
         - Y
-    \end{bmatrix},
+    \end{bmatrix} \in \bb{R}^{(n + m) \times k},
     \mcl{T} =
     \begin{bmatrix}
         \varPhi\trans X \\
         U
-    \end{bmatrix}.
+    \end{bmatrix} \in \bb{R}^{(n + m) \times k}.
 \end{equation}
 
 If we know either $\mcl{J}$ or $\mcl{R}$, we can simply solve for the other matrix.
