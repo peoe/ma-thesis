@@ -1,0 +1,66 @@
+\documentclass[
+    aspectratio=169,
+    10pt,
+    wide,
+    hyperref={
+        colorlinks=false,
+        pdftitle={Model Order Reduction on Quadratically Embedded Manifolds for Port-Hamiltonian Systems}
+    }
+]{beamer}
+\usetheme{metropolis}
+
+%        Plotting        %
+\input{config/templates/colors.tex}
+
+%        Encoding        %
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+
+%        Document Handling        %
+\input{config/templates/date.tex}
+\usepackage{multicol}
+\usepackage{csquotes}
+
+%        Beamer Handling        %
+\usepackage{tabularx}
+\setbeamertemplate{section in toc}[sections numbered]
+
+%        Custom Header        %
+\setbeamertemplate{frametitle continuation}{}
+\setbeamertemplate{frametitle}{
+    \nointerlineskip{}
+    \begin{beamercolorbox}[wd=\paperwidth, ht=2.75ex, dp=1.375ex]{frametitle}
+        \hspace*{2ex}\insertframetitle{} \hfill {\normalsize\textbf{\insertframenumber{} / \inserttotalframenumber}} \hspace*{1ex}
+    \end{beamercolorbox}
+}
+
+%        Custom Footer        %
+\setbeamertemplate{footline}{
+    \color{petrol}
+    \small
+    \begin{tabularx}{\textwidth}{XX}
+        \insertshorttitle{} & \hfill\insertauthor{} \\
+    \end{tabularx}
+    \vspace{2pt}
+}
+
+%        Color Setting        %
+\setbeamercolor{palette primary}{bg=petrol}
+\setbeamercolor{frame numbering}{fg=petrol}
+\setbeamercolor{block title}{fg=petrol}
+\setbeamercolor{title}{fg=petrol}
+
+\setbeamercolor{progress bar}{fg=red}
+\setbeamercolor{alerted text}{fg=red}
+
+\setbeamercolor{example text}{fg=blue}
+
+%        Math        %
+\input{config/templates/math.tex}
+\input{config/templates/beamer_thms.tex}
+
+%        Bibliography        %
+\usepackage[backend=biber, style=alphabetic, url=false, doi=false, isbn=false, maxbibnames=99, giveninits=true]{biblatex}
+\renewbibmacro{in:}{}
+\addbibresource{bibliography.bib}
