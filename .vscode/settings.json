@@ -18,6 +18,7 @@
 		"**/*.fls": true,
 		"**/*.out": true,
 		"**/*.synctex.gz": true,
+		"**/*.toc": true,
 		".vscode": true,
 		".github": true,
 		"titlepage.pdf": true
