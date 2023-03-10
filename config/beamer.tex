@@ -7,7 +7,11 @@
         pdftitle={Model Order Reduction on Quadratically Embedded Manifolds for Port-Hamiltonian Systems}
     }
 ]{beamer}
-\usetheme{metropolis}
+\usetheme[
+    sectionpage=simple,
+    numbering=none,
+    block=fill
+]{metropolis}
 
 %        Plotting        %
 \input{config/templates/colors.tex}
@@ -21,6 +25,7 @@
 \input{config/templates/date.tex}
 \usepackage{multicol}
 \usepackage{csquotes}
+\usepackage{appendixnumberbeamer}
 
 %        Beamer Handling        %
 \usepackage{tabularx}
@@ -42,7 +47,7 @@
     \begin{tabularx}{\textwidth}{XX}
         \insertshorttitle{} & \hfill\insertauthor{} \\
     \end{tabularx}
-    \vspace{2pt}
+    \vspace{4pt}
 }
 
 %        Color Setting        %
