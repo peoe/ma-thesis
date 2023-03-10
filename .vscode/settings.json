@@ -19,6 +19,8 @@
 		"**/*.out": true,
 		"**/*.synctex.gz": true,
 		"**/*.toc": true,
+		"**/*.nav": true,
+		"**/*.snm": true,
 		".vscode": true,
 		".github": true,
 		"titlepage.pdf": true
