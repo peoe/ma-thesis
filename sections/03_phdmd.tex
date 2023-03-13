@@ -1,0 +1,50 @@
+\section{Port-Hamiltonian Dynamic Mode Decomposition}
+
+\begin{frame}{Port-Hamiltonian Dynamic Mode Decomposition, cf.~\cite{Morandin2022}}
+    \begin{alertblock}{Question}
+        How to compute $\mcl{J}, \mcl{R}$ from data $x_i, y_i, u_i$?
+    \end{alertblock}
+
+    Operator Inference!
+
+    $\rightarrow$ Port-Hamiltonian Dynamic Mode Decomposition (\cite{Morandin2022})
+
+    Nice side effect:\ The inferred system will always be passive.
+\end{frame}
+
+\begin{frame}{Port-Hamiltonian Dynamic Mode Decomposition, cf.~\cite{Morandin2022}}
+    \metroset{block=transparent}
+    \begin{block}{Data}
+        \begin{columns}[totalwidth=\linewidth]
+            \begin{column}{.49\textwidth}
+                \begin{itemize}
+                    \item $k \in \bb{N}$ time steps
+                    \item $X^- = \frac{1}{\Delta t} \left( x_1 - x_0, \dots, x_k - x_{k - 1} \right)$
+                    \item $X^+ = \frac{1}{2} \left( x_1 + x_0, \dots, x_k + x_{k - 1} \right)$
+                \end{itemize}
+            \end{column}
+            \begin{column}{.49\textwidth}
+                \begin{itemize}
+                    \item[] \phantom{}
+                    \item $U = \frac{1}{2} \left( u_1 + u_0, \dots, u_k + u_{k - 1} \right)$
+                    \item $Y = \frac{1}{2} \left( y_1 + y_0, \dots, y_k + y_{k - 1} \right)$
+                \end{itemize}
+            \end{column}
+        \end{columns}
+    \end{block}
+
+    \metroset{block=fill}
+    \begin{block}{\color{petrol}Port-Hamiltonian Dynamic Mode Decomposition}
+        \begin{equation*}
+            \mcl{J}, \mcl{R} = \argmin\limits_{\mcl{J} = -\mcl{J}\trans, \mcl{R} = \mcl{R}\trans \geq 0} \norm[F]{\begin{bmatrix}
+                V\trans H V V\trans X^- \\
+                -Y
+            \end{bmatrix} - \left( \mcl{J} - \mcl{R} \right) \begin{bmatrix}
+                V\trans X^+ \\
+                U
+            \end{bmatrix}}
+        \end{equation*}
+    \end{block}
+
+    Solution by an iterative algorithm, cf.~\cite{Morandin2022}.
+\end{frame}

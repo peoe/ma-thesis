@@ -2,6 +2,10 @@
 
 \author{Peter Oehme}
 \title[MOR on Quadratically Embedded Manifolds for pH Systems]{Model Order Reduction on Quadratically Embedded Manifolds for Port-Hamiltonian Systems}
+\institute{
+    University of Münster \\
+    Germany
+}
 \date{20 March 2023}
 
 \begin{document}
@@ -12,17 +16,25 @@
         \end{frame}
     }
 
-    \setcounter{framenumber}{0} % reset frame counter after title
-
-    \begin{frame}{test}
-        \begin{theorem}[adapted from~\cite{Beattie2011}]
-            qwer
-        \end{theorem}
+    \begin{frame}
+        \begin{minipage}{\textwidth}
+            \tableofcontents
+        \end{minipage}
     \end{frame}
 
+    \setcounter{framenumber}{0} % reset frame counter after title
+
+    \include{sections/01_quad}
+    \include{sections/02_ph}
+    \include{sections/03_phdmd}
+    \include{sections/04_quad_ph}
+
     \begin{frame}[allowframebreaks]{References}
+        \def\newblock{}
         \printbibliography[
             heading=none
         ]
     \end{frame}
+
+    \include{sections/05_backup}
 \end{document}
