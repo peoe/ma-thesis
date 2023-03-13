@@ -1,7 +1,7 @@
 \section{Quadratically Embedded Manifolds}
 
 \begin{frame}{Linear Model Order Reduction, cf.~\cite{Geelen2023}}
-    \begin{block}{Linear MOR}
+    \begin{block}{Linear Approximation}
         \begin{equation*}
             x(t) \approx x_{\textsc{ref}} + V x_r(t) \in \bb{R}^n
         \end{equation*}
@@ -22,24 +22,26 @@
         \end{column}
     \end{columns}
 
-    \begin{block}{Linear Projection Error}
-        \begin{equation*}
-            \mcl{E} := \left( id_{n \times n} - VV\trans \right) \left( X - X_{\textsc{ref}} \right)
-        \end{equation*}
-    \end{block}
+    \uncover<2>{
+        \begin{block}{Linear Projection Error}
+            \begin{equation*}
+                \mcl{E} := \left( id_{n \times n} - VV\trans \right) \left( X - X_{\textsc{ref}} \right)
+            \end{equation*}
+        \end{block}
 
-    \begin{columns}
-        \begin{column}{.25\textwidth}
-	        \begin{itemize}
-                \item $X = {\left( x(t_i) \right)}_{i = 1}^k$
-            \end{itemize}
-        \end{column}
-        \begin{column}{.25\textwidth}
-            \begin{itemize}
-                \item $X_{\textsc{ref}} = {\left( x_{\textsc{ref}} \right)}_{i = 1}^k$
-            \end{itemize}
-        \end{column}
-    \end{columns}
+        \begin{columns}
+            \begin{column}{.25\textwidth}
+                \begin{itemize}
+                    \item $X = {\left( x(t_i) \right)}_{i = 1}^k$
+                \end{itemize}
+            \end{column}
+            \begin{column}{.25\textwidth}
+                \begin{itemize}
+                    \item $X_{\textsc{ref}} = {\left( x_{\textsc{ref}} \right)}_{i = 1}^k$
+                \end{itemize}
+            \end{column}
+        \end{columns}
+    }
 
     % TODO: mention kolmogorov $n$-width here?
 \end{frame}
@@ -58,20 +60,24 @@
         \metroset{block=transparent}
         \begin{columns}
             \begin{column}{.5\textwidth}
-                \begin{block}{Advantages}
-                    \begin{itemize}
-                        \item Better approximation quality
-                        \item Removal of Kolmogorov barrier
-                    \end{itemize}
-                \end{block}
+                \uncover<2->{
+                    \begin{block}{Advantages}
+                        \begin{itemize}
+                            \item Better approximation quality
+                            \item Removal of Kolmogorov barrier
+                        \end{itemize}
+                    \end{block}
+                }
             \end{column}
             \begin{column}{.42\textwidth}
-                \begin{block}{Disadvantages}
-                    \begin{itemize}
-                        \item Slow neural network training
-                        \item No explainability
-                    \end{itemize}
-            \end{block}
+                \uncover<3>{
+                    \begin{block}{Disadvantages}
+                        \begin{itemize}
+                            \item Slow neural network training
+                            \item No explainability
+                        \end{itemize}
+                    \end{block}
+                }
             \end{column}
         \end{columns}
     }
@@ -88,18 +94,20 @@
         \item $\bar{V} \in \bb{R}^{n \times r^2}$: the matricized quadratic mapping operator
     \end{itemize}
 
-    With the Khatri-Rao product $\circ$(columnwise Kronecker product, cf.~\cite{Favier2021}):
-    \begin{equation*}
-        A \circ B = \begin{pmatrix}
-            A^{(1)} & \cdots & A^{(k)}
-        \end{pmatrix} \circ \begin{pmatrix}
-            B^{(1)} & \cdots & B^{(k)}
-        \end{pmatrix} = \begin{pmatrix}
-            A_1^{(1)} B^{(1)} & \cdots & A_1^{(k)} B^{(k)} \\
-            \vdots & & \vdots \\
-            A_r^{(1)} B^{(1)} & \cdots & A_r^{(k)} B^{(k)}
-        \end{pmatrix} \in \bb{R}^{r^2 \times k}
-    \end{equation*}
+    \uncover<2>{
+        With the Khatri-Rao product $\circ$ (columnwise Kronecker product, cf.~\cite{Favier2021}):
+        \begin{equation*}
+            A \circ B = \begin{pmatrix}
+                A^{(1)} & \cdots & A^{(k)}
+            \end{pmatrix} \circ \begin{pmatrix}
+                B^{(1)} & \cdots & B^{(k)}
+            \end{pmatrix} = \begin{pmatrix}
+                A_1^{(1)} B^{(1)} & \cdots & A_1^{(k)} B^{(k)} \\
+                \vdots & & \vdots \\
+                A_r^{(1)} B^{(1)} & \cdots & A_r^{(k)} B^{(k)}
+            \end{pmatrix} \in \bb{R}^{r^2 \times k}
+        \end{equation*}
+    }
 \end{frame}
 
 \begin{frame}{MOR on Quadratically Embedded Manifolds, cf.~\cite{Geelen2023}}
