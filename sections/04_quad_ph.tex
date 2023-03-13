@@ -1,0 +1,76 @@
+\section{Quadratically Embedded Manifolds for pH Systems}
+
+\begin{frame}{Quadratically Embedded Manifolds for pH Systems}
+    \begin{block}{Linear Port-Hamiltonian System}
+        \begin{equation}\label{eq:lin-ph}
+            \begin{bmatrix}
+                H X^- \\
+                - Y_{\textsc{lin}}
+            \end{bmatrix} = \begin{pmatrix}
+                \mcl{L}_{11} & \mcl{L}_{12} \\
+                \mcl{L}_{21} & \mcl{L}_{22}
+            \end{pmatrix} \begin{bmatrix}
+                X^+ \\
+                U
+            \end{bmatrix}
+        \end{equation}
+    \end{block}
+
+    \begin{enumerate}
+        \item Generate data $Y_{\textsc{lin}}$ from~\eqref{eq:lin-ph}
+        \item Compute error $Y_{\textsc{err}} = Y - Y_{\textsc{lin}}$
+        \item Apply pH DMD to get quadratic system~\eqref{eq:quad-ph}
+    \end{enumerate}
+
+    \begin{block}{Quadratic Port-Hamiltonian System}
+        \begin{equation}\label{eq:quad-ph}
+            \begin{bmatrix}
+                (H X^-) \circ (H X^-) \\
+                - Y_{\textsc{err}}
+            \end{bmatrix} = \begin{pmatrix}
+                \mcl{Q}_{11} & \mcl{Q}_{12} \\
+                \mcl{Q}_{21} & \mcl{Q}_{22}
+            \end{pmatrix} \begin{bmatrix}
+                X^+ \circ X^+ \\
+                U
+            \end{bmatrix}
+        \end{equation}
+    \end{block}
+\end{frame}
+
+\begin{frame}{Quadratically Embedded Manifolds for pH Systems}
+    \begin{alertblock}{Question}
+        How to combine both systems?
+    \end{alertblock}
+
+    \begin{columns}
+        \begin{column}{.35\textwidth}
+            \begin{itemize}
+                \item $Y \approx Y_{\textsc{comb}} = Y_{\textsc{lin}} + Y_{\textsc{quad}}$
+            \end{itemize}
+        \end{column}
+        \begin{column}{.4\textwidth}
+            \begin{itemize}
+                \item Only a single control variable $U$
+            \end{itemize}
+        \end{column}
+    \end{columns}
+
+    \begin{block}{Combined Port-Hamiltonian System}
+        \begin{equation*}
+            \begin{bmatrix}
+                H X^- \\
+                (H X^-) \circ (H X^-) \\
+                - Y_{\textsc{comb}}
+            \end{bmatrix} = \begin{pmatrix}
+                \mcl{L}_{11} & 0 & \mcl{L}_{12} \\
+                0 & \mcl{Q}_{11} & \mcl{Q}_{12} \\
+                \mcl{L}_{21} & \mcl{Q}_{21} & \mcl{L}_{22} + \mcl{Q}_{22}
+            \end{pmatrix} \begin{bmatrix}
+                X^+ \\
+                X^+ \circ X^+ \\
+                U
+            \end{bmatrix}
+        \end{equation*}
+    \end{block}
+\end{frame}

@@ -1,0 +1,121 @@
+\section{Quadratically Embedded Manifolds}
+
+\begin{frame}{Linear Model Order Reduction, cf.~\cite{Geelen2023}}
+    \begin{block}{Linear MOR}
+        \begin{equation*}
+            x(t) \approx x_{\textsc{ref}} + V x_r(t) \in \bb{R}^n
+        \end{equation*}
+    \end{block}
+
+    \begin{columns}
+        \begin{column}{.49\textwidth}
+            \begin{itemize}
+                \item $x(t) \in \bb{R}^n$: full order state variable
+                \item $x_{\textsc{ref}} \in \bb{R}^n$: reference state, e.g.\ $x(0)$
+            \end{itemize}
+        \end{column}
+        \begin{column}{.49\textwidth}
+            \begin{itemize}
+                \item $x_r(t) \in \bb{R}^r$: reduced order state variable
+                \item $V \in \bb{R}^{n \times r}$: linear projection matrix
+            \end{itemize}
+        \end{column}
+    \end{columns}
+
+    \begin{block}{Linear Projection Error}
+        \begin{equation*}
+            \mcl{E} := \left( id_{n \times n} - VV\trans \right) \left( X - X_{\textsc{ref}} \right)
+        \end{equation*}
+    \end{block}
+
+    \begin{columns}
+        \begin{column}{.25\textwidth}
+	        \begin{itemize}
+                \item $X = {\left( x(t_i) \right)}_{i = 1}^k$
+            \end{itemize}
+        \end{column}
+        \begin{column}{.25\textwidth}
+            \begin{itemize}
+                \item $X_{\textsc{ref}} = {\left( x_{\textsc{ref}} \right)}_{i = 1}^k$
+            \end{itemize}
+        \end{column}
+    \end{columns}
+
+    % TODO: mention kolmogorov $n$-width here?
+\end{frame}
+
+\begin{frame}{Nonlinear Model Order Reduction, cf.~\cite{Lee2020}}
+    \begin{block}{Nonlinear Trial Manifold}
+        \begin{equation*}
+            x(t) \approx x_{\textsc{ref}} + g(x_r(t); \theta)
+        \end{equation*}
+    \end{block}
+    \begin{itemize}
+        \item $g(\cdot; \theta)$ parametrized as a neural network with parameter $\theta$
+    \end{itemize}
+
+    {
+        \metroset{block=transparent}
+        \begin{columns}
+            \begin{column}{.5\textwidth}
+                \begin{block}{Advantages}
+                    \begin{itemize}
+                        \item Better approximation quality
+                        \item Removal of Kolmogorov barrier
+                    \end{itemize}
+                \end{block}
+            \end{column}
+            \begin{column}{.42\textwidth}
+                \begin{block}{Disadvantages}
+                    \begin{itemize}
+                        \item Slow neural network training
+                        \item No explainability
+                    \end{itemize}
+            \end{block}
+            \end{column}
+        \end{columns}
+    }
+\end{frame}
+
+\begin{frame}{MOR on Quadratically Embedded Manifolds, cf.~\cite{Geelen2023}}
+    \begin{block}{Quadratically Embedded Manifold}
+        \begin{equation*}
+            x(t) \approx x_{\textsc{ref}} + V x_r(t) + \bar{V} (x_r(t) \circ x_r(t))
+        \end{equation*}
+    \end{block}
+
+    \begin{itemize}
+        \item $\bar{V} \in \bb{R}^{n \times r^2}$: the matricized quadratic mapping operator
+    \end{itemize}
+
+    With the Khatri-Rao product $\circ$(columnwise Kronecker product, cf.~\cite{Favier2021}):
+    \begin{equation*}
+        A \circ B = \begin{pmatrix}
+            A^{(1)} & \cdots & A^{(k)}
+        \end{pmatrix} \circ \begin{pmatrix}
+            B^{(1)} & \cdots & B^{(k)}
+        \end{pmatrix} = \begin{pmatrix}
+            A_1^{(1)} B^{(1)} & \cdots & A_1^{(k)} B^{(k)} \\
+            \vdots & & \vdots \\
+            A_r^{(1)} B^{(1)} & \cdots & A_r^{(k)} B^{(k)}
+        \end{pmatrix} \in \bb{R}^{r^2 \times k}
+    \end{equation*}
+\end{frame}
+
+\begin{frame}{MOR on Quadratically Embedded Manifolds, cf.~\cite{Geelen2023}}
+    \begin{block}{Inferring $\bar{V}$ \only<2>{\color{red} with Regularization}}
+        \vspace{8pt}
+        \begin{equation*}
+            \bar{V} = \argmin\limits_{\bar{V} \in \bb{R}^{r \times k^2}} \left( \frac{1}{2} \norm[F]{\left( X_r \circ X_r \right)\trans \bar{V}\trans - \mcl{E}\trans}^2 \only<2>{
+                {\color{red} + \frac{\omega}{2} \norm[F]{\bar{V}}^2}
+            } \right)
+        \end{equation*}
+    \end{block}
+
+    Solve as a Least Squares Problem, $W \coloneqq \left( X_r \circ X_r \right)$:
+    \begin{equation*}
+        \bar{V} = \mcl{E} W\trans {\left( W W\trans \only<2>{
+            {\color{red} + \omega id_{r^2 \times r^2}}
+        } \right)}\inv
+    \end{equation*}
+\end{frame}

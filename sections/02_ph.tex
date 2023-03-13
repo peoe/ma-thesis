@@ -1,0 +1,109 @@
+\section{Port-Hamiltonian Systems (Overview)}
+
+\begin{frame}{Port-Hamiltonian Systems (Overview), cf.~\cite{VanDerSchaft2014}}
+    \begin{block}{Input-State-Output Port-Hamiltonian Systems with Feedthrough Term}
+        \begin{align*}
+            \dot{x} &= \left( J(x) - R(x) \right) \partial_x \mcl{H}(x) + \left( G(x) - P(x) \right) u \\
+            y &= \left( G(x)\trans + P(x) \right) \partial_x \mcl{H}(x) + \left( M(x) + S(x) \right) u
+        \end{align*}
+    \end{block}
+
+    \begin{columns}
+        \begin{column}{.41\textwidth}
+            \begin{itemize}
+                \item $x$: internal system state
+                \item $y$: system output
+            \end{itemize}
+        \end{column}
+        \begin{column}{.41\textwidth}
+            \begin{itemize}
+                \item $\mcl{H}$: system Hamiltonian (energy)
+                \item $u$: external system control
+            \end{itemize}
+        \end{column}
+    \end{columns}
+
+    \begin{block}{System Conditions}
+        \begin{columns}[totalwidth=\linewidth]
+            \begin{column}{.3\textwidth}
+                \begin{itemize}
+                    \item $J = -J\trans$
+                    \item $M = -M\trans$
+                \end{itemize}
+            \end{column}
+            \begin{column}{.3\textwidth}
+                \begin{itemize}
+                    \item $R = R\trans$
+                    \item $S = S\trans$
+                \end{itemize}
+            \end{column}
+            \begin{column}{.3\linewidth}
+                \begin{itemize}
+                    \item $\begin{pmatrix}
+                        R(x)  & P(x) \\
+                        P(x)\trans & S(x)
+                    \end{pmatrix} \geq 0$
+                \end{itemize}
+            \end{column}
+        \end{columns}
+    \end{block}
+\end{frame}
+
+\begin{frame}{Port-Hamiltonian Systems (Overview), cf.~\cite{VanDerSchaft2014}}
+    \begin{block}{Linear Port-Hamiltonian Systems}
+        \begin{align*}
+            \mcl{H}(x) &= \frac{1}{2} x\trans H x \\
+            \dot{x} &= \left( J - R \right) H x + \left( G - P \right) u \\
+            y &= \left( G + P \right)\trans H x + \left( M + S \right) u
+        \end{align*}
+    \end{block}
+\end{frame}
+
+\begin{frame}{Port-Hamiltonian Systems (Overview), cf.~\cite{Morandin2022}}
+    \begin{block}{Linear Port-Hamiltonian Systems (Factorization)}
+        \begin{align*}
+            \mcl{H}(x) &= \frac{1}{2} x\trans H x, {\color{red}H = E\trans Q} \\
+            {\color{red}H} \dot{x} &= {\color{red}\left( \tilde{J} - \tilde{R} \right)} x + {\color{red}\left( \tilde{G} - \tilde{P} \right)} u \\
+            y &= {\color{red}\left( \tilde{G} + \tilde{P} \right)\trans} H x + \left( M + S \right) u
+        \end{align*}
+    \end{block}
+\end{frame}
+
+\begin{frame}{Port-Hamiltonian Systems (Overview), cf.~\cite{Morandin2022}}
+    \begin{block}{Discrete Time Port-Hamiltonian System}
+        \only<1>{
+            \begin{align*}
+                H x_i^- &= \left( J - R \right) x_i^+ + \left( G - P \right) u \\
+                y_i &= \left( G + P \right)\trans x_i^+ + \left( S - N \right) u
+            \end{align*}
+        }
+        \only<2>{
+            \begin{equation*}
+                \begin{bmatrix}
+                    H x_i^- \\
+                    - y_i
+                \end{bmatrix} = \left( \mcl{J} - \mcl{R} \right) \begin{bmatrix}
+                    x_i^+ \\
+                    u_i
+                \end{bmatrix}
+            \end{equation*}
+        }
+    \end{block}
+
+    \begin{columns}
+        \begin{column}{.27\textwidth}
+            \begin{itemize}
+                \item $x_i^- = \frac{1}{\Delta t} (x_{i + 1} - x_i)$
+                \item $x_i^+ = \frac{1}{2} (x_{i + 1} + x_i)$
+            \end{itemize}
+        \end{column}
+        \begin{column}{.27\textwidth}
+            \begin{itemize}
+                \item $y_i^+ = \frac{1}{2} (y_{i + 1} + y_i)$
+                \item $u_i^+ = \frac{1}{2} (u_{i + 1} + u_i)$
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% TODO: add short mention of MOR for ph systems
