@@ -6,6 +6,32 @@
 \usepackage{marvosym} % lightning symbol
 \usepackage{textcomp} % interrobang
 
+%        Theorems        %
+\usepackage{amsthm}
+\makeatletter
+\@ifclassloaded{beamer}{}{%
+    \@ifclassloaded{book}{%
+        \newtheorem{theorem}{Theorem}[chapter]
+    }{%
+        \@ifclassloaded{article}{%
+            \newtheorem{theorem}{Theorem}
+        }{}
+    }
+
+    \newtheorem{lemma}[theorem]{Lemma}
+    \newtheorem{corollary}[theorem]{Corollary}
+
+    \theoremstyle{definition}
+    \newtheorem{definition}[theorem]{Definition}
+}
+
+\theoremstyle{definition}
+\newtheorem{assumption}[theorem]{Assumption}
+
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+\makeatother
+
 %        Commands        %
 \usepackage{interval}
 \intervalconfig{soft open fences}
