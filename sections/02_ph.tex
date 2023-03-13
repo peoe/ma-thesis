@@ -23,30 +23,32 @@
         \end{column}
     \end{columns}
 
-    \begin{block}{System Conditions}
-        \begin{columns}[totalwidth=\linewidth]
-            \begin{column}{.3\textwidth}
-                \begin{itemize}
-                    \item $J = -J\trans$
-                    \item $M = -M\trans$
-                \end{itemize}
-            \end{column}
-            \begin{column}{.3\textwidth}
-                \begin{itemize}
-                    \item $R = R\trans$
-                    \item $S = S\trans$
-                \end{itemize}
-            \end{column}
-            \begin{column}{.3\linewidth}
-                \begin{itemize}
-                    \item $\begin{pmatrix}
-                        R(x)  & P(x) \\
-                        P(x)\trans & S(x)
-                    \end{pmatrix} \geq 0$
-                \end{itemize}
-            \end{column}
-        \end{columns}
-    \end{block}
+    \uncover<2>{
+        \begin{block}{System Conditions}
+            \begin{columns}[totalwidth=\linewidth]
+                \begin{column}{.3\textwidth}
+                    \begin{itemize}
+                        \item $J = -J\trans$
+                        \item $M = -M\trans$
+                    \end{itemize}
+                \end{column}
+                \begin{column}{.3\textwidth}
+                    \begin{itemize}
+                        \item $R = R\trans$
+                        \item $S = S\trans$
+                    \end{itemize}
+                \end{column}
+                \begin{column}{.3\linewidth}
+                    \begin{itemize}
+                        \item $\begin{pmatrix}
+                            R(x)  & P(x) \\
+                            P(x)\trans & S(x)
+                        \end{pmatrix} \geq 0$
+                    \end{itemize}
+                \end{column}
+            \end{columns}
+        \end{block}
+    }
 \end{frame}
 
 \begin{frame}{Port-Hamiltonian Systems (Overview), cf.~\cite{VanDerSchaft2014}}
