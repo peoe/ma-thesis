@@ -53,7 +53,67 @@
         \vspace{4pt}
     }
 
-    \frame{
-        qwer
-    }
+    \begin{frame}{Structure-Preserving Interconnection of pH Systems, cf.~\cite{VanDerSchaft2014, Mehrmann2022}}
+        Multiple port-Hamiltonian systems
+        \begin{align*}
+            H_i \dot{x}_i &= (J_i - R_i) x_i + (G_i - P_i) u_i \\
+            y_i &= (G_i + P_I)\trans x_i + (S_i - N_i) u_i
+        \end{align*}
+        can be interconnected
+        \begin{itemize}
+            \item through theoretical framework of \emph{Dirac structures}, cf.~\cite[Section~6.2]{VanDerSchaft2014}, or
+            \item through the matrix relation (cf.~\cite[Section~6.4]{Mehrmann2022})
+                \begin{equation*}
+                    \begin{bmatrix}
+                        M_{11} & M_{12} \\
+                        M_{21} & M_{22}
+                    \end{bmatrix} \begin{bmatrix}
+                        u_1 \\
+                        u_2
+                    \end{bmatrix} + \begin{bmatrix}
+                        L_{11} & L_{12} \\
+                        L_{21} & L_{22}
+                    \end{bmatrix} \begin{bmatrix}
+                        y_1 \\
+                        y_2
+                    \end{bmatrix} = \begin{bmatrix}
+                        0 \\
+                        0
+                    \end{bmatrix}.
+                \end{equation*}
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}{Power Balance Equation, cf.~\cite[Section~6.1]{Mehrmann2022}}
+        \begin{block}{Power Balance}
+            \begin{equation*}
+                \frac{\text{d}}{\text{d}t} \mcl{H}(t, x) = - \begin{bmatrix}
+                    \eta(t, x) \\
+                    u
+                \end{bmatrix}\trans \begin{bmatrix}
+                    R & P \\
+                    P\trans & S
+                \end{bmatrix}(t, x) \begin{bmatrix}
+                    \eta(t, x) \\
+                    u
+                \end{bmatrix} + y\trans u
+            \end{equation*}
+        \end{block}
+
+        \begin{block}{Dissipation Inequality}
+            \begin{align*}
+                \begin{bmatrix}
+                    R & P \\
+                    P\trans & S
+                \end{bmatrix}(t, x) \geq 0 &\implies \frac{\text{d}}{\text{d}t} \mcl{H}(t, x) \leq y\trans u \\
+                 &\implies \mcl{H}(t_2, x(t_2)) - \mcl{H}(t_1, x(t_2)) \leq \int\limits_{t_1}^{t_2} y(s)\trans u(s) ds
+            \end{align*}
+        \end{block}
+    \end{frame}
+
+    % TODO: MOR for pH
+
+    % TODO: iterative solution algorithm from phDMD?
+
+    % TODO: more references on Quad MOR, pH and DMD?
 }
