@@ -21,6 +21,7 @@
                         \item Port-Hamiltonian Systems (Overview)
                         \item pH DMD
                         \item Quadratically Embedded Manifolds for pH Systems
+                        \item[] \phantom{}
                     \end{itemize}
                 }
             \end{column}
@@ -31,10 +32,10 @@
                         \normalsize
                         \begin{itemize}
                             \item Examples
-                            \item Other Operator Inference Frameworks
+                            \item Other Operator Inference Strategies
                             \item Error Analysis
-                            \item Polynomially Embedded Manifolds
-                            \item xcvb
+                            \item Higher Order Polynomially Embedded Manifolds
+                            \item \href{https://pymor.org/}{pyMOR} Implementation\ \cite{Milk2016}
                         \end{itemize}
                     }
                 \end{column}
@@ -105,15 +106,93 @@
                 \begin{bmatrix}
                     R & P \\
                     P\trans & S
-                \end{bmatrix}(t, x) \geq 0 &\implies \frac{\text{d}}{\text{d}t} \mcl{H}(t, x) \leq y\trans u \\
+                \end{bmatrix}(t, x) \succcurlyeq 0 &\implies \frac{\text{d}}{\text{d}t} \mcl{H}(t, x) \leq y\trans u \\
                  &\implies \mcl{H}(t_2, x(t_2)) - \mcl{H}(t_1, x(t_2)) \leq \int\limits_{t_1}^{t_2} y(s)\trans u(s) ds
             \end{align*}
         \end{block}
     \end{frame}
 
-    % TODO: MOR for pH
+    \begin{frame}{PH DMD Iterative Algorithm, cf.~\cite[Algorithm~1]{Morandin2022}}
+        \begin{center}
+            \begin{minipage}{.55\linewidth}
+                \begin{algorithm}[H]
+                    \KwData{data matrices $Z, T$, initial guess for $\mcl{R}^{(0)}$}
+                    $L = \sigma_1^2(T), q = \frac{\sigma_r^2}{L} T, \alpha_1 \in \interval[open]{0}{1}, Q = \mcl{R}^{(0)}$\;
+                    \While{not converged}{
+                        $Z_1 = Z + \mcl{R}^{(k - 1)} T$\;
+                        $\mcl{J}^{(k)} = \argmin \norm[F]{Z_1 - \mcl{J} T}$\;
+                        $Z_2 = \mcl{J}^{(k)} T - Z$\;
+                        $G = Q T T\trans - Z_2 T$\;
+                        $\mcl{R}^{(k)} = \bb{P}_{\succcurlyeq 0}(Q - \frac{1}{L} G)$\;
+                        $\alpha_{k + 1} = \frac{1}{2} \left( q - \alpha_k^2 + \sqrt{{(q - \alpha_k^2)}^2 + 4 \alpha_k^2} \right)$\;
+                        $\beta_{k} = \frac{\alpha_k(1 - \alpha_k)}{\alpha_k^2 + \alpha_{k + 1}}$\;
+                        $Q = \mcl{R}^{(k)} + \beta_k  \left( \mcl{R}^{(k)} - \mcl{R}^{(k - 1)} \right)$\;
+                    }
+                    \Return{$\mcl{J} = \mcl{J}^{(k)}, \mcl{R} = \mcl{R}^{(k)}$}
+                \end{algorithm}
+            \end{minipage}
+        \end{center}
+    \end{frame}
 
-    % TODO: iterative solution algorithm from phDMD?
+    \begin{frame}{More References}
+        \begin{block}{Quadratically Embedded Manifolds}
+            \begin{columns}[totalwidth=\linewidth]
+                \begin{column}{.3\textwidth}
+                    \begin{itemize}
+                        \item \cite{Rutzmoser2017}
+                    \end{itemize}
+                \end{column}
+                \begin{column}{.3\textwidth}
+                    \begin{itemize}
+                        \item \cite{Benner2022}
+                    \end{itemize}
+                \end{column}
+                \begin{column}{.3\textwidth}
+                    \begin{itemize}
+                        \item \cite{Barnett2022}
+                    \end{itemize}
+                \end{column}
+            \end{columns}
+        \end{block}
 
-    % TODO: more references on Quad MOR, pH and DMD?
+        \begin{block}{Port-Hamiltonian Systems}
+            \begin{columns}[totalwidth=\linewidth]
+                \begin{column}{.3\textwidth}
+                    \begin{itemize}
+                        \item \cite{Duindam2009}
+                    \end{itemize}
+                \end{column}
+                \begin{column}{.3\textwidth}
+                    \begin{itemize}
+                        \item \cite{Polyuga2010}
+                    \end{itemize}
+                \end{column}
+                \begin{column}{.3\textwidth}
+                    \begin{itemize}
+                        \item \cite{Rashad2020}
+                    \end{itemize}
+                \end{column}
+            \end{columns}
+        \end{block}
+
+        \begin{block}{DMD}
+            \begin{columns}[totalwidth=\linewidth]
+                \begin{column}{.3\textwidth}
+                    \begin{itemize}
+                        \item \cite{Schmid2010}
+                    \end{itemize}
+                \end{column}
+                \begin{column}{.3\textwidth}
+                    \begin{itemize}
+                        \item \cite{Benner2018}
+                    \end{itemize}
+                \end{column}
+                \begin{column}{.3\textwidth}
+                    \begin{itemize}
+                        \item \cite{Baddoo2023}
+                    \end{itemize}
+                \end{column}
+            \end{columns}
+        \end{block}
+    \end{frame}
 }
