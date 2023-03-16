@@ -4,7 +4,7 @@
     \begin{block}{Input-State-Output Port-Hamiltonian Systems with Feedthrough Term}
         \begin{align*}
             \dot{x} &= \left( J(x) - R(x) \right) \partial_x \mcl{H}(x) + \left( G(x) - P(x) \right) u \\
-            y &= \left( G(x)\trans + P(x) \right) \partial_x \mcl{H}(x) + \left( M(x) + S(x) \right) u
+            y &= \left( G(x) + P(x) \right)\trans \partial_x \mcl{H}(x) + \left( M(x) + S(x) \right) u
         \end{align*}
     \end{block}
 
@@ -26,19 +26,38 @@
     \uncover<2>{
         \begin{block}{System Conditions}
             \begin{columns}[totalwidth=\linewidth]
-                \begin{column}{.3\textwidth}
+                \begin{column}{.24\textwidth}
                     \begin{itemize}
                         \item $J = -J\trans$
+                    \end{itemize}
+                \end{column}
+                \begin{column}{.24\textwidth}
+                    \begin{itemize}
                         \item $M = -M\trans$
                     \end{itemize}
                 \end{column}
-                \begin{column}{.3\textwidth}
+                \begin{column}{.24\textwidth}
                     \begin{itemize}
                         \item $R = R\trans$
+                    \end{itemize}
+                \end{column}
+                \begin{column}{.24\textwidth}
+                    \begin{itemize}
                         \item $S = S\trans$
                     \end{itemize}
                 \end{column}
-                \begin{column}{.3\linewidth}
+            \end{columns}
+
+            \begin{columns}[totalwidth=\linewidth]
+                \begin{column}{.64\linewidth}
+                    \begin{itemize}
+                        \item $\Gamma = \begin{pmatrix}
+                            J(x)  & G(x) \\
+                            -G(x)\trans & N(x)
+                        \end{pmatrix}$ is skew-symmetric ($\Gamma = -\Gamma\trans$)
+                    \end{itemize}
+                \end{column}
+                \begin{column}{.34\linewidth}
                     \begin{itemize}
                         \item $\begin{pmatrix}
                             R(x)  & P(x) \\
@@ -64,7 +83,17 @@
 \begin{frame}{Port-Hamiltonian Systems (Overview), cf.~\cite{Morandin2022}}
     \begin{block}{Linear Port-Hamiltonian Systems (Factorization)}
         \begin{align*}
-            \mcl{H}(x) &= \frac{1}{2} x\trans H x, {\color{red}H = E\trans Q} \\
+            \mcl{H}(x) &= \frac{1}{2} x\trans H x, H = E\trans Q \\
+            E \dot{x} &= \left( \tilde{J} - \tilde{R} \right) Q x + \left( \tilde{G} - \tilde{P} \right) u \\
+            y &= \left( \tilde{G} + \tilde{P} \right)\trans Q x + \left( M + S \right) u
+        \end{align*}
+    \end{block}
+\end{frame}
+
+\begin{frame}{Port-Hamiltonian Systems (Overview), cf.~\cite{Morandin2022}}
+    \begin{block}{Linear Port-Hamiltonian Systems (Factorization)}
+        \begin{align*}
+            \mcl{H}(x) &= \frac{1}{2} x\trans H x, H = E\trans Q \\
             {\color{red}H} \dot{x} &= {\color{red}\left( \tilde{J} - \tilde{R} \right)} x + {\color{red}\left( \tilde{G} - \tilde{P} \right)} u \\
             y &= {\color{red}\left( \tilde{G} + \tilde{P} \right)\trans} x + \left( M + S \right) u
         \end{align*}

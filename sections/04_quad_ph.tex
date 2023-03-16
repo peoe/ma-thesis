@@ -5,7 +5,7 @@
         \begin{equation}\label{eq:lin-ph}
             \begin{bmatrix}
                 H X^- \\
-                - Y_{\textsc{lin}}
+                - Y
             \end{bmatrix} = \begin{pmatrix}
                 \mcl{L}_{11} & \mcl{L}_{12} \\
                 \mcl{L}_{21} & \mcl{L}_{22}
@@ -17,7 +17,7 @@
     \end{block}
 
     \begin{enumerate}
-        \item<2-> Generate data $Y_{\textsc{lin}}$ from~\eqref{eq:lin-ph}
+        \item<2-> Generate data $X^-_{\textsc{lin}}, X^+_{\textsc{lin}}, Y_{\textsc{lin}}$ from~\eqref{eq:lin-ph}
         \item<3-> Compute error $Y_{\textsc{err}} = Y - Y_{\textsc{lin}}$
         \item<4-> Apply pH DMD to get quadratic system~\eqref{eq:quad-ph}
     \end{enumerate}
@@ -26,13 +26,13 @@
         \begin{block}{Quadratic Port-Hamiltonian System}
             \begin{equation}\label{eq:quad-ph}
                 \begin{bmatrix}
-                    (H X^-) \circ (H X^-) \\
+                    (H X^-_{\textsc{lin}}) \diamond (H X^-_{\textsc{lin}}) \\
                     - Y_{\textsc{err}}
                 \end{bmatrix} = \begin{pmatrix}
                     \mcl{Q}_{11} & \mcl{Q}_{12} \\
                     \mcl{Q}_{21} & \mcl{Q}_{22}
                 \end{pmatrix} \begin{bmatrix}
-                    X^+ \circ X^+ \\
+                    X^+_{\textsc{lin}} \diamond X^+_{\textsc{lin}} \\
                     U
                 \end{bmatrix}
             \end{equation}
@@ -65,7 +65,7 @@
             \begin{equation*}
                 \begin{bmatrix}
                     H X^- \\
-                    (H X^-) \circ (H X^-) \\
+                    (H X^-) \diamond (H X^-) \\
                     - Y_{\textsc{comb}}
                 \end{bmatrix} = \begin{pmatrix}
                     \mcl{L}_{11} & 0 & \mcl{L}_{12} \\
@@ -73,7 +73,7 @@
                     \mcl{L}_{21} & \mcl{Q}_{21} & \mcl{L}_{22} + \mcl{Q}_{22}
                 \end{pmatrix} \begin{bmatrix}
                     X^+ \\
-                    X^+ \circ X^+ \\
+                    X^+ \diamond X^+ \\
                     U
                 \end{bmatrix}
             \end{equation*}

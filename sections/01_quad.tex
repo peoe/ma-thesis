@@ -42,8 +42,6 @@
             \end{column}
         \end{columns}
     }
-
-    % TODO: mention kolmogorov $n$-width here?
 \end{frame}
 
 \begin{frame}{Nonlinear Model Order Reduction, cf.~\cite{Lee2020}}
@@ -53,7 +51,7 @@
         \end{equation*}
     \end{block}
     \begin{itemize}
-        \item $g(\cdot; \theta)$ parametrized as a neural network with parameter $\theta$
+        \item $g(\cdot; \theta)$ parametrized as a neural network with weights $\theta$
     \end{itemize}
 
     {
@@ -86,7 +84,7 @@
 \begin{frame}{MOR on Quadratically Embedded Manifolds, cf.~\cite{Geelen2023}}
     \begin{block}{Quadratically Embedded Manifold}
         \begin{equation*}
-            x(t) \approx x_{\textsc{ref}} + V x_r(t) + \bar{V} (x_r(t) \circ x_r(t))
+            x(t) \approx x_{\textsc{ref}} + V x_r(t) + \bar{V} (x_r(t) \diamond x_r(t))
         \end{equation*}
     \end{block}
 
@@ -95,11 +93,11 @@
     \end{itemize}
 
     \uncover<2>{
-        With the Khatri-Rao product $\circ$ (columnwise Kronecker product, cf.~\cite{Favier2021}):
+        With the Khatri-Rao product $\diamond$ (columnwise Kronecker product, cf.~\cite{Favier2021}):
         \begin{equation*}
-            A \circ B = \begin{pmatrix}
+            A \diamond B = \begin{pmatrix}
                 A^{(1)} & \cdots & A^{(k)}
-            \end{pmatrix} \circ \begin{pmatrix}
+            \end{pmatrix} \diamond \begin{pmatrix}
                 B^{(1)} & \cdots & B^{(k)}
             \end{pmatrix} = \begin{pmatrix}
                 A_1^{(1)} B^{(1)} & \cdots & A_1^{(k)} B^{(k)} \\
@@ -114,13 +112,13 @@
     \begin{block}{Inferring $\bar{V}$ \only<2>{\color{red} with Regularization}}
         \vspace{8pt}
         \begin{equation*}
-            \bar{V} = \argmin\limits_{\bar{V} \in \bb{R}^{r \times k^2}} \left( \frac{1}{2} \norm[F]{\left( X_r \circ X_r \right)\trans \bar{V}\trans - \mcl{E}\trans}^2 \only<2>{
+            \bar{V} = \argmin\limits_{\bar{V} \in \bb{R}^{r \times k^2}} \left( \frac{1}{2} \norm[F]{\left( X_r \diamond X_r \right)\trans \bar{V}\trans - \mcl{E}\trans}^2 \only<2>{
                 {\color{red} + \frac{\omega}{2} \norm[F]{\bar{V}}^2}
             } \right)
         \end{equation*}
     \end{block}
 
-    Solve as a Least Squares Problem, $W \coloneqq \left( X_r \circ X_r \right)$:
+    Solve as a Least Squares Problem, $W \coloneqq \left( X_r \diamond X_r \right)$:
     \begin{equation*}
         \bar{V} = \mcl{E} W\trans {\left( W W\trans \only<2>{
             {\color{red} + \omega id_{r^2 \times r^2}}
