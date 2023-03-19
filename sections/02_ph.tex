@@ -84,8 +84,8 @@
     \begin{block}{Linear Port-Hamiltonian Systems (Factorization)}
         \begin{align*}
             \mcl{H}(x) &= \frac{1}{2} x\trans H x, H = E\trans Q \\
-            E \dot{x} &= \left( \tilde{J} - \tilde{R} \right) Q x + \left( \tilde{G} - \tilde{P} \right) u \\
-            y &= \left( \tilde{G} + \tilde{P} \right)\trans Q x + \left( M + S \right) u
+            E \dot{x} &= \left( J - R \right) Q x + \left( G - P \right) u \\
+            y &= \left( G + P \right)\trans Q x + \left( M + S \right) u
         \end{align*}
     \end{block}
 \end{frame}
@@ -126,12 +126,14 @@
             \begin{itemize}
                 \item $x_i^- = \frac{1}{\Delta t} (x_{i + 1} - x_i)$
                 \item $x_i^+ = \frac{1}{2} (x_{i + 1} + x_i)$
+                \item $\mcl{J} = - \mcl{J}\trans$
             \end{itemize}
         \end{column}
         \begin{column}{.27\textwidth}
             \begin{itemize}
                 \item $y_i^+ = \frac{1}{2} (y_{i + 1} + y_i)$
                 \item $u_i^+ = \frac{1}{2} (u_{i + 1} + u_i)$
+                \item $\mcl{R} = \mcl{R}\trans \succcurlyeq 0$
             \end{itemize}
         \end{column}
     \end{columns}
