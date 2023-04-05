@@ -1,17 +1,27 @@
 \section{Numerical Examples}
 
-In general, \href{https://g-haine.github.io/scrimp/index.html#}{SCRIMP} from~\cite{Brugnoli2021} will be interesting.
-
 \subsection{Burgers Equation}
 
-\itodo{write on Burgers}
+For Burgers' equation, the state derivative of the Hamiltonian is $\pd \mcl{H}(x) = \frac{x^2}{2}$, cf.~\cite{Maschke2005}.
+This term is clearly not derived from a quadratic Hamiltonian, so some different methods have to be used.
+Alternatively, Linearly approximate first and then try to apply the quadratic data such that the system Hamiltonian state derivative turns into $\pd \mcl{H}(x) = \frac{x}{2}$.
+This in a sense reflects the idea of lifting system coordinates, cf.~\cite{Qian2020, Kramer2019}.
+Alternatively, one might also have a look at the Carleman linearization process, cf.~\cite{Goyal2015, Rugh1981}.
+There is also the idea of QLMOR which transforms entire systems of nonlinearities into linear systems in which some variables represent the prior nonlinear terms, cf.~\cite{Gu2011}.
+From the PDE theoretical perspective the Hopf-Cole transformation may be of interest to linearize the viscuous Burgers' equation, cf.~\cite{Hopf1950, Cole1951, Kannan2012, Chen2016}.
 
 \subsection{Damped Wave Equation}
 
-Consider~\cite{Serhani2019}.
+Wave equations can be modelled in different ways such that the resulting formulations are attractive to pH sytems.
+Firstly, there is the Friedrichs' system perspective, cf.~\cite{Friedrichs1958, Antonic2014, Mifsud2016}.
+Secondly, direct pH forms are given in~\cite{Cardoso2018, Serhani2019}.
 
-\itodo{write on damped wave equation}
+Because the undampened wave equation is a linear equation, the Hamiltonian is always going to be quadratic.
+With regards to dampening, it should be easy to use the control variable $u$ as dampening action on the system, however an inherent state dampening (boundary values?) might also be interesting.
 
 \subsection{Friedrichs Systems}
 
-\itodo{write on friedrichs systems}
+The usual sources all use the usual model problems: scalar elliptic equations, heat, wave (homogeneous/inhomogeneous), Laplace --- cf.~\cite{Friedrichs1958, Burman2010, Antonic2013, Antonic2014, Mifsud2016, Erceg2022}.
+There also exist formulations of the MHD equations, cf.~\cite{Ern2006}.
+
+A concrete model problem remains to be chosen.

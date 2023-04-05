@@ -8,111 +8,82 @@ When constructing a quadratic manifold in a pH system, many approaches might be 
     \item any viable combination of these.
 \end{enumerate}
 
-If we quadraticize the state variables we get the terms $\underline{\mbf{X}}, \underline{\dot{\mbf{X}}} \in \bb{R}^{r \times \frac{k (k + 1)}{2}}$.
-Analogously, $\underline{\mbf{Y}}, \underline{\mbf{U}} \in \bb{R}^{m \times \frac{k (k + 1)}{2}}$.
-We further define the concatenated vectors
-\[
-    \dot{\mcl{X}} =
-    \begin{bmatrix}
-        \varPhi\trans H \varPhi \varPhi\trans \mbf{\dot{X}} \\
-        \underline{\dot{\mbf{X}}}
-    \end{bmatrix},
-    \mcl{X} =
-    \begin{bmatrix}
-        \varPhi\trans \mbf{X} \\
-        \underline{\mbf{X}}
-    \end{bmatrix},
-    \mcl{Y} =
-    \begin{bmatrix}
-        \mcl{Y} \\
-        \underline{\mcl{Y}}
-    \end{bmatrix},
-    \mcl{U} =
-    \begin{bmatrix}
-        \mbf{U} \\
-        \underline{\mcl{U}}
-    \end{bmatrix}.
-\]
+For now we'll stick to quadratic state variables.
+Quadratizising the control or the outputneabs having to select components of the output for combining linear and quadratic models.
 
-\subsection{Quadraticizing State Vectors}\label{subseq:quad-state-vecs}
+\subsection{The Linear Model}\label{sec:lin-model}
 
-If we only consider $\underline{\mbf{X}}$ and $\underline{\dot{\mbf{X}}}$ in the system we get
+\itodo{if needed estimate the linear model using op inf}
+
+\subsection{The Quadratic Model}\label{sec:quad-model}
+
+We start of with a linearly approximated model
 \begin{equation*}
-    \mathcal{Z} =
     \begin{bmatrix}
-        \underline{\dot{\mbf{X}}} \\
+        \mbf{H} \dot{\mbf{X}} \\
         -\mbf{Y}
-    \end{bmatrix},
-    \mathcal{T} =
-    \begin{bmatrix}
-        \underline{\mbf{X}} \\
+    \end{bmatrix} = \underbrace{(\mcl{J}^{(L)} - \mcl{R}^{(L)})}_{\coloneqq \mcl{L}} \begin{bmatrix}
+        \mbf{X} \\
         \mbf{U}
-    \end{bmatrix} \in \bb{R}^{(r + m) \times \frac{k (k + 1)}{2}}
+    \end{bmatrix}, \mcl{L} = \begin{bmatrix}
+        \mcl{L}_{11} & \mcl{L}_{12} \\
+        \mcl{L}_{21} & \mcl{L}_{22}
+    \end{bmatrix}
 \end{equation*}
-or
-\begin{equation*}
-    \mathcal{Z} =
+where $\mcl{L}$ has to be split into the various matrix blocks to match the individual variables.
+
+We now proceed as follows:
+\begin{enumerate}
+    \item Compute a trajectory $\mbf{H} \mbf{X}_{\textsc{lin}}, \dot{\mbf{X}}_{\textsc{lin}}, \mbf{Y}_{\textsc{lin}}$ from the linear system.
+    \item Compute quadratic data matrices $(\mbf{H} \mbf{X}_{\textsc{lin}}) \diamond (\mbf{H} \mbf{X}_{\textsc{lin}}), \mbf{X}_{\textsc{lin}} \diamond \mbf{X}_{\textsc{lin}}$.
+    \item Identify the system matrices $\mcl{J}^{(Q)} - \mcl{R}^{(Q)} = \mcl{Q}$ of the quadratic pH system~\eqref{eq:quad-ph}.
+\end{enumerate}
+
+\begin{equation}\label{eq:quad-ph}
     \begin{bmatrix}
-        \varPhi\trans H \varPhi \varPhi\trans \mbf{\dot{X}} \\
-        \underline{\dot{\mbf{X}}} \\
-        -\mbf{Y}
-    \end{bmatrix},
-    \mathcal{T} =
-    \begin{bmatrix}
-        \varPhi\trans H \varPhi \varPhi\trans \mbf{X} \\
-        \underline{\mbf{X}} \\
+        (\mbf{H} \dot{\mbf{X}}_{\textsc{lin}}) \diamond (\mbf{H} \dot{\mbf{X}}_{\textsc{lin}}) \\
+        - \mbf{Y}
+    \end{bmatrix} = \mcl{Q} \begin{bmatrix}
+        \mbf{X}_{\textsc{lin}} \diamond \mbf{X}_{\textsc{lin}} \\
         \mbf{U}
-    \end{bmatrix} \in \bb{R}^{(r + r + m) \times \frac{k (k + 1)}{2}}.
-\end{equation*}
-In both cases we would need to pad $\varPhi\trans H \varPhi \varPhi\trans \mbf{\dot{X}} \in \bb{R}^{r \times k}$ and $-\mbf{Y} \in \bb{R}^{m \times k}$ because the simple data dimensions no longer align with the quadratic ones.
-It is also important to note that we somehow need to handle the quadraticized Hamiltonian.
-
-\subsection{Quadraticizing Control and Output}
-
-If we only consider $\underline{\mbf{U}}, \underline{\mbf{Y}}$, we basically run into the same issue as in Subsection~\ref{subseq:quad-state-vecs} though padding of the (normal) Hamiltonian.
-
-\subsection{Quadraticizing State and Control/Output}
-
-If we consider $\underline{\mbf{X}}, \underline{\dot{\mbf{X}}} \in \bb{R}^{r \times \frac{k (k + 1)}{2}}, \underline{\mbf{U}}, \underline{\mbf{Y}} \in \bb{R}^{m \times \frac{k (k + 1)}{2}}$ we can construct the following system:
-\begin{equation*}
-    \begin{bmatrix}
-        \underline{\dot{\mbf{X}}} \\
-        -\underline{\mbf{Y}}
+    \end{bmatrix}, \mcl{Q} = \begin{bmatrix}
+        Q_{11} & Q_{12} \\
+        Q_{21} & Q_{22}
     \end{bmatrix}
-    = (\mcl{J} - \mcl{R})
-    \begin{bmatrix}
-        \underline{\mbf{X}} \\
-        \underline{\mbf{U}}
-    \end{bmatrix},
-\end{equation*}
-where $\mcl{J} = -\mcl{J}\trans, \mcl{R} \succcurlyeq 0 \in \bb{R}^{(r + m) \times (r + m)}$.
-
-In particular, using the concatenated terms instead one can obtain
-\begin{equation}\label{eq:concatenated-quadratic-ph-formulation}
-    \begin{bmatrix}
-        \dot{\mcl{X}} \\
-        -\mcl{Y}
-    \end{bmatrix}
-    = (\mcl{J} - \mcl{R})
-    \begin{bmatrix}
-        \mcl{X} \\
-        \mcl{U}
-    \end{bmatrix}.
 \end{equation}
-This formulation allows for the direct recovery of the normal output variable $\mbf{Y}$ via correctly indexing the left hand side.
 
-\subsection{Sequential vs.\ Simultaneaous Approximation}
+To identify the system~\eqref{eq:quad-ph}, there are multiple approaches.
+The usual idea is to somehow interpolate the underlying transfer function of the pH system.
+In the simplest way, direct frequency measurements of the system are taken as the interpolation points, cf.~\cite{Gillis2018, Cherifi2019, Benner2020, Schwerdtner2021}.
+Instead of handling direct frequency interpolation it is also possible to start from the time domain.
+The idea here is to perform a DFT on the time ``snapshots'', cf.~\cite{Peherstorfer2017, Cherifi2021, Cherifi2022}.
+However, this approach still cannot directly operate on data alone, an intermediate LTI system (through the transfer function).
+In contrast, the extension of DMD to pH proposed in~\cite{Morandin2022} can direclty run on system data.
+While pH DMD does not provided many guarantees as of right now, it allows for easy application to our problem.
 
-The essential part of Equation~\eqref{eq:concatenated-quadratic-ph-formulation} is that this allows for both a sequential approach as well as a simultaneous approach:
-\begin{itemize}
-    \item In the simultaneous case, we just run phDMD~\cite{Morandin2022} on Equation~\eqref{eq:concatenated-quadratic-ph-formulation}.
-    \item In the sequential approach, we first compute the solutions $\mcl{J}_\textsc{lin}, \mcl{R}_\textsc{lin}$ of Problem~\eqref{eq:phdmd-lst-problem}. Then plugging these into $\mcl{J} = \begin{bmatrix}
-        \mcl{J}_\textsc{lin} & \mcl{J}_1 \\
-        \mcl{J}_2 & \mcl{J}_3
-    \end{bmatrix}, \mcl{R} = \begin{bmatrix}
-        \mcl{R}_\textsc{lin} & \mcl{R}_1 \\
-        \mcl{R}_2 & \mcl{R}_3
-    \end{bmatrix}$, we compute the remaining matrices again using phDMD\@.
-\end{itemize}
+\subsection{Constructing the Combined Model}
 
-\itodo{non-quadratic Hamiltonians}
+We begin by noting that the properties of the Khatri-Rao product allow the following decomposition:
+\begin{equation*}
+    (H \dot{\mbf{X}}) \diamond (H \dot{\mbf{X}}) = (H \diamond H) (\dot{\mbf{X}} \diamond \dot{\mbf{X}}).
+\end{equation*}
+\itodo{check the products for correctness!}
+
+We then combine both the linear model from Section~\ref{sec:lin-model} and the quadratic model from Section~\ref{sec:quad-model} by adding the output terms from both systems to the total output of the system.
+
+\begin{equation*}
+    \begin{bmatrix}
+        \mbf{H} \dot{\mbf{X}}_{\textsc{lin}} \\
+        (\mbf{H} \dot{\mbf{X}}_{\textsc{lin}}) \diamond (\mbf{H} \dot{\mbf{X}}_{\textsc{lin}}) \\
+        - \mbf{Y}
+    \end{bmatrix} = \begin{pmatrix}
+        L_{11} & 0 & L_{12} \\
+        0 & Q_{11} & Q_{12} \\
+        L_{21} & Q_{21} & L_{22} + Q_{22}
+    \end{pmatrix}
+    \begin{bmatrix}
+        \mbf{X}_{\textsc{lin}} \\
+        \mbf{X}_{\textsc{lin}} \diamond \mbf{X}_{\textsc{lin}} \\
+        \mbf{U}
+    \end{bmatrix}
+\end{equation*}
