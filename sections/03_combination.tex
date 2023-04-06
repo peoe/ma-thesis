@@ -35,6 +35,7 @@ where $\mcl{L}$ has to be split into the various matrix blocks to match the indi
 We now proceed as follows:
 \begin{enumerate}
     \item Compute a trajectory $\mbf{H} \mbf{X}_{\textsc{lin}}, \dot{\mbf{X}}_{\textsc{lin}}, \mbf{Y}_{\textsc{lin}}$ from the linear system.
+    \item Compute the error in the output variable $\mbf{Y}_{\textsc{err}} = \mbf{Y} - \mbf{Y}_{\textsc{lin}}$.
     \item Compute quadratic data matrices $(\mbf{H} \mbf{X}_{\textsc{lin}}) \diamond (\mbf{H} \mbf{X}_{\textsc{lin}}), \mbf{X}_{\textsc{lin}} \diamond \mbf{X}_{\textsc{lin}}$.
     \item Identify the system matrices $\mcl{J}^{(Q)} - \mcl{R}^{(Q)} = \mcl{Q}$ of the quadratic pH system~\eqref{eq:quad-ph}.
 \end{enumerate}
@@ -42,7 +43,7 @@ We now proceed as follows:
 \begin{equation}\label{eq:quad-ph}
     \begin{bmatrix}
         (\mbf{H} \dot{\mbf{X}}_{\textsc{lin}}) \diamond (\mbf{H} \dot{\mbf{X}}_{\textsc{lin}}) \\
-        - \mbf{Y}
+        - \mbf{Y}_{\textsc{err}}
     \end{bmatrix} = \mcl{Q} \begin{bmatrix}
         \mbf{X}_{\textsc{lin}} \diamond \mbf{X}_{\textsc{lin}} \\
         \mbf{U}
