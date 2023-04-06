@@ -65,9 +65,9 @@ While pH DMD does not provided many guarantees as of right now, it allows for ea
 
 We begin by noting that the properties of the Khatri-Rao product allow the following decomposition:
 \begin{equation*}
-    (H \dot{\mbf{X}}) \diamond (H \dot{\mbf{X}}) = (H \diamond H) (\dot{\mbf{X}} \diamond \dot{\mbf{X}}).
+    (H \dot{\mbf{X}}) \diamond (H \dot{\mbf{X}}) = (H \otimes H) (\dot{\mbf{X}} \diamond \dot{\mbf{X}}),
 \end{equation*}
-\itodo{check the products for correctness!}
+cf.~\cite[Equation~2.256]{Favier2021}.
 
 We then combine both the linear model from Section~\ref{sec:lin-model} and the quadratic model from Section~\ref{sec:quad-model} by adding the output terms from both systems to the total output of the system.
 
