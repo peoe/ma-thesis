@@ -1,3 +1,24 @@
 \chapter*{Abstract}
 
-asdf
+This thesis describes an approach to combine recent advances in Model Order Reduction and Systems Theory.
+In particular, we are going to examine quadratically embedded manifolds for reduced models and apply the ideas thereof to port-Hamiltonian systems.
+The inherent goal of this combination is to couple physically motivated descriptions of dynamical systems to ideas mitigating certain restrictions in approximation theory.
+We commence by describing aspects of the underlying theory in systems theory, highlighting reduced modelling and its constraints before closing with our proposed method in combination with numerical experiments.
+
+The necessary background in systems theory will focus on the class of port-Hamiltonian systems, a subset of dynamical systems incorporating both energry preserving and energy dissipating elements.
+This description is particularly interssting because port-Hamiltonian systems consider two aspects of a model: the internal \emph{states} and \emph{ports} through which the system and the outside environment can interact with each other by so called \emph{controls} and \emph{outputs}.
+Modelling in such a manner makes it incredibly easy to combine multiple systems into a more complex large scale system.
+
+Reducing port-Hamiltonian systems unfortunately is not as easy as reducing systems with less structure, however appropriate methods exist in literature.
+Usually, they are more involved than the basic model reduction algorithms from whom they derive because more caution has to be taken to keep mathematical structures intact.
+The benefit of choosing among these structure-preserving methods is that the individual components of the full order port-Hamiltonian system keep their properties: energy dissipating elements remain energy dissipating even after the model reduction, and similarly for the other components.
+
+Most classical Model Order Reduction approaches suffer from the fact that their approximative qualities are directly linked to the type of full order model.
+This can result in very good decays of the so-called \emph{Kolmogorov N-width} for elliptic parameter dependent problems, but also in very slow decay rates for more unforgiving models such as wave equations.
+To bypass this constraint, recent publications have proposed methods taken from machine learning such as neural networks and autoencoders.
+These deliver good results but are computationally less efficient during the offline (read: training) phases and lack the simple explainability of linear models.
+To incorporate more explainable terms and sill imporve model error rates, polynomial terms have been included in usually linear model reduction methods.
+
+The goal of this thesis is to extend reduced models with quadratic terms to port-Hamiltonian systems.
+Along the way we make use of a few different frameworks and highlight how they all come together.
+We end this work with numerical experiments showcasing a fww model problems and discussing the results attained.
