@@ -1,0 +1,106 @@
+\section{Linear Time-Invariant Systems}\label{sec:ltis}
+
+As detailed in~\cite{Kunkel2006}, a \emph{differential-algebraic equation} can be expressed as
+\begin{equation}\label{eq:general-dae}
+    F(t, x, \dot{x}) = 0,
+\end{equation}
+where for natural numbers $n, m$ the function $F \colon I \times \Omega_x \times \Omega_{\dot{x}} \to \bb{C}^m$ operates on an interval $I \sse \bb{R}$, and two open spatial domains $\Omega_x, \Omega_{\dot{X}} \sse \bb{C}^n$.
+The source we state purposefully keeps the meaning of $\dot{x}$ ambiguous, referring to either the derivative with respect to time of a function $x$ or as an independent variable in the formulation, however we choose to only consider the time derivative $\dot{x} = \frac{\dif}{\dif t} x$ here.
+
+In the case of linear DAEs with constant coefficients, we can express the implicit formulation of Equation~\eqref{eq:general-dae}
+\begin{equation}\label{eq:lin-const-coeff-dae}
+    E \dot{x}(t) = A x(t) + f(t)
+\end{equation}
+in terms of matrices $A, E \in \bb{C}^{n \times n}$ and a time dependent function $f \colon I \to \bb{C}^n$.
+
+We further assume that the function $f$ serves as an influence on the solution of the DAE.
+The interpretation here is that $f$ is a \emph{control} acting on the system over time.
+We explicitly formulate the control in terms of yet another linear matrix product
+\begin{equation}\label{eq:control-substitution}
+    f(t) = B u(t)
+\end{equation}
+for some natural number $q$, a matrix $B \in \bb{C}^{n \times q}$, and a control variable $u \colon I \to \bb{C}^q$.
+Lastly, we introduce an output component $y$ to our modelled system.
+This output again takes the shape of a time dependent function $y \colon I \to \bb{C}^q$, and, keeping in line with Equaions~\eqref{eq:lin-const-coeff-dae} and~\eqref{eq:control-substitution}, we formulate it as a linear combination
+\begin{equation}\label{eq:output-definition}
+    y(t) = C x(t) + D u(t)
+\end{equation}
+for two matrices $C \in \bb{C}^{q \times n}, D \in \bb{C}^{q \times q}$.
+
+\begin{definition}\label{def:lti}
+    A \emph{linear time-invariant (descriptor) system} $\Sigma_{\textsc{LTI}}$ is a system of equations
+    \begin{equation}\label{eq:lti}
+        \Sigma_{\textsc{LTI}} \colon \left\lbrace
+        \begin{aligned}
+            E \dot{x}(t) &= A x(t) + B u(t), \\
+            y(t) &= C x(t) + D u(t)
+        \end{aligned}
+        \right.
+    \end{equation}
+    with matrices $A, E \in \bb{C}^{n \times n}, B \in \bb{C}^{n \times q}, C \in \bb{C}^{q \times n}, D \in \bb{C}^{q \times q}$, and time varying functions $x, \dot{x} \colon I \to \bb{C}^n, u, y \colon I \to \bb{C}^q$.
+\end{definition}
+
+Any LTI system in this form is said to act in the time domain, that is the inputs of both the \emph{states} $x, \dot{x}$, and the control $u$ and output variable $y$ are time.
+From a system theoretic point of view however we must also consider the system from the \emph{frequency domain}.
+We thus describe the system not for a point in time, but rather for a certain frequency with which an input acts on it.
+This frequency formulation is obtained by applying the \emph{Laplace transform}
+\begin{equation*}\label{eq:laplace-trafo}
+    \mcl{L}[f](\omega) = \int\limits_0^\infty \exp{(- \omega t)} f(t) \dif t
+\end{equation*}
+to the individual components in the LTI system; cf.~\cite{Arendt2011}.
+\begin{equation}
+    X = \mcl{L}[x],\quad \dot{X} = \mcl{L}[\dot{x}],\quad U = \mcl{L}[u],\quad Y = \mcl{L}[y].
+\end{equation}
+
+The Laplace transform of a derivative can be expressed as
+\begin{equation*}
+    \mcl{L}[\dot{x}](\omega) = \omega \mcl{L}[x](\omega) - \lim\limits_{t \searrow 0} x(t);
+\end{equation*}
+cf.~\cite[Theorem~9.1]{Doetsch1974}.
+Therefore, under the assumption that the matrix pencil $\omega E - A$ is regular we compute from the first equation in~\eqref{eq:lti}
+\begin{alignat*}{3}
+     & & E \dot{X}(\omega) &= A X(\omega) + B U(\omega) \\
+    \implies & & E (\omega X(\omega) - x(0)) &= A X(\omega) + B U(\omega) \\
+    \implies & & \omega E X(\omega) - A X(\omega) &= E x(0) + B U(\omega) \\
+    \implies & & (\omega E - A) X(\omega) &= E x(0) + B U(\omega) \\
+    \implies & & X(\omega) &= (\omega E - A)\inv E x(0) + (\omega E - A)\inv B U(\omega).
+\end{alignat*}
+We further apply this result to the output part of the LTI system~\eqref{eq:lti}
+\begin{alignat*}{2}
+    Y(\omega) &= C X(\omega) + D U(\omega) \\
+     &= C (\omega E - A)\inv B U(\omega) + D U(\omega) + C (\omega E - A)\inv E x(0).
+\end{alignat*}
+Notably, the last equation contains a summand which only depends on the initial state of the system.
+We can assume this initial value of the time domain function $x(t)$ to be zero $x(0) = x_0 = 0$.
+This is a sensible assumption because it corresponds to a system that contains no energy and can only be acted upon through the outside control.
+This reformulation thus shows how we can directly map the control acting on the system onto the produced output without having to consider the internal state representation.
+More general definitions can also incorporate the initial state dependency in the transfer function, however we refer the reader to the introductory chapter in~\cite{Benner2017}.
+
+\begin{definition}\label{def:transfer-function}
+    The \emph{transfer function} $\zeta \colon \bb{C} \to \bb{C}^{q \times q}$ of an LTI system~\eqref{eq:lti} is defined by the expression
+    \begin{equation}\label{eq:transfer-function}
+        \zeta(\omega) = C (\omega E - A)\inv B + D
+    \end{equation}
+    for the system matrices $A, E \in \bb{C}^{n \times n}, B \in \bb{C}^{n \times q}, C \in \bb{C}^{q \times n}, D \in \bb{C}^{q \times q}$ and some frequency domain control $U \colon \bb{C} \to \bb{C}^{q}$.
+\end{definition}
+
+\begin{remark}
+    The matrices used in the definition of the transfer function are not unique.
+    For any transfer function multiple tuples of matrices may exist which induce the same transfer function.
+    Any such tuple is called a \emph{realization} of the transfer function.
+    Across all realizations, a tuple of matrices $(A, B, C, D, E)$ is called minimal if the matrices $A$ and $E$ have the smallest possible dimension amongst all possible realizations.
+\end{remark}
+
+The transfer function of an LTI system is an essential tool for constructing reduced order models from it.
+We will discuss this further in Chapter~\ref{chap:model-order-reduction}, however we now introduce a key benchmark for this later topic: the poles of the transfer function.
+Following~\cite{Benner2017}, an LTI system is called \emph{stable} if all the finite generalized eigenvalues of the matrix pencil $\omega E - A$ are contained in the left half of the complex plain $\bb{C}_{-} = \iset{\sigma \in \bb{C}}{\fk{Re}(\sigma) < 0}$.
+Stable in this context refers to the fact that a solution for any stable system tends to zero for $t \rightarrow \infty$ as long as no control is applied ($u(t) \equiv 0$).
+This property guarantees that a system is asymptotically stable.
+Very closely connected to the eigenvalues of $\omega E - A$ are the poles of the transfer function associated with the realization $(A, B, C, D, E)$.
+According to~\cite[Section~2]{Benner2017}, the transfer function $\zeta$ may be written as the rational expression
+\begin{equation*}
+    \zeta(\omega) = \frac{P(\omega)}{d(s)},
+\end{equation*}
+where $N$ is a matrix polynomial mapping to $\bb{C}^{q \times n}$ and $d$ is a scalar polynomial representing the least common denominator of all the $q \cdot n$ entries of $\zeta(\omega)$.
+The poles of $\zeta$ then are the roots $\iset{\sigma \in \bb{C}}{d(\sigma) = 0}$ of $d$.
+In general, the set of poles of the transfer function is a subset of the set of generalized eigenvectors of the matrix pencil $\omega E - A$, however if the realization $(A, B, C, D, E)$ is minimal, both sets are equal.

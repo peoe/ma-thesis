@@ -1,0 +1,143 @@
+\section{Port-Hamiltonian Systems}
+
+In the previous section we saw how we can model dynamical systems through the lens of considering the output of a system for a specific control acting on the system.
+This idea can be taken furhter by incorporating inherent physical properties into the description of dynamical systems.
+We first give a description of linear time-invariant port-Hamiltonian DAEs before mentioning more generalized versions.
+We also define the properties of stability and passivity of such systems.
+Furhter, we explicitly note that from now on we consider the system matrices to be real-valued, which is in contrast to the complex-valued definitions in the previous section.
+
+These first remarks stick close to~\cite[Definition~4.9]{Mehrmann2022}.
+In port-Hamiltonian systems, we split the state interaction matrix $A \in \bb{R}^{m \times n}$ into two matrices $J, R \in \bb{R}^{m \times m}$ and a state transformation matrix $Q \in \bb{R}^{m \times n}$.
+The $J$ matrix is responsible for preserving energy in the system, reflected in the skew-symmetry of the matrix $-J = J\trans$.
+The $R$ matrix on the other hand dissipates energy through the internal states.
+We consider $R$ to be a symmetric positive semidefinite matrix, denoted $R \in \mcl{S}_{\curlyeqsucc}^{n \times n}(\bb{R})$.
+We then couple these matrices
+\begin{equation*}
+    A = (J - R)Q
+\end{equation*}
+such that the energy dissipation matrix takes the correct sign when putting physical formulations into the port-Hamiltonian framework.
+Apart from the matrices coupling the internal states we perform similar splits to the matrices relating to the controls and outputs of the system
+\begin{equation*}
+    B = G - P,\quad C = (G + P)\trans Q,\quad D = S - N.
+\end{equation*}
+Additionally, we require that all these matrices conform to the following structural constraints
+\begin{equation}\label{eq:ph-matrix-structure}
+    \begin{pmatrix}
+        Q & 0 \\
+        0 & \id
+    \end{pmatrix}\trans
+    \begin{pmatrix}
+        R & P \\
+        P\trans & S
+    \end{pmatrix}
+    \begin{pmatrix}
+        Q & 0 \\
+        0 & \id
+    \end{pmatrix}
+    \in \mcl{S}_{\curlyeqsucc}^{(n + q) \times (n + q)},\quad -N = N\trans \in \bb{R}^{q \times q},\quad G \in \bb{R}^{n \times q}.
+\end{equation}
+
+We could now rephrase~\eqref{eq:lti} in terms of these matrices, however there is one more aspect to the port-Hamiltonian formulation we yet lack: the \emph{Hamiltonian}.
+The Hamiltonian is motivated in Physics to model the total amount of energy within a system.
+In this case we restrict ourselves to a quadratic Hamiltonian formulation
+\begin{equation}\label{eq:quadratic-hamiltonian}
+    \mcl{H} \colon I \times \bb{R}^{n} \to \bb{R},\quad \mcl{H}(t, x) \mapsto \frac{1}{2} x(t)\trans Q\trans E x(t).
+\end{equation}
+
+\begin{definition}\label{def:phlti}
+    A \emph{port-Hamiltonian linear time-invariant (descriptor) system with quadratic Hamiltonian} is a system of equations
+    \begin{equation}\label{eq:phlti}
+        \Sigma_{\textsc{PHLTI}} \colon \left\lbrace
+        \begin{aligned}
+            E \dot{x}(t) &= (J - R) Q x(t) + (G - P) u(t), \\
+            y(t) &= (G + P)\trans Q x(t) + (S - N) u(t)
+        \end{aligned}
+        \right.
+    \end{equation}
+    together with a Hamiltonian $\mcl{H}(t, x) = \frac{1}{2} x(t)\trans Q\trans E x(t)$ if the system matrices $E, Q \in \bb{R}^{m \times n}, J, R \in \bb{R}^{m \times m}$, $G, P \in \bb{R}^{m \times q}$, and $S, N \in \bb{R}^{q \times q}$ satify the properties
+    \begin{equation*}
+        -J = J\trans,\quad -N = N\trans,\quad
+        \begin{pmatrix}
+            Q & 0 \\
+            0 & \id
+        \end{pmatrix}\trans
+        \begin{pmatrix}
+            R & P \\
+            P\trans & S
+        \end{pmatrix}
+        \begin{pmatrix}
+            Q & 0 \\
+            0 & \id
+        \end{pmatrix}
+        \in \mcl{S}_{\curlyeqsucc}^{(n + q) \times (n + q)}.
+    \end{equation*}
+\end{definition}
+
+\itodo{mention representaiton as classical LTI system}
+
+At this point it is useful to introduce the property of \emph{passivity}.
+Passivity is related to the term stability introduced at the end of Section~\ref{sec:ltis}.
+According to~\cite[Section~3.1.2]{Benner2017}, an LTI system $\Sigma_\textsc{LTI}$ is passive if it holds that
+\begin{equation*}
+    0 \leq \int\limits_0^t u(\tau)\trans y(\tau) \dif \tau,
+\end{equation*}
+though a more involved derivation in~\cite[Section~3.4]{Mehrmann2022} yields the definition by a \emph{dissipation inequality}
+\begin{equation}\label{eq:dissipation-inequality}
+    \mcl{H}(x(t_1)) - \mcl{H}(t_0) \leq \int\limits_{t_0}^{t_1} u(\tau)\trans y(\tau) \dif \tau,
+\end{equation}
+which we stick with for the remainder of this thesis.
+Considering~\cite[Theorem~6.1]{Mehrmann2022}, the dissipation inequality~\eqref{eq:dissipation-inequality} is directly related to the positive semidefiniteness of $\begin{pmatrix}
+    R & P \\
+    P\trans & S
+\end{pmatrix}$.
+In a physical interpretation, the total systems energy is always related to the amount of energy inserted through the control and extracted through the output.
+A very useful result of passivity is that any two passive systems can be coupled by a power-conserving or a dissipative interconnection and the combined system remains passive; cf.~\cite{Mehrmann2022, Morandin2022}.
+
+\itodo{add removal of $Q$ and direct feedthrough terms}
+
+Generally speaking, Definition~\ref{def:phlti} is too restrictive because the system~\eqref{eq:phlti} only allows for linear and constant coefficients.
+In the final part of this chapter we highlight a three approaches to consider more general formulations.
+
+The first of these constitutes itself in the application of linear time-varying operators.
+This results in the following linear port-Hamiltonian system
+\begin{equation}\label{eq:lph}
+    \Sigma_{\textsc{LPH}} \colon \left\lbrace
+    \begin{aligned}
+        E(t) \dot{x}(t) + E(t) K(t) x(t) &= (J(t) - R(t)) Q(t) x(t) + (G(t) - P(t)) u(t), \\
+        y(t) &= (G(t) + P(t))\trans Q(t) x(t) + (S(t) - N(t)) u(t)
+    \end{aligned}
+    \right.
+\end{equation}
+with the quadratic Hamiltonian $\mcl{H}(t, x) \coloneqq \frac{1}{2} x\trans Q(t)\trans E(t) x(t)$.
+The port-Hamiltonian constraints on the dissipative elements $P, R$, and $S$ stays the same as for a time-invariant system $\Sigma_{\textsc{PHLTI}}$, however the condition for the previously simply skew-symmetric part shifts to the need for a skew-adjoint differential operator; cf.~\cite[Definition~4.8]{Mehrmann2022}.
+
+The second approach is very similar to~\eqref{eq:lph}, however in addition to the time dependency we also allow for the operators to change based on the system state.
+This then results in a nonlinear port-Hamiltonian system such as
+\begin{equation}\label{eq:nlph}
+    \Sigma_{\textsc{NLPH}} \colon \left\lbrace
+    \begin{aligned}
+        E(t, x) \dot{x}(t) + r(t, x) &= (J(t, x) - R(t, x)) \eta(t, x) + (G(t, x) - P(t, x)) u(t), \\
+        y(t) &= (G(t, x) + P(t, x))\trans \eta(t, x) + (S(t, x) - N(t, x)) u(t)
+    \end{aligned}
+    \right.
+\end{equation}
+with the Hamiltonian implicitly defined through the differential equaionts
+\begin{equation*}
+    \pd \mcl{H}(t, x) = E(t, x)\trans \eta(t, x),\quad \text{ and }\quad \pd[t] \mcl{H}(t, x) = \eta(t, x)\trans r(t, x),
+\end{equation*}
+alongside similar constraints on the energy-conservative and dissipative parts of the port-Hamiltonian system as in the linear time-invariant case; cf.~\cite[Definition~4.1]{Mehrmann2022}.
+
+As a final remark on the most general representation of port-Hamiltonian systems we have to take a massive conceptual leap, for a more detailed discussion we refer to~\cite[Section~2.2]{VanDerSchaft2014}.
+Consider a finite-dimensional vector space $\mcl{F}$ and denote its dual space $\mcl{E} = \mcl{F}'$ endowed with the usual dual product ${\langle e, f \rangle}_{\mcl{E} \times \mcl{F}} = e(f)$ for some elements $f \in \mcl{F}, e \in \mcl{E}$.
+We then call a subspace $\mcl{D} \sse \mcl{F} \times \mcl{E}$ a \emph{Dirac structure} if $\mcl{D}$ satisfies
+\begin{enumerate}
+    \item ${\langle e, f \rangle}_{\mcl{E} \times \mcl{F}}$ for all pairs $(f, e) \in \mcl{D}$, and
+    \item $\dim{(\mcl{D})} = \dim{(\mcl{F})}$.
+\end{enumerate}
+In this setting we can thus define a port-Hamiltonian system to be the Dirac structure
+\begin{equation*}
+    \mcl{D} \sse \mcl{T}_x \mcl{X} \times \mcl{T}'_x \mcl{X} \times \mcl{F}_R \times \mcl{E}_R \times \mcl{F}_P \times \mcl{E}_P,
+\end{equation*}
+where $\mcl{X}$ denotes an abstract state space, $\mcl{T}_x \mcl{X}$ and $\mcl{T}'_x \mcl{X}$ the respective tangent and dual tangent spaces of $\mcl{X}$, a resistive Dirac structure $\mcl{F}_R \times \mcl{E}_R$, as well as an external port Dirac structure $\mcl{F}_P \times \mcl{E}_P$.
+
+\itodo{take notion of port variable from van der Schaft, page 185 and add it to the beginning of port-based modelling approach description}

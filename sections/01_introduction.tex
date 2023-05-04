@@ -45,7 +45,7 @@ We stick to the second kind of algorithm, because sdf
 The problem with all these methods is that most linear MOR algorithms struggle to approximate certain types of problems such as nonlinear formulations with small reduced orders.
 This failure in approximative quality is caused by the Kolmogorov N-width, a theoretical measure for describing how well the solution manifold of a problem can be described by a set of linear subspaces of fixed dimension; some authors even explicitly exclaim this to be the ``Kolmogorov Barrier'', a hinderance to be overcome by means other than linear approximation.
 Profiting from the nonlinear capabilities of (Deep/Convolutional) Neural Networks, several publications have applied techniques from Machine Learning to try and dislodge this roadblock in model reduciton.
-A few publications in particular employ Deep Convolutional Autoencoders, a component of neural networks explicitly designed for dimensionality reduction of data; cf.~\cite{Lee2020, Romor2022, Buchfink2023}.
+A few publications in particular employ Deep Convolutional Autoencoders, a component of neural networks explicitly designed for dimensionality reduction of data; cf.~\cite{Lee2020, Romor2023, Buchfink2023}.
 The most substantial problems of this line of thinking are twofold: firstly, training of Neural Network components heavily relies on data treatment and can be very time demanding, and secondly, Neural Networks tend to function as black boxes thus leaving all desires for explainability of the underlying computations unfulfilled.
 
 As an alternative to the high handed Neural Network approach polynomial approximation has been proposed in mitigating nonlinear models.
