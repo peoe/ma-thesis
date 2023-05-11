@@ -30,7 +30,7 @@
 
 \theoremstyle{remark}
 \newtheorem*{remark}{Remark}
-\newtheorem{example}{Example}
+\newtheorem{example}[theorem]{Example}
 
 \makeatother
 
@@ -38,9 +38,10 @@
 \usepackage{interval}
 \intervalconfig{soft open fences}
 
-\newcommand{\abs}[2][]{\left\lvert#2\right\rvert_{#1}}
-\newcommand{\norm}[2][]{\left\lVert#2\right\rVert_{#1}}
-\newcommand{\pd}[2][x]{\partial_{#1}^{#2}}
+%        Paired Delimiters        %
+\DeclarePairedDelimiterXPP{\abs}[2]{}{\lvert}{\rvert}{_{#2}}{#1}
+\DeclarePairedDelimiterXPP{\norm}[2]{}{\lVert}{\rVert}{_{#2}}{#1}
+\DeclarePairedDelimiterXPP{\inner}[3]{}{(}{)}{_{#3}}{#1,#2}
 
 %        Set Commands        %
 \newcommand{\sset}[1]{\left\{\,#1\,\right\}}
@@ -49,16 +50,24 @@
 
 %        Matrix Commands        %
 \newcommand{\trans}{^{\mkern-1.5mu \mathsf{T}}}
+\newcommand{\herm}{^{\mkern-1.5mu \mathsf{H}}}
 \newcommand{\inv}{^{-1}}
 \newcommand{\id}[1][]{\text{id}_{#1}}
+\newcommand{\diag}[1]{\mathop{}\!\mathrm{diag}\left(#1\right)}
 
 %        Typesetting Commands        %
+\newcommand{\pd}[2][x]{\partial_{#1}^{#2}}
 \newcommand{\bb}[1]{\mathbb{#1}}
 \newcommand{\fk}[1]{\mathfrak{#1}}
 \newcommand{\mbf}[1]{\mathbf{#1}}
 \newcommand{\mcl}[1]{\mathcal{#1}}
 \newcommand{\dif}{\mathop{}\!\mathrm{d}}
+\newcommand{\dvg}[1][]{\mathop{}\!\mathrm{div}#1}
+\newcommand{\curl}[1][]{\mathop{}\!\mathrm{curl}#1}
+\newcommand{\lapl}[1][]{\mathop{}\!\Delta#1}
 \newcommand{\sse}{\subseteq}
+\newcommand{\res}[2]{{\left.\kern-\nulldelimiterspace#1\vphantom{|}\right|_{#2}}}
+\newcommand{\eps}{\varepsilon}
 
 %        Operators        %
 \DeclareMathOperator*{\argmax}{arg\,max}
