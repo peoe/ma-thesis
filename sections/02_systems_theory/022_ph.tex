@@ -123,7 +123,7 @@ This then results in a nonlinear port-Hamiltonian system such as
 \end{equation}
 with the Hamiltonian implicitly defined through the differential equaionts
 \begin{equation*}
-    \pd \mcl{H}(t, x) = E(t, x)\trans \eta(t, x),\quad \text{ and }\quad \pd[t] \mcl{H}(t, x) = \eta(t, x)\trans r(t, x),
+    \pd{} \mcl{H}(t, x) = E(t, x)\trans \eta(t, x),\quad \text{ and }\quad \pd[t]{} \mcl{H}(t, x) = \eta(t, x)\trans r(t, x),
 \end{equation*}
 alongside similar constraints on the energy-conservative and dissipative parts of the port-Hamiltonian system as in the linear time-invariant case; cf.~\cite[Definition~4.1]{Mehrmann2022}.
 
@@ -139,5 +139,13 @@ In this setting we can thus define a port-Hamiltonian system to be the Dirac str
     \mcl{D} \sse \mcl{T}_x \mcl{X} \times \mcl{T}'_x \mcl{X} \times \mcl{F}_R \times \mcl{E}_R \times \mcl{F}_P \times \mcl{E}_P,
 \end{equation*}
 where $\mcl{X}$ denotes an abstract state space, $\mcl{T}_x \mcl{X}$ and $\mcl{T}'_x \mcl{X}$ the respective tangent and dual tangent spaces of $\mcl{X}$, a resistive Dirac structure $\mcl{F}_R \times \mcl{E}_R$, as well as an external port Dirac structure $\mcl{F}_P \times \mcl{E}_P$.
+For a Hamiltonian function $\mcl{H} \colon \mcl{X} \to \bb{R}$, the first two factors can be characterized by the inner state energy preservig relation
+\begin{equation*}
+    \frac{\dif}{\dif t} H(x) = \pd{} \mcl{H}(x)\trans \dot{x} = 0.
+\end{equation*}
+Similarly, the resistive (dissipative) structure and the external port satisfy
+\begin{equation*}
+    \frac{\dif}{\dif t} \mcl{H}(x) \leq 0,\quad \frac{\dif}{\dif t} \mcl{H}(x) \leq e_p\trans f_p,\quad 0 = \pd{} \mcl{H}(x)\trans \dot{x} + e_R\trans f_R + e_P\trans f_P.
+\end{equation*}
 
 \itodo{take notion of port variable from van der Schaft, page 185 and add it to the beginning of port-based modelling approach description}

@@ -1,3 +1,159 @@
 \section{Examples of LTI and pH Systems}
 
-qwer
+To begin this section we showcase a few models in the LTI setting.
+Firstly, Example~\ref{ex:heating} models a controlled heat eqaution which might appear in cases of optimal heating.
+
+\begin{example}[Controlled Heating]\label{ex:heating}
+    We consider a standard heat equation, apply a control to it amounting to a heating surface, and measure the heat distribution within the system at some finite set of sensor points as the output.
+    We commence from the standard formulation and add in a boundary control term
+    \begin{equation*}
+        \pd[t]{} x = \lapl{x} + b \res{u}{\Gamma}
+    \end{equation*}
+    such that $\Gamma$ is a subset of the domain boundary.
+    The output $y$ is directly coupled to a set of sensor points $\mcl{S}$
+    \begin{equation*}
+        y = c \res{x}{\mcl{S}} + d \res{u}{\Gamma \cap \mcl{S}}.
+    \end{equation*}
+    We can immediately put this problem into the LTI formulation with $A u = \lapl{u}, B u = b \res{u}{\Gamma}, C x = c \res{x}{\mcl{S}}, D u = d \res{u}{\Gamma \cap \mcl{S}}$.
+\end{example}
+
+\begin{example}[Casting Second Order Systems as LTIs]
+    Consider a general description of a second order model
+    \begin{align*}
+        M \ddot{x} + E \dot{x} &= A x + B u \\
+        y &= C x + D u.
+    \end{align*}
+    We begin by substituting the variable $x$ by $q = (x, \dot{x})\trans$ such that the first equation becomes
+    \begin{equation*}
+        \begin{pmatrix}
+            E \\
+            M
+        \end{pmatrix} \dot{q} =
+        \begin{pmatrix}
+            A \\
+            0
+        \end{pmatrix} x
+    \end{equation*}
+
+    \itodo{compute this example such that the terms actually fit!}
+\end{example}
+
+To illustrate the abstract port-based modelling discussed at the end of Section~\ref{sec:ltis} we state a few examples of problems stated in the potr-Hamiltonian framework.
+In Example~\ref{ex:ms-system} we give a direct application of classical mechanical physcs adapted from~\cite[Example~2.1]{VanDerSchaft2014}.
+Example~\ref{ex:burgers} highlights the approach for the viscuous Burgers' equation resulting in a cubic Hamiltonian; cf.~\cite[Example~2.1]{Maschke2005}.
+Finally, in an effort to illustrate the capability to model veen more complex systems, we rephrase Maxwell's equations as a port-Hamiltonian system; cf.~\cite[Section~2]{Haine2022}.
+
+\itodo{MHD equadtions too?}
+
+\begin{example}[Mass Spring System]\label{ex:ms-system}
+    Consider a system made up from two components: a point mass and a linear spring.
+    Under the assumptions that the mass moves in only one direction and without friction we can express the movement of the mass in terms of its kinteic energgy $\frac{1}{2m} p^2$
+    \begin{equation*}
+        \dot{p} = -f_m,\quad e_m = \frac{\dif}{\dif p} \left( \frac{1}{2m} p^2 \right).
+    \end{equation*}
+    In a similar way we apply Hooke's law to compute the spring's potential energy $\frac{1}{2} k q^2$
+    \begin{equation*}
+        \dot{q} = -f_s,\quad e_k = \frac{\dif}{\dif q} \left( \frac{1}{2} k q^2 \right).
+    \end{equation*}
+    All that is left now is to state the interconnection between both systems.
+    To this end, we have to link the force exerted at the end of the spring $e_k$ to the force applied to the point mass $-f_m$, and necessarily also connect the mass' velocity $e_m$ to the velocity of the spring end point $e_k$.
+    This results in the interconnection
+    \begin{equation*}
+        -f_k = e_m,\quad f_m = e_k.
+    \end{equation*}
+    All in all we obtain the Hamiltonian $\mcl{H}(p, q) = \frac{1}{2m} p^2 + \frac{1}{2} k q^2$, and the corresponding system in port-Hamiltonian formulation
+    \begin{equation*}
+        \begin{pmatrix}
+            \dot{p} \\
+            \dot{q}
+        \end{pmatrix} =
+        \begin{pmatrix}
+            0 & -1 \\
+            1 & 0
+        \end{pmatrix}
+        \begin{pmatrix}
+            \pd[p]{} \mcl{H}(p, q) \\
+            \pd[q]{} \mcl{H}(p, q)
+        \end{pmatrix} =
+        \begin{pmatrix}
+            -k q \\
+            \frac{1}{m} p
+        \end{pmatrix}.
+    \end{equation*}
+
+    \itodo{insert image?}
+\end{example}
+
+\begin{example}[Burgers' Equation]\label{ex:burgers}
+    Consider the inviscid homogeneous Burgers' equation on a one-dimensional spatial domain $\interval[open]{a}{b}$
+    \begin{equation*}
+        \pd[t]{} u + \pd[x]{} u^2 = 0.
+    \end{equation*}
+    In this case we can express the associated Hamiltonian as
+    \begin{equation*}
+        \mcl{H}(u) = \int\limits_a^b \frac{u^3}{6} \dif x.
+    \end{equation*}
+    Applying the variational derivative $\delta_u H(u) = \frac{u^2}{2}$ we compute the port-Hamiltonian reformulation
+    \begin{equation*}
+        \pd[t]{} u = - \pd{} \delta_u H(u) = -\pd{} \frac{u^2}{2}.
+    \end{equation*}
+    In this case the time derivative of the Hamiltonian $\mcl{H}$ is constrained by
+    \begin{equation*}
+        \frac{\dif}{\dif t} \mcl{H}(u) = - \int\limits_a^b \delta_u \mcl{H}(u) \cdot \pd{} \delta_u \mcl{H}(u) \dif x = \cdots = \frac{1}{2} \left( {u(b)}^4 - {u(a)}^4 \right).
+    \end{equation*}
+
+    \itodo{compute the inner $\cdots$ in the Hamiltonian time derivative}
+    \itodo{viscous version???}
+\end{example}
+
+\begin{example}[Maxwell's Equations]\label{ex:maxwell}
+    For an electric field $E$, a magnetic field $B$, auxiliary fields $D$ and $H$, a free charge density $\rho$, and a free current density $j$ Maxwell's equations are given by
+    \begin{equation*}
+        \begin{aligned}
+            \pd[t]{} D - \curl{H} &= -j, &\pd[t]{} B + \curl{E} &= 0, \\
+            \dvg{D} &= \rho, &\dvg{B} &= 0.
+        \end{aligned}
+    \end{equation*}
+    On the boundary a linear time-invariant impedance bonudary condition
+    \begin{equation*}
+        \pi_t(E) = k * \left( \res{H}{\Gamma} \times n \right)
+    \end{equation*}
+    is imposed for the unit outer normal $n$, the time-domain convolution $*$, and a causal kernel $k$, meaning that its Laplace tranfsorm is a positive-real function.
+    The derivation of the power balance is quite involved so we refer the reader to $\cdot$.
+    Initially, we use the integral equality
+    \begin{equation*}
+        \inner{E}{\pd[t]{} D}{\Omega} + \inner{H}{\pd[t]{} B}{\Omega} = - \inner*{\res{H}{\Gamma} \times n}{\pi_t(E)}{\Gamma} - \inner{j}{E}{\Omega}.
+    \end{equation*}
+    Combined with the following three constitutive relations
+    \begin{equation*}
+        D(t, x) = \eps(x) E(t, x),\quad H(t, x) = \frac{1}{\mu(x)} B(t, x),\quad j(t, x) = \sigma(x) E(t, x)
+    \end{equation*}
+    for $\eps$ the dielectric permittivity, $\mu$ the magnetic permittivity, and $\sigma \geq 0$ the conductivity, this results in the Hamiltonian
+    \begin{equation*}
+        \mcl{H} = \frac{1}{2} \inner{E}{D}{\Omega} + \frac{1}{2} \inner{H}{B}{\Omega}.
+    \end{equation*}
+    With the energy variables $\alpha_D = D, \alpha_B = B, f_j = E$ and the coenergy varables $e_D = \delta_D \mcl{H} = E, e_B = \delta_B \mcl{H} = H, e_j = j$ we deduce
+    \begin{equation*}
+        \mcl{H} = \frac{1}{2} \inner*{\frac{1}{\eps} \alpha_D}{\alpha_D}{\Omega} + \frac{1}{2} \inner*{\frac{1}{\mu} \alpha_B}{\alpha_B}{\Omega}
+    \end{equation*}
+    as well as with the output $\inner{y}{u}{\Gamma} = - \inner{\res{H}{\Gamma} \times n}{\pi_t(E)}{\Gamma}$ the final port-Hamiltonian system is
+    \begin{equation*}
+        \begin{pmatrix}
+            \pd[t]{} \alpha_D \\
+            \pd[t]{} \alpha_B \\
+            f_j
+        \end{pmatrix} =
+        \begin{pmatrix}
+            0 & \curl & -\id \\
+            -\curl & 0 & 0 \\
+            \id & 0 & 0
+        \end{pmatrix}
+        \begin{pmatrix}
+            e_D \\
+            e_B \\
+            e_j
+        \end{pmatrix}.
+    \end{equation*}
+
+    \itodo{check for the definition of $\pi_t$ in Buffa, Costabel, Sheen; 2002: On traces for $H(curl, \Omega)$ in Lipschitz domains}
+\end{example}
