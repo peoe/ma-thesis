@@ -27,6 +27,9 @@ openany % omit new pages after \part and \chapter
 \input{config/templates/date.tex}
 \input{config/templates/hyphenation.tex}
 
+%        Titlepage        %
+\usepackage{pdfpages}
+
 %        Todos        %
 \usepackage{todonotes}
 \newcommand{\itodo}[1]{\todo[inline]{TODO: #1}}
@@ -38,6 +41,6 @@ openany % omit new pages after \part and \chapter
 \input{config/templates/math.tex}
 
 %        Bibliography        %
-\usepackage[backend=biber, style=alphabetic, url=false, isbn=false, maxbibnames=99, giveninits=true, date=year]{biblatex}
+\usepackage[backend=biber, style=numeric-comp, url=false, isbn=false, maxbibnames=99, giveninits=true, date=year]{biblatex}
 \renewbibmacro{in:}{}
 \addbibresource{bibliography.bib}
