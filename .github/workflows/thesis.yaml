@@ -17,6 +17,11 @@ jobs:
           root_file: config/titlepage/titlepage.tex
           extra_system_packages: "inkscape"
           latexmk_shell_escape: true
+      - name: Upload title page
+        uses: actions/upload-artifact@v3
+        with:
+          name: Titlepage
+          path: config/titlepage/titlepage.pdf
       - name: Build main document
         uses: xu-cheng/latex-action@v2
         with:
