@@ -1,0 +1,53 @@
+\section{Systemtheoretic Linear MOR}\label{sec:system-mor}
+
+System-theoretic model order reduction offers two main perspectives: reduction resulting from the notion of LTIs as in Definition~\ref{def:lti}, and reduction by means of the transfer function from Definition~\ref{def:transfer-function}.
+We give an idea of matrix-based reduction in Subsection~\ref{subsec:balanced-truncation} explaining the method of Balanced Truncation.
+Afterwards, we discuss reduction by means of interpolating the transfer function in Subsection~\ref{subsec:interpolation-reduction}.
+
+\subsection{Balanced Truncation}\label{subsec:balanced-truncation}
+
+\emph{Balanced Truncation} is a method consisting of a two step procedure: Firstly, balance the LTI system such that all states that one can only reach with difficulty are equally hard to observe, and secondly truncate the resulting system matrices such that only a reduced system of easily observable and reachable states remains.
+The procedure was originally described in~\cite{Mullis1976} and later extended by~\cite{Moore1981}.
+Within the balanced truncation framework, several options are available to cater to different systems.
+Standard balancing (``Lyapunov'' balancing in~\cite{Gugercin2007}) often requires large computational time budgets because during this procedure one has to compute dense matrix factorizations.
+To mitigate this drawback, approximate balanced truncation methods have been developped.
+Other balancing methods exist such as stochastic balancing, frequency weighted balancing, or positive real balancing.
+For our purposes, ordinary balanced truncation and positive real balances truncation suffice.
+Positive real balanced truncation in particular is interesting in the context of this thesis because it produces passive systems which are closely linked to port-Hamiltonian systems.
+
+\itodo{sources: approximate bt, stoch. bt, weighted bt, prbt}
+
+We commence with standard balanced truncatoin; cf.~\cite{BB2017}.
+Consider $(A, B, C, D, E)$ to be an LTI system as in Definition~\ref{def:lti}.
+It is important to note that most balanced truncation literature employs LTIs that have $E = \id$.
+If $E$ is regular any system $(A, B, C, D, E)$ can easily be transformed into a system of the form $(\tilde{A}, \tilde{B}, C, D, \id)$ by appliying $E\inv$ to the first equation in~\eqref{eq:lti}.
+We make use of abuse of notation and henceforth simply refer to our system by the matrices $(A, B, C, D, \id)$.
+To tell which system states are observable and which system states are controllable, we define the system's \emph{Gramians}
+\begin{align}
+    P &= \int\limits_0^\infty \exp{(A t)} B B\trans \exp{(A\trans t)} \dif t,\label{eq:controllability-gramian} \\
+    Q &= \int\limits_0^\infty \exp{(A\trans t)} C\trans C \exp{(A t)} \dif t.\label{eq:observability-gramian}
+\end{align}
+In this context, $P$ reflects the controllability of the system, describing the ability to reach any state using the right control, and we call $Q$ the observability Gramian, signifying the set of points which cannot be differentiated from the initial point for some control producing a constantly zero ouput.
+
+\itodo{make descriptions mre mathematical, cf.~\cite[Definitions~6.2 and 6.3]{BB2017}}
+
+\itodo{add more sources about bt}
+
+For asymptotically stable and minimal systems, these matrices satisfy the Lyapunov equalities
+\begin{align*}
+    A P + P A\trans + B B\trans &= 0, \\
+    A\trans Q + Q A + C\trans C &= 0.
+\end{align*}
+
+\itodo{add source; see in Benner, Breiten}
+
+Balancing now constitutes finding a transformation matrix $T$ such that the two matrices $T P T\trans, T\inv[T] Q T\inv$ are diagonal matrices.
+Such a balancing transformation can be constructed by computing the decompositions
+\begin{equation*}
+    P = S\trans S,\quad Q = R\trans R,\quad S R\trans = U \Sigma V\trans
+\end{equation*}
+and then putting $T = \Sigma\inv[\frac{1}{2}] V\trans R$
+
+\subsection{Interpolation-Based Reduction}\label{subsec:interpolation-reduction}
+
+qwer

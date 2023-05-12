@@ -20,3 +20,17 @@ It can be shown that if the solutoins $u(\mu)$ depend analytically on $\mu$, the
 \begin{equation*}
     \kolm{\mcl{M}} \leq c \exp{(-N^\alpha)}.
 \end{equation*}
+
+However, not all problems exhibit this analytical solution manifold behaviour.
+When considering advection dominated probles such as~\cite[Section~5.1]{Ohlberger2016} the upper bound on the Kolmogorov N-width instead turns into a lower bound limiting the decay
+\begin{equation*}
+    \kolm{\mcl{M}} \geq \frac{1}{2} N^{- \frac{1}{2}}.
+\end{equation*}
+Similarly, the hypberloic wave equation only decays with a lower bound of
+\begin{equation*}
+    \kolm{\mcl{M}} \geq \frac{1}{4} N^{- \frac{1}{2}}.
+\end{equation*}
+This slow decay becomes problematic when constructiong reduced models because one would require much larger reduced orders to make the error w.r.t.\@ the full order model small enough.
+The drawback of these increasing bases is the simultaneous increase in computational cost reducing the (online) speedup gained from reducing the model.
+The consequence of these findings is immediate: To preserve the speedup obtained from order reduction we need to incorporate nonlinear parts into the reduced models.
+We highlight some of these nonlinear approaches in Chapter~\ref{chap:nonlinear-mor}.
