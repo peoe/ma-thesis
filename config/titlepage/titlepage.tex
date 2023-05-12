@@ -1,8 +1,11 @@
-\input{config/thesis.tex}
+\documentclass{article}
 
-\usepackage[a4paper, margin=4cm, left=3cm, right=3cm]{geometry}
+\usepackage[a4paper, margin=4cm, left=3cm, right=3cm, top=2cm]{geometry}
+\usepackage{svg}
+\usepackage{tabularx}
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
 
-\svgpath{config/titlepage}
+\input{../templates/date.tex}
 
 \begin{document}
     \begin{titlepage}
@@ -11,31 +14,37 @@
         \begin{center}
             \vspace*{12em}
 
-            Seminar on Algorithmic Graph Theory
+            Masters Thesis
 
             \vspace*{3em}
 
-            {\Huge{All-Pairs Shortest Paths with Real Weights in $\mathcal{O} \left( n^3 / \log(n) \right)$ Time}\par}
+            {\Huge{Model Order Reduction on Quadrativally Embedded Manifolds for Port-Hamiltonian Systems}\par}
+
+            \vspace*{6em}
+
+            {\Large{Peter Bernd Oehme}}
 
             \vspace*{\fill}
 
-            {\Large{Peter Bernd Oehme}}
+            \today
 
             \vspace*{3em}
 
             Faculty of Mathematics and Computer Science \\
             University Münster
 
-            % \vspace*{2em}
+            \vspace*{3em}
 
-            % \includesvg[inkscapelatex=false, width=100pt]{logo.svg}
+            \includesvg[inkscapelatex=false, width=100pt]{logo.svg}
+
+            \vspace*{3em}
+
+            Supervisors
+
+            \begin{tabularx}{\textwidth}{YY}
+                Prof.\ Dr.\ Mario Ohlberger & Ass.\ Prof.\ Dr.\ Silke Glas \\
+                University of Münster & University of Twente
+            \end{tabularx}
         \end{center}
-
-        \vspace*{8em}
-
-        \begin{tabularx}{\textwidth}{l l >{\raggedleft\arraybackslash}X}
-            Supervisors: & Prof.\ Dr.\ Jan Vahrenhold     & \today \\
-                         & Thore Thießen & \\
-        \end{tabularx}
     \end{titlepage}
 \end{document}
