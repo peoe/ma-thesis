@@ -32,7 +32,7 @@ jobs:
         with:
           root_file: thesis.tex
       - name: Remove title page artifact
-        uses: actions/delete-artifact@v2
+        uses: geekyeggo/delete-artifact@v2
         with:
           name: Titlepage
       - name: Upload PDF artifact
