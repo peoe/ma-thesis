@@ -23,7 +23,7 @@ jobs:
           name: Titlepage
           path: titlepage.pdf
       - name: Fetch title page
-        uses: actions/download-artifacts@master
+        uses: actions/download-artifacts@v3
         with:
           name: Titlepage
           path: config/titlepage
