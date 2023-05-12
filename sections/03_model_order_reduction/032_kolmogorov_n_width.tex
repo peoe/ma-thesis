@@ -1,3 +1,22 @@
 \section[The Kolmogorov N-Width]{The Kolmogorov {$N$}-Width}\label{sec:kolmogorov-n-width}
 
-qwer.
+With the POD basis computed we form a matrix similar in nature to~\eqref{eq:pod-data-matrix}
+\begin{equation*}
+    U = \left( u_1, \dots, u_d \right) \in \bb{R}^{n \times d}.
+\end{equation*}
+Using this matrix to project the full order space $\bb{R}^n$ onto the linear subspace $\bb{R}^d$ we can transform an exemplary linear system such as $A u = L$ with $A \in \bb{R}^{n \times n}, L \in \bb{R}^n$ to a reduced model by projecting the operators
+\begin{equation*}
+    \tilde{A} = U\trans A U,\quad \tilde{L} = U\trans L.
+\end{equation*}
+
+In practice, the matrix $U$ only serves as a projection onto a subspace with a much smaller dimension $d \ll n$ meaning that the resulting reduced solution $u_r$ will always introduce some error $\norm{u - u_r}{}$ with respect to the full order solution $u$ in some appropriate norm.
+To bound the error of the reduced solutions we have to consider so-called N-widths; cf.~\cite{Pinkus1985}.
+For linear approximations of problems defined on a parameter space $\mcl{P}$ we can provide an upper bound of the approximation quality of any reduced space $V_N$ with respect to the full order space $V$ by considering the \emph{Kolmogorov N-width} of a solution manifold $\mcl{M} = \iset{u(\mu)}{\mu \in \mcl{P}}$
+\begin{equation}
+    \kolm{\mcl{M}} \coloneqq \inf\limits_{\substack{V_N \subseteq V,\\\dim{(V_N)} = N}} \sup\limits_{v \in \mcl{M}} \inf\limits_{u_r \in V_N} \norm{v - u_r}{}.
+\end{equation}
+For the greedy algorithms, a specific subset of linear MOR techniqeus, a fast decay of the N-width is observed; cf.~\cite{Binev2011, DeVore2013}.
+It can be shown that if the solutoins $u(\mu)$ depend analytically on $\mu$, then there exist constants $a, c > 0$ such that the Kolmogorov N-width can be bounded by
+\begin{equation*}
+    \kolm{\mcl{M}} \leq c \exp{(-N^\alpha)}.
+\end{equation*}

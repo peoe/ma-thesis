@@ -1,6 +1,6 @@
 \section{Linear MOR using Proper Orthogonal Decomposition}\label{sec:pod}
 
-This section is heavily based upon~\cite{Pinnau2008}.
+The first part of this section is heavily based upon~\cite{Pinnau2008}.
 \emph{Proper Orthogonal Decomposition} (POD) is also known as Principal Component Analysis~\cite{Hotelling1936}, or Karhunen-Loève Decomposition~\cite{Karhunen1946}.
 Its aim is the selection of a subspace through its basis such that the subspace optimally approximates the given data in the least-squares sense.
 This basis is also commonly known as the \emph{POD modes}.
@@ -18,7 +18,7 @@ To compute the associated modes we have to solve the eigenvalue problems
 \begin{equation*}
     \forall i = 1, \dots, n \colon\quad Y\herm Y v_i = \lambda_i v_i
 \end{equation*}
-for a set of orthonormal basis vectors $\iset{v_i \in \bb{R}^m}{i = 1, \dots, m}$.
+for a set of orthonormal basis vectors $\iset{v_i \in \bb{R}^m}{i = 1, \dots, d}$.
 The corresponding POD basis is then given as
 \begin{equation*}
     u_i = \frac{1}{\sqrt{\lambda_i}} Y v_i.
