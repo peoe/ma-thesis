@@ -21,7 +21,12 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: Titlepage
-          path: config/titlepage/titlepage.pdf
+          path: titlepage.pdf
+      - name: Fetch title page
+        uses: actions/download-artifacts@master
+        with:
+          name: Titlepage
+          path: config/titlepage
       - name: Build main document
         uses: xu-cheng/latex-action@v2
         with:
