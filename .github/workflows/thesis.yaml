@@ -13,9 +13,10 @@ jobs:
         uses: actions/checkout@v3
       - name: Build title page
         uses: xu-cheng/latex-action@v2
-        with:
-	  latexmk_shell_escape: true
+	with:
           root_file: config/titlepage/titlepage.tex
+	  extra_system_packages: "inkscape"
+	  latexmk_shell_escape: true
       - name: Build main document
         uses: xu-cheng/latex-action@v2
         with:
