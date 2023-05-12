@@ -14,8 +14,8 @@ jobs:
       - name: Build title page
         uses: xu-cheng/latex-action@v2
         with:
-          root_file: config/titlepage/titlepage.tex
 	  latexmk_shell_escape: true
+          root_file: config/titlepage/titlepage.tex
       - name: Build main document
         uses: xu-cheng/latex-action@v2
         with:
