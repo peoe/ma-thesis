@@ -34,20 +34,133 @@ In this context, $P$ reflects the controllability of the system, describing the 
 \itodo{add more sources about bt}
 
 For asymptotically stable and minimal systems, these matrices satisfy the Lyapunov equalities
-\begin{align*}
-    A P + P A\trans + B B\trans &= 0, \\
-    A\trans Q + Q A + C\trans C &= 0.
-\end{align*}
+\begin{equation}\label{eq:lyapunov-equations}
+    \begin{aligned}
+        A P + P A\trans + B B\trans &= 0, \\
+        A\trans Q + Q A + C\trans C &= 0.
+    \end{aligned}
+\end{equation}
 
 \itodo{add source; see in Benner, Breiten}
 
 Balancing now constitutes finding a transformation matrix $T$ such that the two matrices $T P T\trans, T\inv[T] Q T\inv$ are diagonal matrices.
 Such a balancing transformation can be constructed by computing the decompositions
-\begin{equation*}
+\begin{equation}\label{eq:balancing}
     P = S\trans S,\quad Q = R\trans R,\quad S R\trans = U \Sigma V\trans
+\end{equation}
+and then putting $T = \Sigma\inv[\frac{1}{2}] V\trans R$ we can transform the original LTI system $(A, B, C, D, \id)$ into its balanced form $(T A T\inv, T B, C T\inv, D, \id)$.
+To finally truncate the system, that is obtain a reduced order system, we assume that the balanced system can be split into matrix blocks
+\begin{equation*}
+    T A T\inv = \begin{pmatrix}
+        A_1 & A_2 \\
+        A_3 & A_4
+    \end{pmatrix},\quad T B = \begin{pmatrix}
+        B_1 \\
+        B_2
+    \end{pmatrix},\quad C T\inv = \begin{pmatrix}
+        C_1 & C_2
+    \end{pmatrix}.
 \end{equation*}
-and then putting $T = \Sigma\inv[\frac{1}{2}] V\trans R$
+We then define the balanced ROM as $(A_1, B_1, C_1, D, \id)$.
+This reduction even yields an $\mcl{H}_\infty$-error estimate; cf.~\cite[Theorem~6.4]{BB2017}.
+
+To extend the standard balancing procedure to passive systems we relate the passivity of an LTI $(A, B, C, D, E)$ with its transfer funciton $\zeta$ to the set of positive real by the properites
+\begin{equation*}
+    D\trans + D \geq 0,\quad \overline{\zeta}(i \omega) + \zeta(i \omega) \geq 0.
+\end{equation*}
+Similaryl, a strictly positive real system is defined as a positive real system that satisfies both inequalitites as strict inequalities; cf.~\cite[Section~5]{Gugercin2007}.
+Similarly to the Lyapunov equations~\eqref{eq:lyapunov-equations} it can be shown that an LTI $(A, B, C, D, \id)$ is strictly positive real if and only if there exist symmetric positive definite matrices $K, L$ such that the following Riccati equations are satisfied
+\begin{equation}\label{eq:riccati-equations}
+    \begin{aligned}
+        A\trans K + K A + (K B - C\trans) (D + D\trans)\inv (K B - C\trans)\trans &= 0 \\
+        A L + L A\trans + (L C\trans - B) (D + D\trans)\inv (L C\trans - B)\trans &= 0.
+    \end{aligned}
+\end{equation}
+For positive real systems any solutions $K, L$ can be bounded by minimal and maximal solutions
+\begin{align*}
+    K_{\textsc{max}} \curlyeqsucc K \curlyeqsucc K_{\textsc{min}} &\curlyeqsucc 0 \\
+    L_{\textsc{max}} \curlyeqsucc L \curlyeqsucc L_{\textsc{min}} &\curlyeqsucc 0.
+\end{align*}
+The solutions $K, L$ of \eqref{eq:riccati-equations} are related by $K = L\inv$, thus further implying that
+\begin{equation*}
+    K_{\textsc{min}} = L_{\textsc{max}}\inv,\quad K_{\textsc{max}} = L_{\textsc{min}}\inv.
+\end{equation*}
+To balance the strictly positive real system we then perform the same calculations as in~\eqref{eq:balancing} on the minimal solutions $K_{\textsc{min}}$ and $L_{\textsc{min}}$.
+Such a system is then called strictly positive real balanced if $K_{\textsc{min}} = L_{\textsc{min}}$ can be written as the diagonal matrix $\diag{\pi_1 \id[s_1], \dots, \pi_q \id[s_q]}$ with the $\pi_i$ ordered such that $0 < \pi_q < \cdots < \pi_1 \leq 1$ and $s_i$ the corresponding multiplicities summing up to $\sum s_i = n$.
+
+\itodo{figure out dimensions of $P, Q, K, L$}
+\itodo{figure out relation passive $\Leftrightarrow$ (strictly) positive real}
+\itodo{see if antoulas overview book can be useful reference here}
+
+For Balanced truncaiton we can show an error estimate of the reduced order model in the $\mcl{H}_\infty$ norm.
+
+\itodo{more sources on Hinf norm}
 
 \subsection{Interpolation-Based Reduction}\label{subsec:interpolation-reduction}
 
-qwer
+Whereas balanced reduced models try to minimize the $\mcl{H}_\infty$ norm, interpolation-based reduced models aim to find bestapproximations with respect to the $\mcl{H}_2$ norm; cf.~\cite[Section~3]{Gugercin2008}.
+The problem with this type of optimization problem is that the set of stable LTI systems does not form a subspace of $\mcl{H}_2$, indicating that finding solutions to this problem is hard.
+As a replacement for this optimization set we consider the set of all proper rational transfer functions that have simple poles in the open left half plane $\bb{C}_{-}$
+\begin{equation*}
+    \mcl{M}(\mu) \coloneqq \iset{\zeta \text{ proper rational transfer function}}{\zeta \text{ has simple poles at } \mu_i, i = 1, \dots, r}.
+\end{equation*}
+This results in an actual closed subspace of $\mcl{H}_2$ with the properties that
+\begin{enumerate}
+    \item $H \in \mcl{M}(\mu)$ is the transfer function of a stable system with $\dim{(H)} = r$,
+    \item $\mcl{M}(\mu)$ is a $(r - 1)$-dimensional subspace of $\mcl{H}_2$,
+    \item $\zeta_r \in \mcl{M}(\mu)$ is the unique bestapproximation of $\zeta$ in $\mcl{H}_2$ if and only if it holds that $\inner{\zeta - \zeta_r}{H}{\mcl{H}_2} = 0$ for all other transfer functions $H \in \mcl{M}(\mu)$.
+\end{enumerate}
+A further relation between the approximation of transfer functions via the mirror images of the system poles is highlighted in~\cite[Section~3.1]{Gugercin2008}.
+While these minimizers may be unique, the original optimization set is not convex, and hence multiple local minimizers may be characterized as in~\cite[Theorem~3.2]{Gugercin2008}.
+Though this formulation may unify multiple optimization conditions, we shall continue with the interpolatory framework.
+
+\itodo{show that $\mcl{M}$ is closed subspace in $\mcl{H}_2$}
+\itodo{source for proper rational transfer functions}
+
+\itodo{insert H2 error estimate from Gugercon2008, Proposition3.3}
+
+For any local minimizer we can formulate the following necessary optimality conditions of the $\mcl{H}_2$ SISO bestapproximation problem
+\begin{equation}\label{eq:siso-conditions}
+    \zeta_r(- \omega_i) = \zeta(- \omega_i),\quad \zeta'_r(- \omega_i) = \zeta'(- \omega_i) \forall i = 1, \dots, r.
+\end{equation}
+These conditions~\eqref{eq:siso-conditions} can be generalized to MIMO systems such that they read
+\begin{equation}\label{eq:mimo-conditions}
+    \zeta_r(- \omega_i) b_i = \zeta(- \omega_i) b_i,\quad c_i\trans \zeta_r(- \omega_i) = c_i\trans \zeta(- \omega_i),\quad c_i\trans \zeta'_r(- \omega_i) b_i = c_i\trans \zeta(- \omega_i) b_i.
+\end{equation}
+
+While these conditions are very handy, solving the optimal approximation problem is still very hard.
+To combat this difficulty, the publication~\cite{Gugercin2008} proposes an algorithm derived from a standard Newton update formulation.
+Let $\sigma \coloneqq \sset{\sigma_1, \dots, \sigma_r}$ denote the set of interpolation points of the reduced model $\Sigma_r$.
+From this model we compute its transfer funciton $\zeta_r$ and the poles $\lambda(\sigma) = \sset{\lambda_1, \dots, \lambda_r}$ thereof.
+We now wnat to minimize the difference between the mirror image of the interpolation points (remember that these mirror images produce an $\mcl{H}_2$ optimal system) and the poles $\lambda(\sigma)$.
+We thus define the function $g(\sigma) \coloneqq \lambda(\sigma) + \sigma$, aiming to finally obtain an optimal set $\sigma$ such that $g(\sigma) = 0$.
+This optimlaity condition directly corresponds to $\lambda(\sigma) = -\sigma$, thus satisfying the mirror image criterion mentioned previously.
+The authors of~\cite{Gugercin2008} propose the Newton step
+\begin{equation}\label{eq:interpolation-points-newton-step}
+    \sigma^{(k + 1)} = \sigma^{(k)} - (\id + J)\inv (\sigma^{(k)} + \lambda(\sigma^{(k)}))
+\end{equation}
+with $J$ being the Jacobian in the canonical sense that $J_{i, j} = \pd[\sigma_j]{\lambda_i}$.
+In practice, explicitly computing this Jacobian quickly becomes prohibitively expensive.
+Therefore, we make the suitable substitution $J \equiv 0$ because close to an optimal set of interpolation points the Jacobian will be very close to zero.
+Plugging this into~\eqref{eq:interpolation-points-newton-step} breaks down to
+\begin{equation*}
+    \sigma^{(k + 1)} = - \lambda(\sigma^{(k)}).
+\end{equation*}
+Algorithm~\ref{alg:irka} shows how this Newton step is used in the Iterative Rational Krylov Algorithm (IRKA).
+This algorithm relies heavily on a realization-based formulation, however variants independent of specific realizations using the Loewner framework also exist; cf.~\cite[Algorithm~7.2]{Beattie2017}.
+
+\begin{algorithm}\label{alg:irka}
+    \caption{Iterative Rational Krylov Algorithm (IRKA); cf.~\cite[Algorithm~7.1]{Beattie2017}}
+    \KwData{Initial interpolation points $\sigma$ closed and initial tangent directions $r_1^{(0)}, \dots, r_r^{(0)}, \ell_1^{(0)}, \dots, \ell_r^{(0)}$ under complex conjugation, full order model $\Sigma$}
+    $V_r^{(0)} \coloneqq \left( (\sigma_1^{(0)} E - A)\inv B r_1^{(0)}, \dots, (\sigma_r^{(0)} E - A)\inv B r_r^{(0)} \right)$\;
+    $W_r^{(0)} \coloneqq \left( (\sigma_1^{(0)} E - A\trans)\inv C\trans \ell_1^{(0)}, \dots, (\sigma_r^{(0)} E - A\trans)\inv C\trans \ell_r^{(0)} \right)$\;
+    \While{Not converged}{
+        $\tilde{A} \coloneqq W\trans A V, \tilde{E} \coloneqq W\trans E V, \tilde{B} \coloneqq W\trans B, \tilde{C} = C V$\;
+        Compute pole-residue expansion $\zeta_r(s) = \tilde{C} (s \tilde{E} - \tilde{A})\inv \tilde{B} = \sum\limits_{i = 1}^r \frac{\tilde{\ell}_i \tilde{r}_i\trans}{s - {\lambda(\sigma^{(k)})}_i}$\;
+        $\sigma^{(\sigma^{(k + 1)})} \coloneqq - \lambda(\sigma^{(k)}), r^{(k + 1)} \coloneqq \tilde{r}, \ell^{(k + 1)} \coloneqq \tilde{\ell}$\;
+        $V_r^{(k + 1)} \coloneqq \left( (\sigma_1^{(k + 1)} E - A)\inv B r_1^{(k + 1)}, \dots, (\sigma_r^{(k + 1)} E - A)\inv B r_r^{(k + 1)} \right)$\;
+        $W_r^{(k + 1)} \coloneqq \left( (\sigma_1^{(k + 1)} E - A\trans)\inv C\trans \ell_1^{(k + 1)}, \dots, (\sigma_r^{(k + 1)} E - A\trans)\inv C\trans \ell_r^{(k + 1)} \right)$\;
+    }
+\end{algorithm}
+
+\itodo{make set notations more verbose}
