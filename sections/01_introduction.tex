@@ -4,65 +4,64 @@ This introduction serves as an overview of the ideas we discuss in this thesis, 
 For more rigorous definitions and explanations we refer to both the more detailed chapters as listed at the end of this one as well as the references included in the Bibliography.
 We first give an idea of port-Hamiltonian systems theory, then give a description of linear Model Order Reduction, the limitations thereof and proposed methods to overcome these limitations, and finally conclude with a motivation of combining both ideas.
 
-Dynamical systems are descriptions of complex systems evolving over time under an outside interaction called \emph{control} producing an \emph{output} available to the environment.
-The general definition of these systems does not incorporate a lot of inherent structure, however certain problems can hugely benefit from this additional information.
+Dynamical systems are descriptions of complex systems evolving over time under an outside interaction called \emph{control} producing an \emph{output} available to the environment; cf.~\cite{Hinrichsen2005}.
+The general definition of these systems does not incorporate a lot of inherent structure, however certain problem descriptions can hugely benefit from this additional information.
 Foremost, the energy contained within a system can be considered as a physical quantity of interest.
-In the Hamiltonian setting of physics, energy conservation plays a central role: energy can only be transformed from one type to another, but never be created out of nowhere or destroyed.
+In the Hamiltonian setting of physics, energy conservation plays a central role: energy can only be transformed from one type to another, but never be created out of nowhere or destroyed; cf.~\cite{Taylor2005, Giorgilli2022}.
 Thus, to add energy to a system or remove it from the very same, additional outside influence has to take place.
 The removal of energy is codified as \emph{dissipation} while the acting of an outside force on a system throguh some control may increase the energy stored within.
 In particular, when we think of this process schematically, we can describe the relation of the system with respect to the environment to act through \emph{ports}.
-This in turn gives rise to the name of \emph{port-Hamiltonian} systems, a rigorous mathematical description of dynamical systems with a port-based interaction model.
-
-\itodo{add citations for systems theory}
+This in turn gives rise to the name of \emph{port-Hamiltonian} systems, a rigorous mathematical description of dynamical systems with a port-based interaction model; cf.~\cite{Duindam2009, Jacob2012, VanDerSchaft2014, Mehrmann2022}.
 
 Model Order Reduction as a framework provides many different approaches to creating reduced order models.
 One of the simplest to understand is \emph{Proper Orthogonal Decomposition} (POD).
-It resembles the Singular Value Decomposition in that it decomposes a data matrix in order to find a basis of the full order model which incorporates as much information as possible into each individual basis element such that we can approximate the higher dimensional solutions rather well using a small number of representative elenents.
+It resembles the Singular Value Decomposition in that it decomposes a data matrix in order to find a basis of the full order model which incorporates as much information as possible into each individual basis element such that we can approximate the higher dimensional solutions rather well using a small number of representative elenents; cf.~\cite{Hotelling1936, Karhunen1946, Pinnau2008}.
 While it would be possible to use POD for the reduction of system theoretic problems, there are methods which directly take the underlying system descriptions into account.
 This mostly happens through the means of \emph{transfer funcionts}.
 These functions describe the models frequency response, that is how it reacts to excitation at certain frequencies.
 Formally, transfer funcitons are derived from the control-output (sometimes also called input-output) mapping by taking the Laplace transform, wherefore transfer functions map from the frequency domain instead of the temporal domain.
-When reducing a model using its transfer function the objective turns away from estimating the most influential full order basis elements to interpolating the full order transfer funciton while using the fewest interpolation points possible.
+When reducing a model using its transfer function the objective turns away from estimating the most influential full order basis elements to truncate hard to reach and hard to observe system components, cf.~\cite{Moore1981, Enns1984, Antoulas2005, Gugercin2007, BB2017}, or interpolating the full order transfer funciton while using the fewest interpolation points possible, cf.~\cite{Antoulas2005, Gugercin2009, Beattie2017}.
 This procedure is influenced by different properties of the transfer function such as its complex-valued poles: depending on their position on the complex (half-) plane, a reduction algorithm may become unstable or even completely fail to produce a suitable reduced order model.
 
 More complex MOR algorithms strive to preserve the models underlying structure.
 These methods often require more computational effort, but in turn create reduced models with desirable structural properties.
 In the context of port-Hamiltonian systems we are particularly interested in preserving the specific system matrix structures because these induce the physical properties of the system, namely energy conservation.
-For port-Hamiltonian systems there exist a few varieties of reduction methods:
+For port-Hamiltonian systems there exist a few varieties of reduction methods, cf.~\cite{Polyuga2010}:
 \begin{itemize}
     \item The first idea is to start off with a system theoretic superset of (linear) port-Hamiltonian problems: \emph{Linear Time-Invariant} (LTI) systems.
-        The idea is to reduce a LTI represenation of the full order port-Hamiltonian model and then find the closest port-Hamiltonian representation of the reduced order LTI system.
-    \item The second method is to interpolate the transfer function of the port-Hamiltonian system in a specific way to obtain a \emph{realization} of the transfer function which satisfies the structural requirements of a port-Hamiltonian system.
+        The idea is to reduce a LTI represenation of the full order port-Hamiltonian model and then find the closest port-Hamiltonian representation of the reduced order LTI system; cf.~\cite{Gillis2018, Cherifi2019}.
+    \item The second method is to interpolate the transfer function of the port-Hamiltonian system in a specific way to obtain a \emph{realization} of the transfer function which satisfies the structural requirements of a port-Hamiltonian system; cf.~\cite{BGD2020, Schwerdtner2021, Poussot2022}.
         The downside of this approach is that we actually need to sample the frequency domain of the underlying system instead of just relying on time domain data.
-    \item The third idea is closely linked to the second, however it tries to get around the frequency domain by sampling the time domain and only then transform the data gathered into the frequency space by means of discrete Fourier transforms.
+    \item The third idea is closely linked to the second, however it tries to get around the frequency domain by sampling the time domain and only then transform the data gathered into the frequency space by means of discrete Fourier transforms; cf.~\cite{Najnudel2021, Cherifi2022, Günther2023}.
     \item There are also additional algorithms which avoid the previous ideas and choose different strategies, however they often originate from a motivation that is not direclty linked to Model Order Reduction.
         The most prominent of these for this thesis is the pH DMD algorithm which we discuss later on because its main application is in the domain of Operator Inference; cf.~\cite{Morandin2022}.
 \end{itemize}
-We stick to the second kind of algorithm, because sdf
-
-\itodo{addd reason why we choose irka (besides practicality)}
 
 The problem with all these methods is that most linear MOR algorithms struggle to approximate certain types of problems such as nonlinear formulations with small reduced orders.
 This failure in approximative quality is caused by the Kolmogorov N-width, a theoretical measure for describing how well the solution manifold of a problem can be described by a set of linear subspaces of fixed dimension; some authors even explicitly exclaim this to be the ``Kolmogorov Barrier'', a hinderance to be overcome by means other than linear approximation.
 Profiting from the nonlinear capabilities of (Deep/Convolutional) Neural Networks, several publications have applied techniques from Machine Learning to try and dislodge this roadblock in model reduciton.
-A few publications in particular employ Deep Convolutional Autoencoders, a component of neural networks explicitly designed for dimensionality reduction of data; cf.~\cite{Lee2020, Romor2023, Buchfink2023}.
+A few publications in particular employ Deep Convolutional Autoencoders, a component of neural networks explicitly designed for dimensionality reduction of data; cf.~\cite{Lee2020, Benner2022, Romor2023, Buchfink2023}.
 The most substantial problems of this line of thinking are twofold: firstly, training of Neural Network components heavily relies on data treatment and can be very time demanding, and secondly, Neural Networks tend to function as black boxes thus leaving all desires for explainability of the underlying computations unfulfilled.
 
-As an alternative to the high handed Neural Network approach polynomial approximation has been proposed in mitigating nonlinear models.
-This ansatz involves generating higher order polynomial data sets from an originally linear set of fitting data, however because to the infeasible exponential growth of the data dimension for increasing polynomial orders, most authors restrict themselves to second or third order terms, that is quadratically or cubically embedded manifolds.
-Some of these publications have presented promising results for generic dynamical systems with simple structural constraints, however no such progress has been made for the more restrictive setting of port-Hamiltonian systems.
+Aside from these direct neural network approximation methods one can also consider the machine learning-based identification problems for nonlinear dynamics through the so-called SINDy framework; cf.~\cite{Brunton2016, Kaheman2020}.
+This framework cannot only handle general nonlinear functions used for approximation, but also incorporate control variables and structure-preserving methods such as for port-Hamiltonian systems; cf.~\cite{Kaiser2018, Lee2022}.
+The downside to structure-preserving SINDy is that, so far, this method has only been implemented using a neural network approach which we want to avoid.
+For this purpose we give a reformulation of SINDYc with respect to port-Hamiltonian systems that entirely relies on constrained optimization.
 
-\itodo{verify descriptions of quadratic terms in burgers equation is framed: is it quadratic approximation or is it just carleman bilinearization?}
+As another alternative to the high handed Neural Network approach polynomial approximation has been proposed in mitigating nonlinear models.
+This ansatz involves generating higher order polynomial data sets from an originally linear set of fitting data, however because to the infeasible exponential growth of the data dimension for increasing polynomial orders, most authors restrict themselves to second or third order terms, resulting in quadratically or cubically embedded manifolds.
+Some of these publications have presented promising results for generic dynamical systems with simple structural constraints, cf.~\cite{Gu2011, Peherstorfer2016, Jain2017, Rutzmoser2017, Kramer2019, BGK2020, BGH2020, Qian2020, Gosea2021, Barnett2022, Khodabakhshi2022, Qian2022, Geelen2023}, however no such progress has been made for the more restrictive setting of port-Hamiltonian systems.
+
+\itodo{include some words on DEIM}
 
 Our goal therefore is to derive a method to incorporate quadratic reduced order approximation methods into the port-Hamiltonian formulation.
 While other ideas for polynomial terms can solely rely on solving least squares problems, the inherent structure of port-Hamiltonian systems makes this a lot harder.
-Thus, we take a detour via Operator Inference techniques for port-Hamiltonian systems and in particular explore the application of the pH DMD algorithm to obtain the system matrices encoding the quadratic data.
-We also discuss the effects of increasing the polynomial order even further to cubic or even quartic manifolds.
+Thus, we take a detour via Operator Inference and System Identification techniques for port-Hamiltonian systems and in particular explore the application of the pH DMD algorithm to obtain the system matrices acting on the quadratic data.
 
 This thesis is structured as follows:
 \begin{itemize}
     \item In Chapter~\ref{chap:systems-theory} we discuss system theoretic foundations necessary to understand port-Hamiltonian systems.
-    \item Following this, Chapter~\ref{chap:linear-mor} gives an overview of Model Order Reduction: beginning with a basic understanding via POD, describing the nature of the Kolmogorov N-width, and culminating with a brief statement of nonlinear methods via autoencoders.
-    \item In Chapter~\ref{chap:operator-inference} we present ways in which Operator Inference plays a role for this thesis, and describe the main idea of bringing together port-Hamiltonian systems and quadratical approximation.
+    \item Following this, Chapter~\ref{chap:linear-mor} gives an overview of Model Order Reduction: beginning with a basic understanding of linear systemtheoretic reducion methods, incorporating struture-preservation variants, and describing the abstract limitations of linear MOR by considering Proper Orthogonal Decomposition and the Kolmogorov $N$-width.
+    \item In Chapter~\ref{chap:nonlinear-mor} we present ways in which we can extend the linear techniques to nonlinear formulations through use of neural networks, Discrete Empirical Interpolation (DEIM), and Operator Inference/Identification.
     \item Finally, Chapter~\ref{chap:numerical-experiments} closes this thesis with numerical experiments to highlight the algorithms described, as well as discussions on the practicality of our proposed method.
 \end{itemize}
