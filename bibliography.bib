@@ -122,7 +122,7 @@
    title = {Structure-preserving model reduction for nonlinear port-Hamiltonian systems},
    year = {2011},
 }
-@incollection{Beattie2017,
+@inbook{Beattie2017,
    abstract = {Many physical, chemical, biomedical, and technical processes can be described by means of partial differential equations (PDEs) or dynamical systems. If the underlying processes exhibit nonlinear d...},
    author = {Christopher Beattie and Serkan Gugercin},
    doi = {10.1137/1.9781611974829.CH7},
@@ -135,7 +135,7 @@
    url = {https://epubs.siam.org/doi/10.1137/1.9781611974829.ch7},
    year = {2017},
 }
-@article{Benner2020,
+@article{BGK2020,
    abstract = {This work presents a non-intrusive model reduction method to learn low-dimensional models of dynamical systems with non-polynomial nonlinear terms that are spatially local and that are given in analytic form. In contrast to state-of-the-art model reduction methods that are intrusive and thus require full knowledge of the governing equations and the operators of a full model of the discretized dynamical system, the proposed approach requires only the non-polynomial terms in analytic form and learns the rest of the dynamics from snapshots computed with a potentially black-box full-model solver. The proposed method learns operators for the linear and polynomially nonlinear dynamics via a least-squares problem, where the given non-polynomial terms are incorporated on the right-hand side. The least-squares problem is linear and thus can be solved efficiently in practice. The proposed method is demonstrated on three problems governed by partial differential equations, namely the diffusion–reaction Chafee–Infante model, a tubular reactor model for reactive flows, and a batch-chromatography model that describes a chemical separation process. The numerical results provide evidence that the proposed approach learns reduced models that achieve comparable accuracy as models constructed with state-of-the-art intrusive model reduction methods that require full knowledge of the governing equations.},
    author = {Peter Benner and Pawan Goyal and Boris Kramer and Benjamin Peherstorfer and Karen Willcox},
    doi = {10.1016/j.cma.2020.113433},
@@ -168,7 +168,7 @@ respects dynamics on nonlinear manifolds.},
    url = {https://arxiv.org/abs/2209.15412v1},
    year = {2022},
 }
-@article{Benner2020,
+@article{BGH2020,
    abstract = {Reduced-order modeling has a long tradition in computational fluid dynamics.
 The ever-increasing significance of data for the synthesis of low-order models
 is well reflected in the recent successes of data-driven approaches such as
@@ -227,12 +227,12 @@ approaches.},
    url = {http://www.siam.org/journals/sisc/37-2/97255.html},
    year = {2015},
 }
-@article{Benner2020,
+@article{BGD2020,
    abstract = {In this paper, we study the identification problem of strictly passive systems from frequency response data. We present a simple construction approach based on the Mayo–Antoulas generalized realization theory that automatically yields a port-Hamiltonian realization for every strictly passive system with simple spectral zeros. Furthermore, we discuss the construction of a frequency-limited port-Hamiltonian realization. We illustrate the proposed method by means of several examples.},
    author = {Peter Benner and Pawan Goyal and Paul Van Dooren},
    doi = {10.1016/J.SYSCONLE.2020.104741},
    issn = {0167-6911},
-   journal = {Systems & Control Letters},
+   journal = {Systems \& Control Letters},
    keywords = {Identification,Passive systems,Port-Hamiltonian system,Tangential interpolation},
    month = {9},
    pages = {104741},
@@ -263,7 +263,7 @@ approaches.},
    url = {https://link.springer.com/chapter/10.1007/978-3-319-46618-7_3},
    year = {2017},
 }
-@incollection{BB2017,
+@inbook{BB2017,
    abstract = { We introduce balancing-based model order reduction (MOR) techniques for large-scale dynamical systems. We emphasize the efficient implementation of state-of-the-art techniques for systems with up to millions of degrees of freedom. In particular, we briefly review recent results on low-rank methods that compute approximate balanced reduced-order models (ROMs). In particular, we discuss a connection between several of these approximate balancing techniques. We further present generalizations of the classical balanced truncation (BT) method for linear systems. This will include balancing of linear stochastic and bilinear control systems. For these systems, generalized Lyapunov equations play an important role. We also survey possible generalizations of low-rank solution methods initially derived for the linear case, such as the ADI iteration or Krylov subspace methods for the tensorized linear system. Moreover, we discuss frequency-weighted balancing of linear systems. Again, the more complicated structure of the underlying Lyapunov equations is studied and problems that might occur are addressed. A brief outlook, with current and future topics of research, is provided. },
    author = {Peter Benner and Tobias Breiten},
    doi = {10.1137/1.9781611974829.ch6},
@@ -787,6 +787,17 @@ a~finite available storage is investigated.},
    url = {https://epubs.siam.org/terms-privacy},
    year = {2018},
 }
+@inbook{Giorgilli2022,
+   author = {Antonio Giorgilli},
+   doi = {10.1017/9781009151122.001},
+   journal = {Notes on Hamiltonian Dynamical Systems},
+   month = {5},
+   pages = {1-30},
+   publisher = {Cambridge University Press},
+   title = {Hamiltonian Formalism},
+   url = {https://www.cambridge.org/core/product/identifier/9781009151122%23c1/type/book_part},
+   year = {2022},
+}
 @article{Gosea2021,
    abstract = {The dynamic mode decomposition (DMD) is a data-driven method used for identifying the dynamics of complex nonlinear systems. It extracts important characteristics of the underlying dynamics using measured time-domain data produced either by means of experiments or by numerical simulations. In the original methodology, the measurements are assumed to be approximately related by a linear operator. Hence, a linear discrete-time system is fitted to the given data. However, often, nonlinear systems modeling physical phenomena have a particular known structure. In this contribution, we propose an identification and reduction method based on the classical DMD approach allowing to fit a structured nonlinear system to the measured data. We mainly focus on two types of nonlinearities: bilinear and quadratic bilinear. By enforcing this additional structure, more insight into extracting the nonlinear behavior of the original process is gained. Finally, we demonstrate the proposed methodology for different examples, such as Burgers’ equation and the coupled van der Pol oscillators.},
    author = {Ion Victor Gosea and Igor Pontes Duff},
@@ -895,6 +906,26 @@ a~finite available storage is investigated.},
    title = {Interpolation-based H2 model reduction for port-Hamiltonian systems},
    year = {2009},
 }
+@article{Günther2023,
+   abstract = {We present a gradient-based calibration algorithm to identify the system
+matrices of a linear port-Hamiltonian system from given input-output time data.
+Aiming for a direct structure-preserving approach, we employ techniques from
+optimal control with ordinary differential equations and define a constrained
+optimization problem. The input-to-state stability is discussed which is the
+key step towards the existence of optimal controls. Further, we derive the
+first-order optimality system taking into account the port-Hamiltonian
+structure. Indeed, the proposed method preserves the skew-symmetry and positive
+(semi)-definiteness of the system matrices throughout the optimization
+iterations. Numerical results with perturbed and unperturbed synthetic data, as
+well as an example from the PHS benchmark collection demonstrate the
+feasibility of the approach.},
+   author = {Michael Günther and Birgit Jacob and Claudia Totzeck},
+   keywords = {AMS classification: 37J06 Keywords: Port-Hamiltonian systems,adjoint-based calibration,coupled dynamical systems,data-driven approach,optimal control,structure preservation,time domain},
+   month = {1},
+   title = {Data-driven adjoint-based calibration of port-Hamiltonian systems in time domain},
+   url = {https://arxiv.org/abs/2301.03924v1},
+   year = {2023},
+}
 @article{Haine2022,
    abstract = {This work demonstrates the discretization of the boundary-controlled Maxwell equations, recast as a port-Hamiltonian system (pHs). After a reminder on the Stokes-Dirac structure associated with the Maxwell system, we introduce different partitioned weak formulations that preserve the pHs structure, and its associated power balance, at the semi-discrete level. These weak formulations are compared through numerical applications to closed non-perfectly conducting cavities and open waveguides under transverse approximation.},
    author = {Ghislain Haine and Denis Matignon and Florian Monteghetti},
@@ -954,6 +985,17 @@ a~finite available storage is investigated.},
    title = {Structure-preserving model order reduction of Hamiltonian systems},
    url = {http://arxiv.org/abs/2109.12367},
    year = {2021},
+}
+@book{Hinrichsen2005,
+   author = {Diederich Hinrichsen and Anthony J. Pritchard},
+   city = {Berlin, Heidelberg},
+   doi = {10.1007/B137541},
+   edition = {1},
+   isbn = {978-3-540-44125-0},
+   publisher = {Springer Berlin Heidelberg},
+   title = {Mathematical Systems Theory I},
+   url = {http://link.springer.com/10.1007/b137541},
+   year = {2005},
 }
 @article{Hochbruck2020,
    abstract = {In this paper we consider central fluxes discontinuous Galerkin space discretizations of a general class of wave-type equations of Friedrichs’ type. This class includes important examples such as Maxwell’s equations and wave equations. We prove an optimal error bound which holds under suitable regularity assumptions on the solution. Our analysis is performed in a framework of evolution equations on a Hilbert space and thus allows for the combination with various time integration schemes.},
@@ -1209,7 +1251,7 @@ a~finite available storage is investigated.},
    volume = {404},
    year = {2020},
 }
-@generic{Lee2022,
+@article{Lee2022,
    abstract = {Discovery of dynamical systems from data forms the foundation for data-driven modeling and recently, structure-preserving geometric perspectives have been shown to provide improved forecasting , stability, and physical realizability guarantees. We present here a unification of the Sparse Identification of Nonlinear Dynamics (SINDy) formalism with neural ordinary differential equations. The resulting framework allows learning of both "black-box" dynamics and learning of structure preserving bracket formalisms for both reversible and irreversible dynamics. We present a suite of benchmarks demonstrating effectiveness and structure preservation, including for chaotic systems.},
    author = {Kookjin Lee and Nathaniel Trask and Panagiotis Stinis@pnnl Gov and Bin Dong and Qianxiao Li and Lei Wang and Zhi-Qin John Xu},
    issn = {2640-3498},
@@ -1281,7 +1323,7 @@ Apart from the port-Hamiltonian approximation of the flow problem, another topic
    month = {1},
    pages = {483-488},
    publisher = {Elsevier},
-   title = {From Conservation Laws to Port\hyphen\{\}Hamiltonian Represenations of Distributed-Parameter Systems},
+   title = {From Conservation Laws to Port\hyphen\{\}Hamiltonian Representations of Distributed-Parameter Systems},
    volume = {38},
    year = {2005},
 }
@@ -1551,7 +1593,7 @@ demonstrated with several numerical examples.},
    title = {n-Widths in Approximation Theory},
    year = {1985},
 }
-@incollection{Pinnau2008,
+@inbook{Pinnau2008,
    abstract = {In many fields of science and engineering, like fluid or structural mechanics and electric circuit design, large–scale dynamical systems need to be simulated, optimized or controlled. They are often given by discretizations of systems of nonlinear partial differential equations yielding high–dimensional discrete phase spaces. for this reason during the last decades research was mainly focused on the development of sophisticated analytical and numerical tools to understand the overall system behavior. Not surprisingly, the number of degrees of freedom for simulations keptpace with the increasing computing power. But when it comes to optimal design or control the problems are in general to large to be tackled with standard techniques. Hence, there is a strong need for model reduction techniques to reduce the computational costs and storage requirements. They should yield low–dimensional approximations for the full high–dimensional dynamical system, which reproduce the characteristic dynamics of the system.},
    author = {René Pinnau},
    city = {Berlin, Heidelberg},
@@ -1905,6 +1947,15 @@ noisy frequency response data.},
    publisher = {CRC Press/Balkema},
    title = {State estimation of geometrically non-linear systems using reduced-order models},
    year = {2019},
+}
+@book{Taylor2005,
+   author = {J. R. Taylor},
+   edition = {1},
+   isbn = {9781891389221},
+   publisher = {University Science Books Mill Valley},
+   title = {Classical Mechanics},
+   url = {https://link.springer.com/book/9781891389221},
+   year = {2005},
 }
 @article{VanDerSchaft2014,
    abstract = {An up-to-date survey of the theory of port-Hamiltonian systems is given, emphasizing novel developments and relationships with other formalisms. Port-Hamiltonian systems theory yields a systematic framework for network modeling of multi-physics systems. Examples from different areas show the range of applicability. While the emphasis is on modeling and analysis, the last part provides a brief introduction to control of port-Hamiltonian systems.},
