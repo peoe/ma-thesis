@@ -1,3 +1,88 @@
 \section{Structure Preserving Linear MOR}\label{sec:structure-preserving-mor}
 
-asdf
+In Section~\ref{sec:system-mor} we covered some systemtheoretic linear MOR frameworks.
+Now we want to cover some more aspects of linear MOR for LTI systems by introducing structure preserving qualities into the Balanced Truncation and Interpolation-Based Reduction methods.
+This is by no means easy because the restriction from the general set of matrices to more specific sets like the family of skew-symmetric or symmetric positive definite matrices may cause the underlying optimization set to no longer be convex.
+Thus, the corresponding optimization problems to find optimal systems become either hard to solve or the solutions may no longer be unique, adding locally optimal systems to the set of problems we have to face.
+
+\itodo{find sources on convexity of optimization set}
+
+The first algorithm we take a look at is positive real balanced truncation.
+This method relies on the fact that positive real systems are closely linked to port-Hamiltonian systems by the fact that the following chain of implications is true, cf.~\cite[Proposition~2.1]{CGH2022}
+\begin{equation*}
+    pH \implies KYP \implies PR \wedge passive.
+\end{equation*}
+It can be further shown that
+\begin{equation*}
+    KYP \wedge Q regular \implies pH,\quad passive \wedge E regular \implies KYP.
+\end{equation*}
+With~\cite[Proposition~5.4]{CGH2022} we obtain
+\begin{equation*}
+    PR \wedge minimal realization \wedge D + D\trans \geq M_0 + M_0\trans \implies KYP.
+\end{equation*}
+This gets combined in~\cite[Lemma~5.6]{CGH2022} to construct a minimal pH realization from the proper rational and the non-proper parts of the transfer funciton to construct a pH system by interconnection.
+Note in particular the explaination in the paragraph preceeding the Lemma.
+
+\itodo{sources for the relation of pos real to pH}
+\itodo{move prbt stuff from bt subsection}
+\itodo{reference interconnection pH source/statement}
+
+\itodo{incorporate the following part}
+
+To extend the standard balancing procedure to passive systems we relate the passivity of an LTI $(A, B, C, D, E)$ with its transfer funciton $\zeta$ to the set of positive real by the properites
+\begin{equation*}
+    D\trans + D \succcurlyeq 0,\quad \overline{\zeta}(i \omega) + \zeta(i \omega) \geq 0.
+\end{equation*}
+Similaryl, a strictly positive real system is defined as a positive real system that satisfies both inequalitites as strict inequalities; cf.~\cite[Section~5]{Gugercin2007}.
+Similarly to the Lyapunov equations~\eqref{eq:lyapunov-equations} it can be shown that an LTI $(A, B, C, D, \id)$ is strictly positive real if and only if there exist symmetric positive definite matrices $K, L \in \bb{C}^{n \times n}$ such that the following algebraic Riccati equations (AREs) are satisfied
+\begin{equation}\label{eq:riccati-equations}
+    \begin{aligned}
+        A\trans K + K A + (K B - C\trans) (D + D\trans)\inv (K B - C\trans)\trans &= 0 \\
+        A L + L A\trans + (L C\trans - B) (D + D\trans)\inv (L C\trans - B)\trans &= 0.
+    \end{aligned}
+\end{equation}
+For positive real systems all solutions $K, L$ can be bounded by minimal and maximal solutions
+\begin{equation*}
+    K_{\msc{max}} \succcurlyeq K \succcurlyeq K_{\msc{min}} \succcurlyeq 0,\quad L_{\msc{max}} \succcurlyeq L \succcurlyeq L_{\msc{min}} \succcurlyeq 0
+\end{equation*}
+which has been shown by the connection to bounded real systems in~\cite[Proposition~5.1]{Ober1991}.
+The solutions $K, L$ of~\eqref{eq:riccati-equations} are related by $K = L\inv$, thus further implying that
+\begin{equation*}
+    K_{\msc{min}} = L_{\msc{max}}\inv,\quad K_{\msc{max}} = L_{\msc{min}}\inv.
+\end{equation*}
+To balance the strictly positive real system we then perform the same calculations as in~\eqref{eq:balancing} on the minimal solutions $K_{\msc{min}}$ and $L_{\msc{min}}$.
+Such a system is then called strictly positive real balanced if $K_{\msc{min}} = L_{\msc{min}}$ can be written as the diagonal matrix $\diag{\pi_1 \id[s_1], \dots, \pi_q \id[s_q]}$ with the $\pi_i$ ordered such that $0 < \pi_q < \cdots < \pi_1 \leq 1$ and $s_i$ the corresponding multiplicities summing up to $\sum s_i = n$.
+
+\itodo{mention Cherifi, corollary 2.7, 2022}
+
+\itodo{incorporate the above part}
+
+In Subsection~\ref{subsec:interpolation-reduction} we introduced the Iterative Rational Krylov Algorithm (IRKA).
+In~\cite{Gugercin2012}, the authors propose an extended variant of the IRKA algorithm that produces port-Hamiltonian reduced realizations of the transfer function $\zeta$.
+
+\begin{algorithm}\label{alg:ph-irka}
+    \caption{port-Hamiltonian Iterative Rational Krylov Algorithm (pH-IRKA); cf.~\cite[Algorithm~1]{Gugercin2012}}
+    \KwData{Initial interpolation points $\sigma$ closed and initial tangent directions $r_1^{(0)}, \dots, r_r^{(0)}$ under complex conjugation, full order model $\Sigma$}
+    $V_r^{(0)} \coloneqq \left( {(\sigma_1^{(0)} \id - (J - R) Q)}\inv B r_1^{(0)}, \dots, {(\sigma_r^{(0)} \id - (J - R) Q)}\inv B r_r^{(0)} \right)$\;
+    $W_r^{(0)} \coloneqq Q V_r^{(0)} \left( {V_r^{(0)}}\trans Q V_r^{(0)} \right)\inv$\;
+    \While{Not converged}{
+        $J_r^{(k + 1)} \coloneqq {W_r^{(k)}}\trans J W_r^{(k)}, R_r^{(k + 1)} \coloneqq {W_r^{(k)}}\trans R W_r^{(k)}, Q_r^{(k + 1)} \coloneqq {V_r^{(k)}}\trans Q V_r^{(k)}, B_r^{(k + 1)} \coloneqq {W_r^{(k)}}\trans B$\;
+        $A_r^{(k + 1)} \coloneqq (J_r^{(k + 1)} - R_r^{(k + 1)}) Q_r^{(k + 1)}$\;
+        Compute left and right eigenpairs $(\lambda_i, x_i)$ and $(\lambda_i, y_i)$, such that $A_r^{(k + 1)} x_i = \lambda_i x_i, y_i\herm A_r^{(k + 1)} = \lambda_i y_i\herm, y_i\herm x_i = \delta_{i, j}$\;
+        $\sigma_i^{(k + 1)} \coloneqq -\lambda_i, {r_i^{(k + 1)}}\trans \coloneqq y_i\herm B_r^{(k + 1)}$\;
+        $V_r^{(k + 1)} \coloneqq \left( {(\sigma_i^{(k + 1)} \id - (J - R) Q)}\inv B r_1^{(k + 1)}, \dots, {(\sigma_r^{(k + 1)} \id - (J - R) Q)}\inv B r_r^{(k + 1)} \right)$\;
+    }
+\end{algorithm}
+
+It is shown in~\cite[Theorem~11]{Gugercin2012} that any such reduced system is port-Hamiltonian and satisfies some of the necessary $\mcl{H}_2$ optimality conditions.
+The remaining conditions can be satisfied if we compute
+\begin{equation*}
+    \zeta_r(s) \coloneqq \sum\limits_{i = 1}^r \frac{c_i b_i\trans}{s - \lambda_i}
+\end{equation*}
+and verify that the following equality is satisfied
+\begin{equation*}
+    \range{{(\lambda_1 \id - (J - R) Q)}\inv B b_1, \dots, {(\lambda_r \id - (J - R) Q)}\inv B b_r} = \range{{(\lambda_1 \id - (J - R) Q)}\inv B b_1, \dots, {(\lambda \id - (J - R) Q)}\inv B c_r}
+\end{equation*}
+
+\itodo{figure out how to include an E term in phirka}
+\itodo{reference~\cite[Remark~4]{Gugercin2012} to note that the updated subspace in Algorithm~\ref{alg:ph-irka} can be chosen to be real (conjugate interpolation points, \dots)}

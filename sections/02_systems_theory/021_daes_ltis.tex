@@ -28,9 +28,9 @@ This output again takes the shape of a time dependent function $y \colon I \to \
 for two matrices $C \in \bb{C}^{q \times n}, D \in \bb{C}^{q \times q}$.
 
 \begin{definition}\label{def:lti}
-    A \emph{linear time-invariant (descriptor) system} $\Sigma_{\textsc{LTI}}$ is a system of equations
+    A \emph{linear time-invariant (descriptor) system} $\Sigma_{\msc{LTI}}$ is a system of equations
     \begin{equation}\label{eq:lti}
-        \Sigma_{\textsc{lti}} \colon \left\lbrace
+        \Sigma_{\msc{lti}} \colon \left\lbrace
         \begin{aligned}
             E \dot{x}(t) &= A x(t) + B u(t), \\
             y(t) &= C x(t) + D u(t)
@@ -44,7 +44,7 @@ for two matrices $C \in \bb{C}^{q \times n}, D \in \bb{C}^{q \times q}$.
     Definition~\ref{def:lti} signifies a continuous dynamical system.
     If we instead sample the trajectory $x$ at fixed sample points $0 \leq t_1 \dots \leq t_k = T < \infty$, then we can formulate a dynamical system in discrete form
     \begin{equation*}
-        \Sigma_{\textsc{lti}}^{\textsc{d}} \colon \left\lbrace
+        \Sigma_{\msc{lti}}^{\msc{d}} \colon \left\lbrace
         \begin{aligned}
             E x_{i + 1} &= A x_i + B u_i, \\
             y_i &= C x_i + D u_i

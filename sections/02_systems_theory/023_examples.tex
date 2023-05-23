@@ -30,7 +30,7 @@ Firstly, Example~\ref{ex:heating} models a controlled heat eqaution which might 
     and compute the constituent relations $M \dot{x}_2 = A x_1 - E x_2 + Bu, \dot{x_1} = x_2$.
     These in term can be put into LTI form
     \begin{equation*}
-        \Sigma_{\textsc{lti}} \colon \left\lbrace
+        \Sigma_{\msc{lti}} \colon \left\lbrace
         \begin{aligned}
             \begin{pmatrix}
                 \id & 0 \\
@@ -58,8 +58,8 @@ Firstly, Example~\ref{ex:heating} models a controlled heat eqaution which might 
         \pd[t]{} c_i + \nabla \cdot v(x, t) c_i - \nabla \cdot (K(x, t) \nabla c_i) = R_i(c) + u_i,\quad i = 1, \dots, S
     \end{equation}
     incorporating advection along the wind velocity vector $v(x, t)$, diffusion via turbulence $K(x, t)$, reaction terms $R_i(c)$ indicating the rate of change of the concentration of each chemical, and $U_i$ the control term acting as sources or sinks for the chemicals.
-    Discretizing~\eqref{eq:air-quality-state-equation} yields the state equation of an LTI system $\Sigma_{\textsc{lti}}$.
-    For the output of $\Sigma_{\textsc{lti}}$ we can imagine a set of sensors placed around locations of interest such as factories, roads, or residential zones.
+    Discretizing~\eqref{eq:air-quality-state-equation} yields the state equation of an LTI system $\Sigma_{\msc{lti}}$.
+    For the output of $\Sigma_{\msc{lti}}$ we can imagine a set of sensors placed around locations of interest such as factories, roads, or residential zones.
     These can be codified in the usual manner as
     \begin{equation*}
         y_i = C c_i + D u_i.
