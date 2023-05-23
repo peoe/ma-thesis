@@ -1,15 +1,26 @@
 \section{Abstract Limitations of Linear MOR}\label{sec:limitations-linear-mor}
 
+This section is not directly linked to the systemtheoretic scope of this thesis, however it demonstrates an important motivation for the next chapter.
+We thus think it reasonable to make a small detour and talk about the direct limitations of linear MOR for PDEs.
+In effect, we want to transpose this motivation onto the problem inherent in this manuscript, however no such rigorous results as we present in this section are available as of the time of writing.
+
+To make clear what we demonstrate here, we commence Subsection~\ref{subsec:pod} with the description of one of the standard techniques when reducing problem descriptions of PDEs without input or output variables: Proper Orthogonal Decomposition.
+We then showcase a few model problems which serve as a good intuition on how the model we consider for reduction can impact the effectiveness of the reduction procedure in Subsection~\ref{subsec:kolmogorov-n-width}.
+
+\itodo{think about removing the POD section, we don't really need it\dots}
+
 \subsection{Proper Orthogonal Decomposition}\label{subsec:pod}
+
+\itodo{this should be greedy, shouldn't it? Check sources for POD/greedy citaitons}
 
 The first part of this section is heavily based upon~\cite{Pinnau2008}.
 \emph{Proper Orthogonal Decomposition} (POD) is also known as Principal Component Analysis~\cite{Hotelling1936}, or Karhunen-Loève Decomposition~\cite{Karhunen1946}.
 Its aim is the selection of a subspace through its basis such that the subspace optimally approximates the given data in the least-squares sense.
 This basis is also commonly known as the \emph{POD modes}.
 In Model Order Reduction this takes the concrete form of selecting a set of solutions $y_1, \dots, y_N$ of a PDE to use as basis functions for the reduced model.
-To this end multiple strategies are available of which we present the method of snapshots in Subsection~\ref{subsec:pod-snapshots} and the singular value decomposition in Subsection~\ref{subsec:pod-svd}.
+To this end multiple strategies are available of which we present the method of snapshots in Subsubsection~\ref{subsubsec:pod-snapshots} and the singular value decomposition in Subsubsection~\ref{subsubsec:pod-svd}.
 
-\subsubsection{Method of Snapshots}\label{subsec:pod-snapshots}
+\subsubsection{Method of Snapshots}\label{subsubsec:pod-snapshots}
 
 For a set of \emph{solution snapshots} $\iset{y_i \in \bb{R}^n}{i = 1, \dots, m, y_i = y(\mu_i)}$ of a parametrized PDE we construct the data matrix
 \begin{equation}\label{eq:pod-data-matrix}
@@ -26,9 +37,9 @@ The corresponding POD basis is then given as
     u_i = \frac{1}{\sqrt{\lambda_i}} Y v_i.
 \end{equation*}
 
-\subsubsection{Singular Value Decomposition}\label{subsec:pod-svd}
+\subsubsection{Singular Value Decomposition}\label{subsubsec:pod-svd}
 
-Computing POD modes using the \emph{Singular Value Decomposition} (SVD) is closely linked to the method of snapshots in Subsection~\ref{subsec:pod-snapshots}.
+Computing POD modes using the \emph{Singular Value Decomposition} (SVD) is closely linked to the method of snapshots in Subsubsection~\ref{subsubsec:pod-snapshots}.
 We once more consider the data matrix $Y \in \bb{R}^{n \times m}$ from~\eqref{eq:pod-data-matrix}.
 First, we compute the SVD of $Y$
 \begin{equation*}
@@ -75,7 +86,7 @@ Similarly, the hypberloic wave equation only decays with a lower bound of
 \begin{equation*}
     \kolm{\mcl{M}} \geq \frac{1}{4} N^{- \frac{1}{2}}.
 \end{equation*}
-This slow decay becomes problematic when constructiong reduced models because one would require much larger reduced orders to make the error w.r.t.\@ the full order model small enough.
+This slow decay becomes problematic when constructiong reduced models because one would require much larger reduced orders to make the error w.\ r.\ t.\ the full order model small enough.
 The drawback of these increasing bases is the simultaneous increase in computational cost reducing the (online) speedup gained from reducing the model.
 The consequence of these findings is immediate: To preserve the speedup obtained from order reduction we need to incorporate nonlinear parts into the reduced models.
 We highlight some of these nonlinear approaches in Chapter~\ref{chap:nonlinear-mor}.

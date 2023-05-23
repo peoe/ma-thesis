@@ -1,4 +1,4 @@
-\section{Systemtheoretic Linear MOR}\label{sec:system-mor}
+\section{System Theoretic Linear MOR}\label{sec:system-mor}
 
 System-theoretic model order reduction offers two main perspectives: reduction resulting from the notion of LTIs as in Definition~\ref{def:lti}, and reduction by means of the transfer function from Definition~\ref{def:transfer-function}.
 We give an idea of matrix-based reduction in Subsection~\ref{subsec:balanced-truncation} explaining the method of Balanced Truncation.
@@ -6,44 +6,53 @@ Afterwards, we discuss reduction by means of interpolating the transfer function
 
 \subsection{Balanced Truncation}\label{subsec:balanced-truncation}
 
-\emph{Balanced Truncation} is a method consisting of a two step procedure: Firstly, balance the LTI system such that all states that one can only reach with difficulty are equally hard to observe, and secondly truncate the resulting system matrices such that only a reduced system of easily observable and reachable states remains.
-The procedure was originally described in~\cite{Mullis1976} and later extended by~\cite{Moore1981}.
-Within the balanced truncation framework, several options are available to cater to different systems.
-Standard balancing (``Lyapunov'' balancing in~\cite{Gugercin2007}) often requires large computational time budgets because during this procedure one has to compute dense matrix factorizations.
+\emph{Balanced Truncation} is a method consisting of a two step procedure: balancing and truncation.
+Firstly, balancing the LTI system means transforming the system so that states that are hard to reach by an outside acting control are also hard to observe.
+Secondly, truncation of the balanced system constitutes itself by omission of the matrix entries corresponding to the hard-to-reach and hard-to-observe system states.
+In so acting we create a system reflecting the easily observable and reachable states.
+
+This procedure was originally described in~\cite{Mullis1976} and later extended by~\cite{Moore1981, Enns1984}.
+Within the balanced truncation framework, several balancing options are available to cater to different system requirements.
+Standard balancing (also called Lyapunov balancing according to~\cite{Gugercin2007}) often requires large computational time budgets because during this procedure one has to compute expensive dense matrix factorizations.
 To mitigate this drawback, approximate balanced truncation methods have been developped.
-Other balancing methods exist such as stochastic balancing, frequency weighted balancing, or positive real balancing.
-For our purposes, ordinary balanced truncation and positive real balances truncation suffice.
+These include, among others, stochastic balancing~\cite{Desai1984, Green1988}, frequency weighted balancing~\cite{Enns1984, Wang1999}, bounded real balancing~\cite{Opdenacker1988, Reis2009} or positive real balancing~\cite{Desai1984, Ober1991}.
+For our purposes, it suffices to consider ordinary balanced truncation and positive real balances truncation.
 Positive real balanced truncation in particular is interesting in the context of this thesis because it produces passive systems which are closely linked to port-Hamiltonian systems.
 
-\itodo{sources: approximate bt, stoch. bt, weighted bt, prbt}
-
-We commence with standard balanced truncatoin; cf.~\cite{BB2017}.
+We commence with standard balanced truncation as described in~\cite{BB2017}.
 Consider $(A, B, C, D, E)$ to be an LTI system as in Definition~\ref{def:lti}.
 It is important to note that most balanced truncation literature employs LTIs that have $E = \id$.
-If $E$ is regular any system $(A, B, C, D, E)$ can easily be transformed into a system of the form $(\tilde{A}, \tilde{B}, C, D, \id)$ by appliying $E\inv$ to the first equation in~\eqref{eq:lti}.
-We make use of abuse of notation and henceforth simply refer to our system by the matrices $(A, B, C, D, \id)$.
-To tell which system states are observable and which system states are controllable, we define the system's \emph{Gramians}
-\begin{align}
-    P &= \int\limits_0^\infty \exp{(A t)} B B\trans \exp{(A\trans t)} \dif t,\label{eq:controllability-gramian} \\
-    Q &= \int\limits_0^\infty \exp{(A\trans t)} C\trans C \exp{(A t)} \dif t.\label{eq:observability-gramian}
-\end{align}
-In this context, $P$ reflects the controllability of the system, describing the ability to reach any state using the right control, and we call $Q$ the observability Gramian, signifying the set of points which cannot be differentiated from the initial point for some control producing a constantly zero ouput.
+If $E$ is regular, then any system $(A, B, C, D, E)$ can easily be transformed into a system of the form $(\tilde{A}, \tilde{B}, C, D, \id)$ by appliying $E\inv$ to the state equation in~\eqref{eq:lti}.
+We utilize of abuse of notation and henceforth simply refer to our system by the matrices $(A, B, C, D, \id)$.
 
-\itodo{make descriptions mre mathematical, cf.~\cite[Definitions~6.2 and 6.3]{BB2017}}
+\begin{definition}[{Cf.~\cite[Definition~6.2]{BB2017}}]\label{def:controllability}
+    The system $(A, B, C, D, \id)$ is \emph{controllable} if for all states $x_0, x_1 \in \bb{C}^n$ and a final time $T \geq 0$ there exists a suitable control $u \colon \interval{0}{T} \to \bb{C}^q$ such that the solution $x(t)$ of the system satisfies $x(0) = x_0, x(T) = x_1$.
+\end{definition}
 
-\itodo{add more sources about bt}
+\begin{definition}[{Cf.~\cite[Definition~6.3]{BB2017}}]\label{def:observability}
+    The state $x_1 \in \bb{C}^n$ of a system $(A, B, C, D, \id)$ is \emph{unobservable} if the output of the system with $x(0) = x_1$ is $y \equiv 0$ for all points in time.
+    This in particular means that $x_1$ cannot be distinguished from the zero state $x_0 = 0 \in \bb{C}^n$.
+    A system is \emph{observable} if the set of all unobservable states trivially consists of only the zero state $x_0$.
+\end{definition}
 
+To characterize which system states are observable and which system states are controllable, we define the system's infinite \emph{Controllability Gramian} in accordance with~\cite[Equation~6.8]{BB2017}
+\begin{equation}\label{eq:controllability-gramian}
+    P = \int\limits_0^\infty \exp{(A t)} B B\trans \exp{(A\trans t)} \dif t \in \bb{C}^{n \times n}
+\end{equation}
+alongside the corresponding infinite \emph{Observability Gramian}
+\begin{equation}\label{eq:observability-gramian}
+    Q = \int\limits_0^\infty \exp{(A\trans t)} C\trans C \exp{(A t)} \dif t \in \bb{C}^{n \times n}.
+\end{equation}
 For asymptotically stable and minimal systems, these matrices satisfy the Lyapunov equalities
 \begin{equation}\label{eq:lyapunov-equations}
     \begin{aligned}
         A P + P A\trans + B B\trans &= 0, \\
-        A\trans Q + Q A + C\trans C &= 0.
+        A\trans Q + Q A + C\trans C &= 0
     \end{aligned}
 \end{equation}
+according to~\cite{Antoulas2005, Hinrichsen2005}.
 
-\itodo{add source; see in Benner, Breiten}
-
-Balancing now constitutes finding a transformation matrix $T$ such that the two matrices $T P T\trans, T\inv[T] Q T\inv$ are diagonal matrices.
+The act of balancing now constitutes finding a transformation matrix $T$ such that the two matrices $T P T\trans, T\inv[T] Q T\inv$ are diagonal matrices.
 Such a balancing transformation can be constructed by computing the decompositions
 \begin{equation}\label{eq:balancing}
     P = S\trans S,\quad Q = R\trans R,\quad S R\trans = U \Sigma V\trans
@@ -62,39 +71,16 @@ To finally truncate the system, that is obtain a reduced order system, we assume
     \end{pmatrix}.
 \end{equation*}
 We then define the balanced ROM as $(A_1, B_1, C_1, D, \id)$.
-This reduction even yields an $\mcl{H}_\infty$-error estimate; cf.~\cite[Theorem~6.4]{BB2017}.
+This reduction even yields an $\mcl{H}_\infty$-error estimate.
 
-To extend the standard balancing procedure to passive systems we relate the passivity of an LTI $(A, B, C, D, E)$ with its transfer funciton $\zeta$ to the set of positive real by the properites
-\begin{equation*}
-    D\trans + D \geq 0,\quad \overline{\zeta}(i \omega) + \zeta(i \omega) \geq 0.
-\end{equation*}
-Similaryl, a strictly positive real system is defined as a positive real system that satisfies both inequalitites as strict inequalities; cf.~\cite[Section~5]{Gugercin2007}.
-Similarly to the Lyapunov equations~\eqref{eq:lyapunov-equations} it can be shown that an LTI $(A, B, C, D, \id)$ is strictly positive real if and only if there exist symmetric positive definite matrices $K, L$ such that the following Riccati equations are satisfied
-\begin{equation}\label{eq:riccati-equations}
-    \begin{aligned}
-        A\trans K + K A + (K B - C\trans) (D + D\trans)\inv (K B - C\trans)\trans &= 0 \\
-        A L + L A\trans + (L C\trans - B) (D + D\trans)\inv (L C\trans - B)\trans &= 0.
-    \end{aligned}
-\end{equation}
-For positive real systems any solutions $K, L$ can be bounded by minimal and maximal solutions
-\begin{align*}
-    K_{\textsc{max}} \curlyeqsucc K \curlyeqsucc K_{\textsc{min}} &\curlyeqsucc 0 \\
-    L_{\textsc{max}} \curlyeqsucc L \curlyeqsucc L_{\textsc{min}} &\curlyeqsucc 0.
-\end{align*}
-The solutions $K, L$ of \eqref{eq:riccati-equations} are related by $K = L\inv$, thus further implying that
-\begin{equation*}
-    K_{\textsc{min}} = L_{\textsc{max}}\inv,\quad K_{\textsc{max}} = L_{\textsc{min}}\inv.
-\end{equation*}
-To balance the strictly positive real system we then perform the same calculations as in~\eqref{eq:balancing} on the minimal solutions $K_{\textsc{min}}$ and $L_{\textsc{min}}$.
-Such a system is then called strictly positive real balanced if $K_{\textsc{min}} = L_{\textsc{min}}$ can be written as the diagonal matrix $\diag{\pi_1 \id[s_1], \dots, \pi_q \id[s_q]}$ with the $\pi_i$ ordered such that $0 < \pi_q < \cdots < \pi_1 \leq 1$ and $s_i$ the corresponding multiplicities summing up to $\sum s_i = n$.
-
-\itodo{figure out dimensions of $P, Q, K, L$}
-\itodo{figure out relation passive $\Leftrightarrow$ (strictly) positive real}
-\itodo{see if antoulas overview book can be useful reference here}
-
-For Balanced truncaiton we can show an error estimate of the reduced order model in the $\mcl{H}_\infty$ norm.
-
-\itodo{more sources on Hinf norm}
+\begin{theorem}[{Cf.~\cite[Theorem~6.4]{BB2017}}]\label{thm:h-inf-error}
+    Let $\Sigma_{\msc{lti}}$ be an asymptotically stable and minimal system.
+    If $(A_{\msc{b}}, B_{\msc{b}}, C_{\msc{b}}, D_{\msc{b}}, \id)$ is a balanced realization with an ordered sequence of numbers $\sigma_1 > \cdots > \sigma_k > 0$ and the Gramians
+    \begin{equation*}
+        P = Q = \diag{\sigma_1 \id, \dots, \sigma_k \id}
+    \end{equation*}
+    and
+\end{theorem}
 
 \subsection{Interpolation-Based Reduction}\label{subsec:interpolation-reduction}
 
@@ -152,14 +138,14 @@ This algorithm relies heavily on a realization-based formulation, however varian
 \begin{algorithm}\label{alg:irka}
     \caption{Iterative Rational Krylov Algorithm (IRKA); cf.~\cite[Algorithm~7.1]{Beattie2017}}
     \KwData{Initial interpolation points $\sigma$ closed and initial tangent directions $r_1^{(0)}, \dots, r_r^{(0)}, \ell_1^{(0)}, \dots, \ell_r^{(0)}$ under complex conjugation, full order model $\Sigma$}
-    $V_r^{(0)} \coloneqq \left( (\sigma_1^{(0)} E - A)\inv B r_1^{(0)}, \dots, (\sigma_r^{(0)} E - A)\inv B r_r^{(0)} \right)$\;
-    $W_r^{(0)} \coloneqq \left( (\sigma_1^{(0)} E - A\trans)\inv C\trans \ell_1^{(0)}, \dots, (\sigma_r^{(0)} E - A\trans)\inv C\trans \ell_r^{(0)} \right)$\;
+    $V_r^{(0)} \coloneqq \left( {(\sigma_1^{(0)} E - A)}\inv B r_1^{(0)}, \dots, {(\sigma_r^{(0)} E - A)}\inv B r_r^{(0)} \right)$\;
+    $W_r^{(0)} \coloneqq \left( {(\sigma_1^{(0)} E - A\trans)}\inv C\trans \ell_1^{(0)}, \dots, {(\sigma_r^{(0)} E - A\trans)}\inv C\trans \ell_r^{(0)} \right)$\;
     \While{Not converged}{
         $\tilde{A} \coloneqq W\trans A V, \tilde{E} \coloneqq W\trans E V, \tilde{B} \coloneqq W\trans B, \tilde{C} = C V$\;
-        Compute pole-residue expansion $\zeta_r(s) = \tilde{C} (s \tilde{E} - \tilde{A})\inv \tilde{B} = \sum\limits_{i = 1}^r \frac{\tilde{\ell}_i \tilde{r}_i\trans}{s - {\lambda(\sigma^{(k)})}_i}$\;
+        Compute pole-residue expansion $\zeta_r(s) = \tilde{C} {(s \tilde{E} - \tilde{A})}\inv \tilde{B} = \sum\limits_{i = 1}^r \frac{\tilde{\ell}_i \tilde{r}_i\trans}{s - {\lambda(\sigma^{(k)})}_i}$\;
         $\sigma^{(\sigma^{(k + 1)})} \coloneqq - \lambda(\sigma^{(k)}), r^{(k + 1)} \coloneqq \tilde{r}, \ell^{(k + 1)} \coloneqq \tilde{\ell}$\;
-        $V_r^{(k + 1)} \coloneqq \left( (\sigma_1^{(k + 1)} E - A)\inv B r_1^{(k + 1)}, \dots, (\sigma_r^{(k + 1)} E - A)\inv B r_r^{(k + 1)} \right)$\;
-        $W_r^{(k + 1)} \coloneqq \left( (\sigma_1^{(k + 1)} E - A\trans)\inv C\trans \ell_1^{(k + 1)}, \dots, (\sigma_r^{(k + 1)} E - A\trans)\inv C\trans \ell_r^{(k + 1)} \right)$\;
+        $V_r^{(k + 1)} \coloneqq \left( {(\sigma_1^{(k + 1)} E - A)}\inv B r_1^{(k + 1)}, \dots, {(\sigma_r^{(k + 1)} E - A)}\inv B r_r^{(k + 1)} \right)$\;
+        $W_r^{(k + 1)} \coloneqq \left( {(\sigma_1^{(k + 1)} E - A\trans)}\inv C\trans \ell_1^{(k + 1)}, \dots, {(\sigma_r^{(k + 1)} E - A\trans)}\inv C\trans \ell_r^{(k + 1)} \right)$\;
     }
 \end{algorithm}
 
