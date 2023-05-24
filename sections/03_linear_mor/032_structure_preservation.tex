@@ -2,38 +2,21 @@
 
 In Section~\ref{sec:system-mor} we covered some systemtheoretic linear MOR frameworks.
 Now we want to cover some more aspects of linear MOR for LTI systems by introducing structure preserving qualities into the Balanced Truncation and Interpolation-Based Reduction methods.
-This is by no means easy because the restriction from the general set of matrices to more specific sets like the family of skew-symmetric or symmetric positive definite matrices may cause the underlying optimization set to no longer be convex.
+This is by no means easy because the restriction from the general set of matrices to more specific sets like the family of skew-symmetric or symmetric positive definite matrices causes the underlying optimization set to no longer be convex.
 Thus, the corresponding optimization problems to find optimal systems become either hard to solve or the solutions may no longer be unique, adding locally optimal systems to the set of problems we have to face.
 
-\itodo{find sources on convexity of optimization set}
+\subsection{Positive Real Balanced Truncation}\label{subsec:prbt}
 
 The first algorithm we take a look at is positive real balanced truncation.
-This method relies on the fact that positive real systems are closely linked to port-Hamiltonian systems by the fact that the following chain of implications is true, cf.~\cite[Proposition~2.1]{CGH2022}
-\begin{equation*}
-    pH \implies KYP \implies PR \wedge passive.
-\end{equation*}
-It can be further shown that
-\begin{equation*}
-    KYP \wedge Q regular \implies pH,\quad passive \wedge E regular \implies KYP.
-\end{equation*}
-With~\cite[Proposition~5.4]{CGH2022} we obtain
-\begin{equation*}
-    PR \wedge minimal realization \wedge D + D\trans \geq M_0 + M_0\trans \implies KYP.
-\end{equation*}
-This gets combined in~\cite[Lemma~5.6]{CGH2022} to construct a minimal pH realization from the proper rational and the non-proper parts of the transfer funciton to construct a pH system by interconnection.
-Note in particular the explaination in the paragraph preceeding the Lemma.
+This method relies on the fact that positive real systems are closely linked to port-Hamiltonian systems by the fact that we can transform behaviourally controllable and behaviourally observable, that is minimal, positive real systems into port-Hamiltonian systems as we shall see later.
 
-\itodo{sources for the relation of pos real to pH}
-\itodo{move prbt stuff from bt subsection}
-\itodo{reference interconnection pH source/statement}
+\begin{definition}[{Cf.~\cite[Definition~2.1]{Freund2004} or~\cite[Property~(PR)]{CGH2022}}]\label{def:positive-real}
+    A linear time-invariant system $\Sigma_\msc{lti}$ is said to be \emph{positive real} if its transfer function $\zeta$ has no poles in the right complex halfplane $\sigma \in \bb{C}, \re{\sigma} > 0$, for all complex numbers $\sigma \in \bb{C}$ it holds that $\conj{\zeta(\sigma)} = \zeta(\conj{\sigma})$, and the the matrix $\zeta(\sigma) + \zeta(\sigma)\herm$ is positive semidefinite for all complex numbers $\sigma \in \bb{C}, \re{\sigma} > 0$.
+    Analogously, the transfer function is called \emph{strictly positive real} if in addition to the other two conditions the matrix sum is positive definite.
+\end{definition}
 
-\itodo{incorporate the following part}
-
-To extend the standard balancing procedure to passive systems we relate the passivity of an LTI $(A, B, C, D, E)$ with its transfer funciton $\zeta$ to the set of positive real by the properites
-\begin{equation*}
-    D\trans + D \succcurlyeq 0,\quad \overline{\zeta}(i \omega) + \zeta(i \omega) \geq 0.
-\end{equation*}
-Similaryl, a strictly positive real system is defined as a positive real system that satisfies both inequalitites as strict inequalities; cf.~\cite[Section~5]{Gugercin2007}.
+To extend the standard balancing procedure to result in positive real systems we relate the passivity of an LTI $(A, B, C, D, E)$ with its positive real transfer funciton $\zeta$ as indicated by~\cite[Corollary~2.7]{CGH2022}.
+In addition, we can also formulate the condition $D + D\trans \succcurlyeq 0$ on the system's feedthrough term; cf.~\cite[Definition~5]{Gugercin2007}.
 Similarly to the Lyapunov equations~\eqref{eq:lyapunov-equations} it can be shown that an LTI $(A, B, C, D, \id)$ is strictly positive real if and only if there exist symmetric positive definite matrices $K, L \in \bb{C}^{n \times n}$ such that the following algebraic Riccati equations (AREs) are satisfied
 \begin{equation}\label{eq:riccati-equations}
     \begin{aligned}
@@ -53,12 +36,149 @@ The solutions $K, L$ of~\eqref{eq:riccati-equations} are related by $K = L\inv$,
 To balance the strictly positive real system we then perform the same calculations as in~\eqref{eq:balancing} on the minimal solutions $K_{\msc{min}}$ and $L_{\msc{min}}$.
 Such a system is then called strictly positive real balanced if $K_{\msc{min}} = L_{\msc{min}}$ can be written as the diagonal matrix $\diag{\pi_1 \id[s_1], \dots, \pi_q \id[s_q]}$ with the $\pi_i$ ordered such that $0 < \pi_q < \cdots < \pi_1 \leq 1$ and $s_i$ the corresponding multiplicities summing up to $\sum s_i = n$.
 
-\itodo{mention Cherifi, corollary 2.7, 2022}
+\itodo{change complex numbers to real ones here, we're talking about pr systems and assumed real numbers for ph systems! don't forget herm to trans!}
 
-\itodo{incorporate the above part}
+For the rest of this subsection we focus on demonstrating the necessary conditions such that a positive real LTI system can be represented in port-Hamiltonian form.
+First off result, we require a few additional definitions which relate observability and controllability to the minimality of the LTI system.
+
+\begin{definition}[{Cf.~\cite[Equation~(8)]{CGH2022} or~\cite[Theorem~6.2]{Freund2004}}]\label{def:behaviourally-controllable}
+    An LTI system $(A, B, C, D, E)$ is said to be \emph{behaviourally controllable} if
+    \begin{equation}\label{eq:behaviourally-controllable}
+        \forall \lambda  \in \bb{C} \colon \rank{\begin{matrix}
+            \lambda E - A & B
+        \end{matrix}} = n.
+    \end{equation}
+\end{definition}
+
+\begin{definition}[{Cf.~\cite[Equation~(8)]{CGH2022} or~\cite[Theorem~6.2]{Freund2004}}]\label{def:behaviourally-observable}
+    An LTI system $(A, B, C, D, E)$ is said to be \emph{behaviourally observable} if
+    \begin{equation}\label{eq:behaviourally-observable}
+        \forall \lambda  \in \bb{C} \colon \rank{\begin{matrix}
+            \lambda {(E - A)}\trans & C\trans
+        \end{matrix}} = n.
+    \end{equation}
+\end{definition}
+
+\begin{lemma}[{Cf.~\cite{Verghese1981, Dai1989}}]\label{lem:minimality-conditions}
+    An LTI descriptor system $(A, B, C, D, E)$ is minimal if and only if it fulfills Equations~\eqref{eq:behaviourally-controllable} and~\eqref{eq:behaviourally-observable} as well as the following conditions
+    \begin{equation*}
+        \rank{\begin{matrix}
+            E & B
+        \end{matrix}} = \rank{\begin{matrix}
+            E \\
+            C
+        \end{matrix}} = n,\quad A \knl{E} \subseteq \range{E}.
+    \end{equation*}
+\end{lemma}
+
+For the next step we need to compute a specific form of the transfer function's Laurent series.
+In the same manner as~\cite[Equation~(37)]{CGH2022} we construct the Laurent expansion
+\begin{equation}\label{eq:laurent-series}
+    \zeta(s) = \sum\limits_{i = -\infty}^{k - 1} M_i s^i.
+\end{equation}
+
+\itodo{make sure you define what the $k$ is in this expansion, this might not be consistent with other sources!}
+
+\begin{lemma}[{Adapted from~\cite[Lemma~5.1]{CGH2022}}]\label{lem:lti-laurent-series}
+    Let $(A, B, C, D, E)$ be a positive real LTI descriptor system with a transfer function $\zeta$ with its Laurent series as defined in Equation~\eqref{eq:laurent-series}.
+    Then we can write the transfer function as a sum of a proper rational function $\zeta_{\msc{p}}$ and the matrix $M_1$
+    \begin{equation}\label{eq:pr-lti-laurent-series}
+        \zeta(s) = \zeta_{\msc{p}}(s) + M_1 s.
+    \end{equation}
+\end{lemma}
+
+We now construct a minimal realization $(A_\msc{p}, B_\msc{p}, C_\msc{p}, D_\msc{p}, E_\msc{p})$ with $D_\msc{p} = M_0$ of $\zeta_\msc{p}$ from Lemma~\ref{lem:lti-laurent-series}.
+This realization contains an invertible matrix $E_\msc{p}$ because by Lemma~\ref{lem:minimality-conditions} the realization satisfies the assumptions of~\cite[Theorem~6.3]{Freund2004}, and by extension from the positive realness of the complete system $(A, B, C, D, E)$ is also positive real.
+We can apply~\cite[Proposition~5.4]{CGH2022} because we have defined the proper realization in such a way that $D_\msc{p} + D_\msc{p}\herm \succcurlyeq M_0 + M_0\herm$ is always true, therefore there exists a matrix $Q_\msc{p} \in \bb{C}^{n \times n}$ that solves the Kalman-Yakubovich-Popov linear matrix inequalities (KYP LMIs) for the proper system $(A, B, C, D, E) = (A_\msc{p}, B_\msc{p}, C_\msc{p}, M_0, E_\msc{p})$
+\begin{equation}\label{eq:kyp-lmi}
+    \begin{pmatrix}
+        -A\herm Q - Q\herm A & C\herm - Q\herm B \\
+        C - B\herm Q & D + D\herm
+    \end{pmatrix} \succcurlyeq 0,\quad E\herm Q = Q\herm E \succcurlyeq 0.
+\end{equation}
+
+\begin{lemma}[{Cf.~\cite[Proposition~3.1]{CGH2022}}]\label{lem:kyp-invertible-solution}
+    If $\Sigma_\msc{lti}$ in the form~\eqref{eq:lti} has an invertible matrix $E$ and is behaviourally observable, meaning that it satisfies~\eqref{eq:behaviourally-observable}, and there exists a matrix $Q \in \bb{C}^{n \times n}$ solving the LMIs
+    \begin{equation*}
+        \begin{pmatrix}
+            -A\herm Q - Q\herm A & C\herm - Q\herm B \\
+            C - B\herm Q & D + D\herm
+        \end{pmatrix} \succcurlyeq 0,\quad E\herm Q = Q\herm E,
+    \end{equation*}
+    then $Q$ is invertible.
+\end{lemma}
+
+Thus, by means of Lemma~\ref{lem:kyp-invertible-solution}, the matrix $Q_\msc{p}$ is invertible and by solving~\eqref{eq:kyp-lmi} it also satisfies $Q_\msc{p}\herm E_\msc{p} \succcurlyeq 0$.
+This allows us to obtain the proper part of the final port-Hamiltonian system
+\begin{equation}\label{eq:pr-proper-ph-part}
+    \Sigma_1 \colon \left\lbrace
+    \begin{pmatrix}
+        J - R & G - P \\
+        {(G + P)}\herm & D
+    \end{pmatrix}
+    \right. \coloneqq \begin{pmatrix}
+        A_\msc{p} Q_\msc{p}\inv & B_\msc{p} \\
+        C_\msc{p} Q_\msc{p}\inv & D_\msc{p}
+    \end{pmatrix}.
+\end{equation}
+Additionally, we can form a minimal realization by creating the block matrices
+\begin{equation*}
+    E_\infty = \begin{pmatrix}
+        M_1 & 0 \\
+        0 & 0
+    \end{pmatrix},\quad A_\infty = \begin{pmatrix}
+        0 & -\id[m] \\
+        \id[m] & 0
+    \end{pmatrix},\quad B_\infty = \begin{pmatrix}
+        0 \\
+        \id[m]
+    \end{pmatrix} = C_\infty\trans,\quad D_\infty = 0.
+\end{equation*}
+This indeed defines a realization when we compute $s M_1 = C_\infty {(s E_\infty - A_\infty)}\inv B_\infty = C_\infty \begin{pmatrix}
+    0 & \id[m] \\
+    -\id[m] & s M_1
+\end{pmatrix} B_\infty$.
+We apply the same arguments as for the proper rational part of the sum~\eqref{eq:pr-lti-laurent-series} to see that these matrices together with $Q_\infty = \id[2m]$ form a port-Hamiltonian realization
+\begin{equation}\label{eq:pr-improper-ph-part}
+    \Sigma_2 \colon \left\lbrace
+    \begin{pmatrix}
+        J - R & G - P \\
+        {(G + P)}\herm & D
+    \end{pmatrix}
+    \right. \coloneqq \begin{pmatrix}
+        A_\infty Q_\infty\inv & B_\infty \\
+        C_\infty Q_\infty\inv & D_\infty
+    \end{pmatrix}.
+\end{equation}
+Lastly, we combine the two port-Hamiltonian systems $\Sigma_1$ and $\Sigma_2$ from~\eqref{eq:pr-proper-ph-part} and~\eqref{eq:pr-improper-ph-part} by using~\cite[Lemma~5.6]{CGH2022}.
+This surmounts to the final system matrices
+\begin{equation*}
+    E_\msc{ph} \coloneqq \begin{pmatrix}
+        E_\msc{p} & 0 & 0 \\
+        0 & M_1 & 0 \\
+        0 & 0 & 0
+    \end{pmatrix},\quad A_\msc{ph} \coloneqq \begin{pmatrix}
+        A_\msc{p} & 0 & 0 \\
+        0 & 0 & -\id[m] \\
+        0 & \id[m] & 0
+    \end{pmatrix},\quad B_\msc{ph} \coloneqq \begin{pmatrix}
+        B_\msc{p} \\
+        0 \\
+        \id[m]
+    \end{pmatrix},\quad C_\msc{ph} \coloneqq \begin{pmatrix}
+        C_\msc{p} & 0 & \id[m]
+    \end{pmatrix},\quad D_\msc{ph} \coloneqq M_0,\quad Q_\msc{ph} \coloneqq \begin{pmatrix}
+        Q_\msc{p} & 0 \\
+        0 & \id[2m]
+    \end{pmatrix}.
+\end{equation*}
+
+\subsection{PH-IRKA}\label{subsec:ph-irka}
 
 In Subsection~\ref{subsec:interpolation-reduction} we introduced the Iterative Rational Krylov Algorithm (IRKA).
 In~\cite{Gugercin2012}, the authors propose an extended variant of the IRKA algorithm that produces port-Hamiltonian reduced realizations of the transfer function $\zeta$.
+When considering Algorithm~\ref{alg:irka} it is not inherently clear that the constructed subspaces $V_r$ and $W_r$ induce a passive system, however choosing $W_r = Q V_r {(V_r\trans Q V_r)}\inv$ generates a subspace which satisfies this exact constraint, thus realizing a port-Hamiltonian system; cf.~\cite[Section~2.4]{Breiten2022}.
+The so-called \emph{PH-IRKA} algorithm is shown in Algorithm~\ref{alg:ph-irka}.
 
 \begin{algorithm}\label{alg:ph-irka}
     \caption{port-Hamiltonian Iterative Rational Krylov Algorithm (pH-IRKA); cf.~\cite[Algorithm~1]{Gugercin2012}}
@@ -85,4 +205,7 @@ and verify that the following equality is satisfied
 \end{equation*}
 
 \itodo{figure out how to include an E term in phirka}
-\itodo{reference~\cite[Remark~4]{Gugercin2012} to note that the updated subspace in Algorithm~\ref{alg:ph-irka} can be chosen to be real (conjugate interpolation points, \dots)}
+
+\begin{remark}
+    Additional port-Hamiltonian reduction techniques for example are contained in~\cite{Polyuga2010, Chaturantabut2016, Cherifi2019, BGD2020}.
+\end{remark}

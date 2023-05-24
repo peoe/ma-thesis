@@ -75,11 +75,10 @@ This reduction even yields an $\mcl{H}_\infty$-error estimate.
 
 \begin{theorem}[{Cf.~\cite[Theorem~6.4]{BB2017}}]\label{thm:h-inf-error}
     Let $\Sigma_{\msc{lti}}$ be an asymptotically stable and minimal system.
-    If $(A_{\msc{b}}, B_{\msc{b}}, C_{\msc{b}}, D_{\msc{b}}, \id)$ is a balanced realization with an ordered sequence of numbers $\sigma_1 > \cdots > \sigma_k > 0$ and the Gramians
+    If $(A_{\msc{b}}, B_{\msc{b}}, C_{\msc{b}}, D_{\msc{b}}, \id)$ is a balanced realization with an ordered sequence of numbers $\sigma_1 > \cdots > \sigma_k > 0$ such that the Gramians $P = Q = \diag{\sigma_1 \id, \dots, \sigma_k \id}$ can be used to create the reduced system $\hat{\Sigma}_{\msc{LTI}} (\hat{A}, \hat{B}, \hat{C}, \hat{D}, \id)$, then $\hat{\Sigma}_{\msc{LTI}}$ is asymptotically stable, minimal, balanced, and fulfills
     \begin{equation*}
-        P = Q = \diag{\sigma_1 \id, \dots, \sigma_k \id}
+        \norm{\Sigma_{\msc{lti}} - \hat{\Sigma}_{\msc{lti}}}{} \leq 2 \sum\limits_{i = r + 1}^k \sigma_i.
     \end{equation*}
-    and
 \end{theorem}
 
 \subsection{Interpolation-Based Reduction}\label{subsec:interpolation-reduction}
@@ -96,18 +95,16 @@ This results in an actual closed subspace of $\mcl{H}_2$ with the properties tha
     \item $\mcl{M}(\mu)$ is a $(r - 1)$-dimensional subspace of $\mcl{H}_2$,
     \item $\zeta_r \in \mcl{M}(\mu)$ is the unique bestapproximation of $\zeta$ in $\mcl{H}_2$ if and only if it holds that $\inner{\zeta - \zeta_r}{H}{\mcl{H}_2} = 0$ for all other transfer functions $H \in \mcl{M}(\mu)$.
 \end{enumerate}
-A further relation between the approximation of transfer functions via the mirror images of the system poles is highlighted in~\cite[Section~3.1]{Gugercin2008}.
+A further relation between the approximation of transfer functions via the mirror images of the system poles is highlighted in~\cite[Section~3.1]{Gugercin2008}, indicating that a system can be optimally interpolated by choosing the mirror images of the poles as interpolation points.
 While these minimizers may be unique, the original optimization set is not convex, and hence multiple local minimizers may be characterized as in~\cite[Theorem~3.2]{Gugercin2008}.
-Though this formulation may unify multiple optimization conditions, we shall continue with the interpolatory framework.
+Though this formulation may unify multiple optimization conditions, we continue with the interpolatory framework.
 
 \itodo{show that $\mcl{M}$ is closed subspace in $\mcl{H}_2$}
 \itodo{source for proper rational transfer functions}
 
-\itodo{insert H2 error estimate from Gugercon2008, Proposition3.3}
-
 For any local minimizer we can formulate the following necessary optimality conditions of the $\mcl{H}_2$ SISO bestapproximation problem
 \begin{equation}\label{eq:siso-conditions}
-    \zeta_r(- \omega_i) = \zeta(- \omega_i),\quad \zeta'_r(- \omega_i) = \zeta'(- \omega_i) \forall i = 1, \dots, r.
+    \zeta_r(- \omega_i) = \zeta(- \omega_i),\quad \zeta'_r(- \omega_i) = \zeta'(- \omega_i) \quad \forall i = 1, \dots, r.
 \end{equation}
 These conditions~\eqref{eq:siso-conditions} can be generalized to MIMO systems such that they read
 \begin{equation}\label{eq:mimo-conditions}
@@ -149,4 +146,4 @@ This algorithm relies heavily on a realization-based formulation, however varian
     }
 \end{algorithm}
 
-\itodo{make set notations more verbose}
+\itodo{reference~\cite[Remark~4]{Gugercin2012} to note that the updated subspace in Algorithm~\ref{alg:ph-irka} can be chosen to be real (conjugate interpolation points, \dots)}
