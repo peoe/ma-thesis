@@ -1,0 +1,30 @@
+\section{Inferring port-Hamiltonian Systems}\label{sec:inferring-ph-systems}
+
+We introduce several methods to infer port-Hamiltonian systems in a nonintrusive manner throughout this section.
+First, we commence by a hybrid approach in Subsection~\ref{subsec:realization-based-inference}: We apply a nonintrusive method to obtain an LTI system and afterwards compute a port-Hamiltonian realization from it.
+Secondly, we discuss the interpolation-based \emph{Loewner Approach} in Subsection~\ref{subsec:loewner-approach} which acts on transfer function data similar to Subsection~\ref{subsec:interpolation-reduction}.
+Lastly, there exist a number of optimization-based inference methods similar to the problems in Section~\ref{sec:mor-quadratically-embedded-manifolds} which we highlight in Subsection~\ref{subsec:optimization-based-inference}.
+
+\subsection{Realization-Based Inference}\label{subsec:realization-based-inference}
+
+Realization-based Operator Inference works as a two step procedure:
+\begin{enumerate}
+    \item Use the provided data $x_i, u_i, y_i, i = 1, \dots, k$ to infer an LTI realization $\Sigma_\msc{lti} \colon (A, B, C, D, E)$, and
+    \item Compute a port-Hamiltonian realization $\Sigma_\msc{ph}$ from $\Sigma_\msc{lti}$.
+\end{enumerate}
+This approach thus is inherently hybrid, because the second step requires access to the system matrices, and cannot be considered purely nonintrusive.
+There are also quite a few downsides to this way of approximating a system.
+If the second step is not very robust with respect to the input data, then even small numerical errors or noise in the measurements can cause the result to be nonsensical.
+We thus only consider this framework as a theoretical stepping stone to introduce later more direct ideas.
+
+As first step~\cite{Miller2012, Gosea2021, Heiland2022, Peherstorfer2016, Peherstorfer2017}.
+Sindy~\cite{Brunton2016, Kaiser2018, Kaheman2020, Lee2022}?
+qwer.~\cite{Cherifi2019, Beattie2022}.
+
+\subsection{The Loewner Approach}\label{subsec:loewner-approach}
+
+asf.~\cite{Antoulas2019, BGD2020, Cherifi2022, Peherstorfer2017, Poussot2022, GKA2021}.
+
+\subsection{Optimization-Based Inference}\label{subsec:optimization-based-inference}
+
+zxcv.~\cite{Gillis2018, Günther2023, Morandin2022, Najnudel2021, Schwerdtner2021, SV2021, Schwerdtner2022, Schwerdtner2023}.

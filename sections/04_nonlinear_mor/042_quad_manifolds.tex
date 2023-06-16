@@ -1,0 +1,59 @@
+\section{MOR on Quadratically Embedded Manifolds}\label{sec:mor-quadratically-embedded-manifolds}
+
+In recent years, advances have been made in computing nonlinear models without the aid of Neural Networks.
+These methods are inspired by modal derivatives cf.~\cite{Wu2016, Weeger2016, Jain2017, Rutzmoser2017}, and have been brought into a direct model reduction context by fitting polynomial system components, cf.~\cite{Peherstorfer2016, BGK2020, BGH2020, Gosea2021, Barnett2022, Khodabakhshi2022, Qian2022, Geelen2023}.
+Most importantly, the inference approaches described in these publications allow for simple Least Squares solutions of the inference problem, resolving the explainability constraint of the Neural Network methods mentioned in Section~\ref{sec:nn-mor}.
+For this section we focus on the formulation introduced in~\cite{Geelen2023} alongside some slight alterations made on our behalf.
+
+In the linear MOR framework, the full state variables $x \in \bb{R}^n$ are reduced by linear projection onto the span of a low-dimensional subspace $\bb{R}^r \subseteq \bb{R}^n$
+\begin{equation}\label{eq:linear-state-reduction}
+    x \approx x_\msc{ref} + V x_r,
+\end{equation}
+where $x_\msc{ref}$ serves as a reference state, the choice of which is problem dependent.
+There exist multiple options to construct the projection matrix $V \in \bb{R}^{n \times r}$, however these methods are outside the scope of this thesis therefore we refer to~\cite{BOP2017, BCO2017} and the references contained therein.
+We measure the reduction error for the state snapshot matrices $X \coloneqq (x_1, \dots, x_k), X_\msc{ref} \coloneqq (x_\msc{ref}, \dots, x_\msc{ref}) \in \bb{R}^{n \times k}$ by computing the backprojection error of the reduced states
+\begin{equation}
+    \mcl{E} \coloneqq (\id - V V\trans) (X - X_\msc{ref}).
+\end{equation}
+
+To construct the polynomially embedded manifold model, we compare the full order and the reduced state at every point in time
+\begin{equation*}
+    \varepsilon(t) \coloneqq x(t) - x_\msc{ref} - V x_r(t).
+\end{equation*}
+Crucially, we now get to choose how we want to approximate the signed error term $\varepsilon$.
+Theoretically we could choose an arbitrary linear combination of nonlinear transformations of the reduced state $x_r$, but for simplicity we constrain ourselves to the quadratic terms $W (x_r \odot x_r)$.
+Here, the operator $\odot$ denotes the \emph{Khatri-Rao Product} also known as the column-wise Kronecker product as described in~\cite{Slyusar1999, Shuangzhe2008, Favier2021} acting on a state variable $x_r = {\big( x_{(1)}^{\phantom{1}}, \dots, x_{(r)}^{\phantom{1}} \big)}\trans$ in the following manner
+\begin{equation}\label{eq:redundant-khatri-rao}
+    x_r \odot x_r \coloneqq {\left( x_{(1)}^2, x_{(1)}^{\phantom{1}} x_{(2)}^{\phantom{1}}, \dots, x_{(1)}^{\phantom{1}} x_{(r)}^{\phantom{1}}, x_{(2)}^{\phantom{1}} x_{(1)}^{\phantom{1}}, x_{(2)}^2, \dots, x_{(r)}^2 \right)}\trans \in \bb{R}^{r^2}.
+\end{equation}
+In practice, this formulation contains many duplicate entries such as $x_{(1)}^{\phantom{1}} x_{(2)}^{\phantom{1}}$ and $x_{(2)}^{\phantom{1}} x_{(1)}^{\phantom{1}}$, thus we can omit these terms without losing any information.
+This surmounts in the reformulation of the Khatri-Rao product as
+\begin{equation}\label{eq:khatri-rao}
+    x_r \odot x_r \coloneqq {\left( x_{(1)}^2, x_{(1)}^{\phantom{1}} x_{(2)}^{\phantom{1}}, \dots, x_{(1)}^{\phantom{1}} x_{(r)}^{\phantom{1}}, x_{(2)}^2, \dots, x_{(r)}^2 \right)}\trans \in \bb{R}^{\frac{r (r + 1)}{2}}.
+\end{equation}
+By abuse of notation we will henceforth consider the ordinary Khatri-Rao product~\eqref{eq:redundant-khatri-rao} in theoretic discussions while using the non-redundant version~\eqref{eq:khatri-rao} in numerical applications.
+This replacement results in no changes for the product's properties that we need to exploit later on.
+To ease the handling of the different dimensions invoked by both versions of the product we denote the quadratic data dimension as $q \in \bb{N}$.
+
+\itodo{prove that distributivity for product holds true for non-redundant khatri-rao}
+
+Next, we must compute the quadratic projection operator $W \in \bb{R}^{n \times q}$.
+Ideally, we would like to directly use the system matrices of the original system to compute $W$, however with regard to non-intrusive modelling approaches it is necessary to come up with a data-driven formulation.
+We take a cue from obtaining best data fits and similarly to the simple Neural Network loss~\eqref{eq:reduction-loss} minimize the cost functional
+\begin{equation}\label{eq:quadratic-least-squares-sum}
+    \sum\limits_{i = 1}^k \norm{x(t_k) - x_\msc{ref} - V x_r(t_k) - W (x_r(t_k) \odot x_r(t_k))}{2}^2.
+\end{equation}
+If we transpose all summands within the norm in~\eqref{eq:quadratic-least-squares-sum} and form the quadratic data matrix $Q \coloneqq {\big( x_r(t_1) \odot x_r(t_1), \dots, x_r(t_k) \odot x_r(t_k) \big)}\trans$, then we can equivalently solve the Least Squares problem
+\begin{equation}\label{eq:quadratic-least-squares}
+    W = \argmin\limits_{W \in \bb{R}^{n \times q}} \frac{1}{2} \norm{Q\trans W\trans - \mcl{E}\trans}{F}^2.
+\end{equation}
+This problem is overdetermined if $\rank{Q} > q$ is satisfies, which means that as a necessary condition $k > q$ has to hold.
+Practically, problem~\eqref{eq:quadratic-least-squares} can be separated into $n$ vector-valued problems, allowing for a parallel solution algorithm.
+In order to stabilize the problem~\eqref{eq:quadratic-least-squares}, additional regularization terms can be employed as demonstrated in~\cite[Equation~15]{Geelen2023}.
+Some of the terms they discuss stabilize the problem using Frobenius norms, whereas others like the $2$-norm serve to induce \emph{sparsity by groups}: effectively creating columns sparsity in $W$.
+
+Similar proposals have been made in~\cite{Peherstorfer2016}, covering LTI systems that additionally depend on the quadratic internal state representations.
+Additionally, they prove results showing that the inferred operators converge to intrusively reduced operators for vanishing time steps implying that data from stable systems eventually allows to infer stable systems again, cf.~\cite[Theorem~1, Corollary~1]{Peherstorfer2016}.
+Unfortunately, this direct approach cannot be applied to the inferral of port-Hamiltonian systems because the structural constraints on the system matrices do not allow for a straightforward solution of the Least Squares problem.
+The upside of trying to infer pH systems is the fact that we have access to the input and output variables of the pH system as well as the internal states, allowing for multiple different paradigms.
+To overcome this hurdle we discuss several approaches in Section~\ref{sec:inferring-ph-systems}.

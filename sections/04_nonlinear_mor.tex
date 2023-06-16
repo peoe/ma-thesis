@@ -1,15 +1,13 @@
-\chapter{Nonlinear Model Reduction}\label{chap:nonlinear-mor}
+\chapter{Inferring Models}\label{chap:inferring-models}
 
-qwer.
+In this chapter we highlight some approaches to nonlinear inferrential Model Order Reduction.
+We begin by introducing non-structured inference frameworks.
+Firstly, Section~\ref{sec:nn-mor} introduces the idea of fixing the problems of linear MOR as mentioned in Section~\ref{sec:limitations-linear-mor} by using Neural Networks for high dimensional approximation.
+Afterwards, we contrast this high-handed idea with a much simpler Least Squares-based projection in Section~\ref{sec:mor-quadratically-embedded-manifolds}.
+Following this conceptual anchor point we introduce several ways how may obtain quadratic port-Hamiltonian models by means of operator inference/operator interpolation in Section~\ref{sec:inferring-ph-systems}.
+Lastly, we combine the idea of quadratic models and inference-based modelling in Section~\ref{sec:quadratically-embedded-manifolds-ph-systems}.
 
-\section{MOR with Quadratically Embedded Manifolds}\label{sec:mor-quadratically-embedded-manifolds}
-
-qwer.
-
-\section{Inferring port-Hamiltonian Systems}\label{sec:inferring-ph-systems}
-
-qwer.
-
-\section{Quadratically Embedded Manifolds for pH Systems}\label{sec:quadratically-embedded-manifolds-ph-systems}
-
-qwer.
+\input{sections/04_nonlinear_mor/041_nns.tex}
+\input{sections/04_nonlinear_mor/042_quad_manifolds.tex}
+\input{sections/04_nonlinear_mor/043_inferring_ph.tex}
+\input{sections/04_nonlinear_mor/044_quad_ph.tex}
