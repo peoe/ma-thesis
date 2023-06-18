@@ -2,7 +2,6 @@
 
 We introduce several methods to infer port-Hamiltonian systems in a nonintrusive manner throughout this section.
 First, we commence by a hybrid approach in Subsection~\ref{subsec:realization-based-inference}: We apply a nonintrusive method to obtain an LTI system and afterwards compute a port-Hamiltonian realization from it.
-Secondly, we discuss the interpolation-based \emph{Loewner Approach} in Subsection~\ref{subsec:loewner-approach} which acts on transfer function data similar to Subsection~\ref{subsec:interpolation-reduction}.
 Lastly, there exist a number of optimization-based inference methods similar to the problems in Section~\ref{sec:mor-quadratically-embedded-manifolds} which we highlight in Subsection~\ref{subsec:optimization-based-inference}.
 
 \subsection{Realization-Based Inference}\label{subsec:realization-based-inference}
@@ -17,14 +16,300 @@ There are also quite a few downsides to this way of approximating a system.
 If the second step is not very robust with respect to the input data, then even small numerical errors or noise in the measurements can cause the result to be nonsensical.
 We thus only consider this framework as a theoretical stepping stone to introduce later more direct ideas.
 
-As first step~\cite{Miller2012, Gosea2021, Heiland2022, Peherstorfer2016, Peherstorfer2017}.
-Sindy~\cite{Brunton2016, Kaiser2018, Kaheman2020, Lee2022}?
-qwer.~\cite{Cherifi2019, Beattie2022}.
+\itodo{talk about advantages of skipping intermediaries, or somehow give a reason why we would want to concern ourselves with these methods and not just the one we use at the end\dots}
 
-\subsection{The Loewner Approach}\label{subsec:loewner-approach}
+\itodo{move peherstorfer paragraph from previous section here!} % Operator inference for ltis with potential quadratic terms~\cite{Peherstorfer2016}
 
-asf.~\cite{Antoulas2019, BGD2020, Cherifi2022, Peherstorfer2017, Poussot2022, GKA2021}.
+Alternatively, there exists the paradigm of the \emph{Loewner method}.
+The Loewner method uses samples of the transfer function and the corresponding tangential directions to construct system matrices.
+We commence as described in~\cite{BGD2020} with the transfer function $H$ of an LTI $\Sigma_\msc{lti}$ and the interpolation points
+\begin{equation*}
+    v_i\trans \coloneqq  l_i\trans H(\mu_i),\quad w_i \coloneqq H(\lambda_i) r_i,\quad D\coloneqq H(\infty),
+\end{equation*}
+such that the interpolation conditions fulfill $l_i, r_i, v_i, w_i \in \bb{C}^n, \lambda_i, \mu_i \in \bb{C}$.
+Then we can construct the Loewner and the shifted Loewner matrix
+\begin{equation}\label{eq:loewner-matrices}
+    \bb{L} \coloneqq \begin{pmatrix}
+        \frac{l_1 w_1  - v_1 r_1}{\lambda_1 - \mu_1} & \cdots & \frac{l_1 w_n  - v_1 r_n}{\lambda_n - \mu_1} \\
+        \vdots & \ddots & \vdots \\
+        \frac{l_n w_1  - v_n r_1}{\lambda_1 - \mu_n} & \cdots & \frac{l_n w_n  - v_n r_n}{\lambda_n - \mu_n}
+    \end{pmatrix},\quad \bb{L}_\sigma \coloneqq \begin{pmatrix}
+        \frac{\lambda_1 l_1 w_1 - \mu_1 r_1 v_1}{\lambda_1 - \mu_1} & \cdots & \frac{\lambda_n l_1 w_n - \mu_1 r_n v_1}{\lambda_n - \mu_1} \\
+        \vdots & \ddots & \vdots \\
+        \frac{\lambda_1 l_n w_1 - \mu_n r_1 v_n}{\lambda_1 - \mu_n} & \cdots & \frac{\lambda_n l_n w_n - \mu_n r_n v_n}{\lambda_n - \mu_n}
+    \end{pmatrix}
+\end{equation}
+If the Loewner matrix is invertible, then according to~\cite[Theorem~5.1]{BGD2020} we can use $\bb{L}, \bb{L}_\sigma, L \coloneqq {(l_1, \dots, l_n)}\trans, R \coloneqq (r_1, \dots, r_n), M \coloneqq \diag{\mu_1, \dots, \mu_n}, N \coloneqq \diag{\lambda_1, \dots, \lambda_n}, V = {(v_1, \dots, v_n)}\trans, W \coloneqq (w_1, \dots, w_n)$ to create a realization of $\Sigma_\msc{lti}$ with the following block structure
+\begin{equation}\label{eq:loewner-realization}
+    \begin{pmatrix}
+        A - sE & B \\
+        C & D
+    \end{pmatrix} = \begin{pmatrix}
+        \bb{L}_\sigma - s \bb{L} & V \\
+        -W & 0
+    \end{pmatrix} + \begin{pmatrix}
+        -L \\
+        \id
+    \end{pmatrix} D \begin{pmatrix}
+        R & \id
+    \end{pmatrix}.
+\end{equation}
+This basic procedure can be amended and extended in various ways.
+Choosing a specific set of interpolation points such as the set of spectral zeros of the transfer function $H$ can yield additional properties which directly allow the construction of a port-Hamiltonian system, cf.~\cite{BGD2020, Poussot2022}.
+Instead of directly sampling the transfer function we can also apply transformations such as the Discrete Fourier Transform to time domain data, cf.~\cite{Peherstorfer2017, Cherifi2021}.
+Other authors have also directly incorporated higher order terms into the theoretical aspects, for example by making use of the fact that a system's Loewner matrices are generalized observability and controllability Gramians, cf.~\cite{Antoulas2019}, or by iteratively computing a separate higher order model which fits the systemic error onto the higher order terms, cf.~\cite{GKA2021}.
+
+\itodo{the last thought is very close to our procedure, remark on that?}
+
+% loewner
+% loewner with estimation of spectral zeros~\cite{BGD2020}
+% builds on Benner~\cite{BGD2020}, modifies for non strict passivity~\cite{Poussot2022}; their problems are very similar to mine!
+% Time domain loewner~\cite{Peherstorfer2017}
+% time domain loewner via dft, hints on how large of a frequency space can be estimated for set of number of samples~\cite{Cherifi2022}
+% Loewner for linear and bilinear-quadratic systems~\cite{Antoulas2019}
+% loewner multi model method with several transfer functions and iterative algorithm to match quadratic part to data of oscillatory inputs~\cite{GKA2021}
+
+In a similar fashion to the Least Squares problem in Section~\ref{sec:mor-quadratically-embedded-manifolds}, we can formulate a similar approach to fit operators in LTI systems.
+This idea relies on \emph{Dynamic Mode Decomposition} (DMD) as well as its extension Input-Output DMD (ioDMD) as introduced in~\cite{Annoni2016}.
+For an LTI system $\Sigma_\msc{lti}$ with a known matrix $E \in \bb{R}^{n \times n}$ under the control variable $u \in \bb{R}^m$ we concatenate the individual data snapshots for time points $t_i, i = 1, \dots, k$ into the matrices
+\begin{equation}\label{eq:iodmd-data-matrices}
+    \Omega \coloneqq \begin{pmatrix}
+        x_1 & \cdots & x_k \\
+        u_1 & \cdots & u_k
+    \end{pmatrix},\quad \Gamma \coloneqq \begin{pmatrix}
+        E \dot{x}_1 & \cdots & E \dot{x}_k \\
+        y_1 & \cdots & y_k
+    \end{pmatrix}.
+\end{equation}
+This allows us to write the entire LTI as $\Gamma = \Sigma \Omega$, where $\Sigma$ corresponds to the block matrix containing the remaining system matrices of $\Sigma_\msc{lti}$, cf.~\cite{Heiland2022}.
+The usual Least Squares problem
+\begin{equation*}
+    \min\limits_{\Sigma \in \bb{R}^{n + m \times n + m}} \norm{\Gamma - \Sigma \Omega}{F}^2
+\end{equation*}
+is solved by $\Sigma = \Gamma \Omega^\dagger$, whereby $\Omega^\dagger$ denotes the pseudo-inverse of $\Omega$.
+The ioDMD framework can further be extended to bilinear and quadratic terms by appropriately amending the data matrices, cf.~\cite{Gosea2021}.
+
+% dmd
+%fitting structured data with dmd/least squares formulations~\cite{Gosea2021}
+% overview article without direct connection to ltis~\cite{Heiland2022}
+
+Another way of inferring LTI systems is by measuring the output producec by a unit step input at the initial time point, cf.~\cite{Miller2012}.
+The essential idea in this approach is to estimate the system's transfer function and by extend its Gramians, somewhat reflecting the procedure of the time domain Loewner method.
+Afterwards, a realization is assembled using an SVD-based computation.
+
+Finally, as a last method to come up with an initial LTI realization, we propose to extend the \emph{Sparse Identification of Nonlinear Dynamics} (SINDy) framework.
+SINDy is based on a function library-based approach, which has been extended to implicit dynamical systems~\cite{Mangan2016, Kaheman2020} and systems with control terms~\cite{Kaiser2018}.
+The principle formulation of SINDy as given in~\cite{Brunton2016} acts on dynamical systems of the form
+\begin{equation}\label{eq:sindy-explicit-dynamical-system}
+    \frac{\dif}{\dif t} x = f(x).
+\end{equation}
+Next, we construct the state data matrices $X \coloneqq (x_1, \dots, x_k), \dot{X} \coloneqq (\dot{x}_1, \dots, \dot{x}_k)$ and apply transformations to form the function library
+\begin{equation}\label{eq:sindy-explicit-library}
+    \Theta(X) = (\theta_1(X), \dots, \theta_\ell(X)).
+\end{equation}
+Similarly to DMD, we fit the transformed data such that
+\begin{equation}\label{eq:sindy-explicit-fit}
+    \dot{X} = P \Theta(X),
+\end{equation}
+where $P \in \bb{R}^{n \times n}$ is a sparse matrix of coefficients reflecting which library components have been selected in the final model.
+The solution $P$ has to be computed with a sparsity promoting solver such as Sequentially Thresholded Least Squares (LTLSQ)~\cite{Zhang2019}, the LASSO framework~\cite{Tibshirani1996}, or other similar methods as mentioned in~\cite{Kaiser2018, Kaheman2020}.
+To start to fit LTIs with SINDy, we have to convert the explicit system~\eqref{eq:sindy-explicit-dynamical-system} as well as the corresponding fitting equation~\eqref{eq:sindy-explicit-fit} into the implicit formulation
+\begin{equation}\label{eq:sindy-implicit-equations}
+    \begin{aligned}
+        f(x, \dot{x}) &= 0, \\
+        P \Theta(X, \dot{X}) &= 0.
+    \end{aligned}
+\end{equation}
+This transformation yields the implicit-SINDy~\cite{Mangan2016} or SINDy-PI~\cite{Kaheman2020} methods, with the latter having demonstrated better performance results.
+This slightly changes the conditions on the sparse coefficient matrix $P$, requiring that $\diag{P} = 0$ because otherwise $P = \id$ would be a trivial solution, cf.~\cite[Section~3~(b)]{Kaheman2020}.
+Incorporating control variables into the SINDy framework has been accomplished by including appropriate control and mixed state-control terms into the function library~\eqref{eq:sindy-explicit-library}, cf.~\cite{Kaiser2018}, yielding the so-called SINDYc procedure, which under certain conditions equals DMDc.
+Unlike the procedure of DMDc we propose to proceed with SINDYc but instead consider stacked variables instead of the usual extended library.
+This results in the explicit system
+\begin{equation}\label{eq:sindy-io}
+    f(x, u) = P \Theta \begin{pmatrix}
+        X \\
+        U
+    \end{pmatrix} = \begin{pmatrix}
+        E \\
+        \id
+    \end{pmatrix} \begin{pmatrix}
+        \dot{x} & y
+    \end{pmatrix},
+\end{equation}
+where we have to adapt $\Theta$ such that the library allows for transformations on certain data components.
+Thereafter, we can extract the matrix blocks from the coefficient matrix $P$ as the system matrices $A, B, C, D$ by selecting the appropriate row and column indices.
+As an extension to the linear library we would employ if we were to fit an LTI system, we could also directly choose quadratic, other higher order polynomial, or even nonpolynomial nonlinear transformations, thus direclty affecting the objective of this thesis, however we postpone this discussion to Section~\ref{sec:quadratically-embedded-manifolds-ph-systems}.
+We also have to remark that while we can easily repurpose SINDy to procure an LTI realization, using this framework to compute port-Hamiltonian realizations is much more difficult as a cause of the structural matrix constraints.
+It would certainly be possible to find a depiction of the optimizational constraints for a pH realization, however the efficiency of the plain solvers as LTLSQ or LASSO would be lost alongside the convexity of the underlying optimization problem.
+Some authors have proposed remedies to this restriction, however their methods once again involve Neural Networks, therefore incurring the explainability issue, cf.~\cite{Lee2022}.
+
+\itodo{we don't actually need SINDy-PI, remove it!}
+
+% sindy
+% first paper on sindy~\cite{Brunton2016}
+% sindyc~\cite{Kaiser2018}
+% implicit sindy~\cite{Kaheman2020}
+% structure preserving sindy (especially pH) with nns~\cite{Lee2022}
+
+As soon as we have constructed an LTI system $\Sigma_\msc{lti}$, we can manipulate it until we are left with a port-Hamiltonian system.
+To this end, there are again various methods available in the literature, and we only discuss a few that are closely related to the concepts we brought up so far.
+It is imperative that we again mention the similarities between stable, positive real, and port-Hamiltonian systems as already mentioned in Subsection~\ref{subsec:prbt} and~\cite{Cherifi2022}, because most of the ideas to convert LTI systems to pH systems are closely linked to these concepts.
+
+First off, we discuss the results from~\cite{Beattie2022}.
+In this publication they explicitly derive properties that an LTI system needs to fulfill such that one can compute a port-Hamiltonian realization from $\Sigma_\msc{lti} = (A, B, C, D, \id)$.
+They use the real KYP linear matrix inequality~\eqref{eq:kyp-lmi}
+\begin{equation*}
+    \begin{pmatrix}
+        - A\trans Q - Q A & C\trans - QB \\
+        C - B\trans Q & D + D\trans
+    \end{pmatrix} \succcurlyeq 0.
+\end{equation*}
+Afterwards, they use the symmetric positive definite solution $\tilde{Q}$ to derive a regular transformation matrix $T$ from a Cholesky decomposition $\tilde{Q} = T\trans T$ and show that the transformed system
+\begin{equation}\label{eq:ph-transformation-from-passive-system}
+    Q \coloneqq \id,\quad J \coloneqq \frac{1}{2} (T A T\inv - {(T A T\inv)}\trans),\quad R \coloneqq -\frac{1}{2} (T A T\inv + {(T A T\trans)}\trans),\quad G \coloneqq \frac{1}{2} (T B + {(C T\inv)}\trans),\quad P \coloneqq \frac{1}{2} (T B + {(C T\inv)}\trans),\quad S \coloneqq \frac{1}{2} (D + D\trans),quad N \coloneqq \frac{1}{2} (D - D\trans)
+\end{equation}
+is indeed port-Hamiltonian.
+This method is feasible only for small to medium scale problems, cf.~\cite{Cherifi2019}, leading them to propose two other methods.
+The first of these proposes to use a similar procedure based on a positive real balanced truncation, resulting in much better scaling with respect to large model orders.
+The second method takes a completely different angle: optimizing over the matrices to obtain a best fit oh a port-Hamiltonian system to the original LTI $\Sigma_\msc{lti}$.
+This change of perspective opens up a set of optimization-based methods, which we discuss in Subsection~\ref{subsec:optimization-based-inference}.
+
+% ph system computation
+% three approaches to compute ph from lti~\cite{Cherifi2019}; 1: unstructured approach via lmis 2: based on prbt 3: nearest ph system via optimization
+%computation of ph system through ares and lyapunov eqs for stability~\cite{Beattie2022}
 
 \subsection{Optimization-Based Inference}\label{subsec:optimization-based-inference}
 
-zxcv.~\cite{Gillis2018, Günther2023, Morandin2022, Najnudel2021, Schwerdtner2021, SV2021, Schwerdtner2022, Schwerdtner2023}.
+This subsections deals with optimization-based port-Hamiltonian operator inference methods.
+In essence, all of these methods choose some parametrization of the underlying system matrices and then run an optimization algorithm to minimize a chosen cost functional.
+The choice of algorithm and the construction of the individual optimization objectives and the inclusion of structural constraints heavily varies between publications.
+As a final point one has to consider the initialization of the matrices.
+Most of the algorithms are very succeptible to initial value changes because the optimization problems are generally neither convex nor linear.
+
+The first method we mention is the \emph{Nearest Port-Hamiltonian System}, cf.~\cite{Gillis2018} and~\cite{Cherifi2019} respectively, where the connection between the two is immediate by the last comments of the preceding subsection and by Subsection~\ref{subsec:prbt}.
+The main minimization problem is given by the relation to the inferred LTI system $\Sigma_\msc{lti} = (A, B, C, D, E)$
+\begin{equation}\label{eq:nearest-ph-system-minimization-problem}
+    \begin{aligned}
+        &\min\limits_{F, J, R, G, P, S, N} \mcl{J}(F, J, R, G, P, S, N) \coloneqq \norm{A - (J - R)}{F}^2 + \norm{B - (G - P)}{F}^2 + \norm{C - {(G + P)}\trans}{F}^2 + \norm{D - (S - N)}{F}^2 + \norm{E - F}{F}^2 \\
+        &\suchthat -J = J\trans, -N = N\trans, R = R\trans \succcurlyeq 0, S = S\trans \succcurlyeq 0, E = E\trans \succcurlyeq 0, \begin{pmatrix}
+            R & P \\
+            P\trans & S
+        \end{pmatrix} \succcurlyeq 0.
+    \end{aligned}
+\end{equation}
+In~\cite{Gillis2018}, this problem is solved with the \emph{Fast Gradient Method} in combination with a restarting mechanism to stabilize convergence properties of the algorithm.
+Along with these features, the objective function~\eqref{eq:nearest-ph-system-minimization-problem} allows for weights on each individual summand prioritizing certain system terms during the optimization.
+Besides this advantage, the computation of the cost function gradient is very easy for the Frobenius norm $\nabla_X \norm{A X - B}{F}^2 = 2 A\trans (A X - B)$.
+As far as initialization is concerned, the authors of~\cite{Gillis2018} propose two methods: Initialize with additional assumptions on some matrices such that the optimal solution can be given analytically, and solve an LMI to compute an initial port-Hamiltonian realization along the same lines of arguments as previous links between LMIs and positive real systems have done.
+
+% optimization based projection of admissible lti system as ph~\cite{Gillis2018}; includes conversion from an lti system $(A, B, C, D, E)$ to ph, restarting FGM; this is similar to~\cite[Section~5]{Cherifi2019}
+
+Another FGM related method is the \emph{Port-Hamiltonian Dynamic Mode Decomposition} (pH DMD), cf.~\cite{Morandin2022}.
+As the name implies this is closely linked to the DMD method in that we want to minimize
+\begin{equation}\label{eq:ph-dmd-minimization-problem}
+    \norm{\begin{pmatrix}
+        E \dot{X} \\
+        -Y
+    \end{pmatrix} - (\mcl{J} - \mcl{R}) \begin{pmatrix}
+        X \\
+        U
+    \end{pmatrix}}{F}^2,
+\end{equation}
+under the constraints that the system block matrices fulfill $-\mcl{J} = \mcl{J}\trans$ and $\mcl{R} = \mcl{R}\trans \succcurlyeq 0$, where $X, \dot{X}, U$ and $Y$ are data matrices which in this case include adjustments made via implicit midpoint rules.
+Their method differentiates itself from the previous FGM by the fact that their algorithm does not allow for restarting, however they also do not offer the ability of optimizing the $E$ matrix at the same time because in this setting it would lead to the trivial minimizer $0$,cf.~\cite[Remark~3.3]{Morandin2022}.
+On the other hand, pH DMD improves the way they can handle different modes of initialization.
+If either $\mcl{J}$ or $\mcl{R}$ are given, then the other matrix can be explicitly computed.
+This allows for a step wise update of the matrices within the FGM algorithm.
+Further, by considering the weighted Least Squares problem
+\begin{equation*}
+    \min \norm{\begin{pmatrix}
+        X & U
+    \end{pmatrix} (\begin{pmatrix}
+        E \dot{X} \\
+        -Y
+    \end{pmatrix} - (\mcl{J} - \mcl{R}) \begin{pmatrix}
+        X \\
+        U
+    \end{pmatrix})}{F}^2
+\end{equation*}
+provides an initial approximate solution to the unweighted problem with an estimate bounding the error of the unweighted problem by the weighted version, cf.~\cite[Lemma~3.11]{Morandin2022}.
+One downside of this method is the inherent formulation using a fixed time stwpping scheme: pH DMD is based of implicit midpoint stepping and choosing other time stepping schemes such as RK45 may decrease performance of the algorithm despite the time scheme being of a higher order.
+
+% FGM derivative algorithm, no restarting allowed; initializes from weighted least squares problem~\cite{Morandin2022}
+
+Instead of optimizing over e.\@ g.\@ symmetric positive (semi-)definite matrices at once it would also be reasonable to decompose all structure-constrained matrices into distinctive, basis-like elements such that we can simply adjust the coefficients through a parameter optimization with simpler constraints.
+To this end we highlight a couple papers which use this idea in slightly different ways.
+
+Firstly, for a port-Hamiltonian system of the form
+\begin{equation*}
+    \begin{pmatrix}
+        \dot{x} \\
+        y
+    \end{pmatrix} = (\mcl{J} - \mcl{R}) \begin{pmatrix}
+        \nabla_x H(x) \\
+        u
+    \end{pmatrix}
+\end{equation*}
+we can deconstruct an exemplary skew-symmetric matrix $J \in \bb{R}^{3 \times 3}$ as
+\begin{equation}\label{eq:skew-symmetric-basis-decomposition}
+    N(\omega) = \omega_1 \begin{pmatrix}
+        0 & 1 & 0 \\
+        -1 & 0 & 0 \\
+        0 & 0 & 0
+    \end{pmatrix} + \omega_2 \begin{pmatrix}
+        0 & 0 & 1 \\
+        0 & 0 & 0 \\
+        -1 & 0 & 0
+    \end{pmatrix} + \omega_3 \begin{pmatrix}
+        0 & 0 & 0 \\
+        0 & 0 & 1 \\
+        0 & -1 & 0
+    \end{pmatrix}.
+\end{equation}
+Instead of considering the gradient over the entire matrix, we can now consider it over the set of parameters $\omega = (\omega_1, \dots, \omega_p)$ as the vector $\nabla_\omega \mcl{J}$.
+Similarly, we deconstruct an exemplary positive definite matrix $R \in \bb{R}^{3 \times 3}$ in a similar fashion to~\eqref{eq:skew-symmetric-basis-decomposition} as
+\begin{equation}
+    R(\omega) = T(\omega) T(\omega)\trans,\quad T(\omega) = \omega_1 \begin{pmatrix}
+        1 & 0 & 0 \\
+        0 & 0 & 0 \\
+        0 & 0 & 0
+    \end{pmatrix} + \omega_2 \begin{pmatrix}
+        0 & 0 & 0 \\
+        1 & 0 & 0 \\
+        0 & 0 & 0
+    \end{pmatrix} + \omega_3 \begin{pmatrix}
+        0 & 0 & 0 \\
+        0 & 1 & 0 \\
+        0 & 0 & 0
+    \end{pmatrix} + \omega_4 \begin{pmatrix}
+        0 & 0 & 0 \\
+        0 & 0 & 0 \\
+        1 & 0 & 0
+    \end{pmatrix} + \omega_5 \begin{pmatrix}
+        0 & 0 & 0 \\
+        0 & 0 & 0 \\
+        0 & 1 & 0
+    \end{pmatrix} + \omega_6 \begin{pmatrix}
+        0 & 0 & 0 \\
+        0 & 0 & 0 \\
+        0 & 0 & 1
+    \end{pmatrix}.
+\end{equation}
+Following along with~\cite{Najnudel2021}, we can also parametrize the Hamiltonian $H$ (in our case represented solely by $E$) using a kernel estimation with a parameter and compute the gradient of the error $\norm{\Sigma_\msc{ph}(\theta) - \Sigma_\msc{ph}}{F}^2$ by analytical computations.
+The authors then use an \emph{Interior Points Method} with an additional logarithmic barrier in the objective function.
+The barrier penalizes the matrix coefficients if they do not ressemble a positive definite matrix, hence this method relies on a weakly enforced constraint.
+
+\itodo{look into the details of this optimization, this cannot remain this vague!}
+\itodo{using $\mcl{J}$ as both a system matrix and the optimization objective is a very bad idea!}
+
+% modelling via separating J and R into separate components, but slightly differently from Schwerdtner, inherently approximate the hamiltonian function through kernels, R initialization via least squares~\cite{Najnudel2021}
+
+parametrized gradients via adjoint equations with block matrices, robust optimization condition analysis, no interesting numerical experiments~\cite{Günther2023}
+
+parametrization of ph system and analytical gradients of maximum singular value difference~\cite{Schwerdtner2021}; default loss, not yet ``leveled least squares'', includes noisy errors
+
+parametrization, no gradients but mentions results from other papers with analyticald grads, error adaptive selection of sampling points~\cite{SV2021}; levelled loss with maximum singular value
+
+parametrization, analytical gradients, remarks on asymptotic stability~\cite{Schwerdtner2022}; levelled loss with multiple singular values
+
+parametrization, analytical gradients, remarks on initialization strategy~\cite{Schwerdtner2023}; levelled loss with multiple singular values

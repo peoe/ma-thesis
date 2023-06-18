@@ -52,6 +52,10 @@ Practically, problem~\eqref{eq:quadratic-least-squares} can be separated into $n
 In order to stabilize the problem~\eqref{eq:quadratic-least-squares}, additional regularization terms can be employed as demonstrated in~\cite[Equation~15]{Geelen2023}.
 Some of the terms they discuss stabilize the problem using Frobenius norms, whereas others like the $2$-norm serve to induce \emph{sparsity by groups}: effectively creating columns sparsity in $W$.
 
+\itodo{the sections before this can be moved to the previous chapter, as they are really more concerned with MOR\dots The methods may be explained a bit differently to amount for the operator inference content within the sources}
+
+\itodo{the part below should really be in the next section}
+
 Similar proposals have been made in~\cite{Peherstorfer2016}, covering LTI systems that additionally depend on the quadratic internal state representations.
 Additionally, they prove results showing that the inferred operators converge to intrusively reduced operators for vanishing time steps implying that data from stable systems eventually allows to infer stable systems again, cf.~\cite[Theorem~1, Corollary~1]{Peherstorfer2016}.
 Unfortunately, this direct approach cannot be applied to the inferral of port-Hamiltonian systems because the structural constraints on the system matrices do not allow for a straightforward solution of the Least Squares problem.
