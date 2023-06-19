@@ -237,7 +237,19 @@ One downside of this method is the inherent formulation using a fixed time stwpp
 
 % FGM derivative algorithm, no restarting allowed; initializes from weighted least squares problem~\cite{Morandin2022}
 
-Instead of optimizing over e.\@ g.\@ symmetric positive (semi-)definite matrices at once it would also be reasonable to decompose all structure-constrained matrices into distinctive, basis-like elements such that we can simply adjust the coefficients through a parameter optimization with simpler constraints.
+Instead of choosing a Least Squares approach which fits both the output data and the state data, we can also consider a calibration problem
+\begin{equation}
+    \mcl{J}(y, \omega) \coloneqq \frac{1}{2} \int\limits_0^T \abs{y(t) - y_\msc{data}(t)}{}^2 \dif t + \frac{\lambda}{2} \abs{\omega - \omega_\msc{ref}}{}^2, \quad \lambda \geq 0
+\end{equation}
+where $\omega = (J, R, Q, G, P, x_0)$ is a vectorized representation of the system matrices and the initial data as described in~\cite{Günther2023}.
+The authors compute the gradient of the objective functional by considering the error in the two states and computing the first order optimality conditions with Fréchet derivatives.
+Along the way they also derive an adjoint equation and use standard techniques to state a gradient descent algorithm.
+The downside of this approach is that we have to solve the system at every step of the algorithm.
+While this may be feasible on small scale or reduced order models, it does not pose well for models of larger scales such as the quadratic models we want to consider later on, whose order scales polynomially.
+
+% parametrized gradients via adjoint equations with block matrices, robust optimization condition analysis, no interesting numerical experiments~\cite{Günther2023}
+
+Instead of optimizing over e.\@ g.\@ symmetric positive (semi-) definite matrices at once it would also be reasonable to decompose all structure-constrained matrices into distinctive, basis-like elements such that we can simply adjust the coefficients through a parameter optimization with simpler constraints.
 To this end we highlight a couple papers which use this idea in slightly different ways.
 
 Firstly, for a port-Hamiltonian system of the form
@@ -268,7 +280,7 @@ we can deconstruct an exemplary skew-symmetric matrix $J \in \bb{R}^{3 \times 3}
 \end{equation}
 Instead of considering the gradient over the entire matrix, we can now consider it over the set of parameters $\omega = (\omega_1, \dots, \omega_p)$ as the vector $\nabla_\omega \mcl{J}$.
 Similarly, we deconstruct an exemplary positive definite matrix $R \in \bb{R}^{3 \times 3}$ in a similar fashion to~\eqref{eq:skew-symmetric-basis-decomposition} as
-\begin{equation}
+\begin{equation}\label{eq:spsd-basis-decomposition}
     R(\omega) = T(\omega) T(\omega)\trans,\quad T(\omega) = \omega_1 \begin{pmatrix}
         1 & 0 & 0 \\
         0 & 0 & 0 \\
@@ -304,7 +316,31 @@ The barrier penalizes the matrix coefficients if they do not ressemble a positiv
 
 % modelling via separating J and R into separate components, but slightly differently from Schwerdtner, inherently approximate the hamiltonian function through kernels, R initialization via least squares~\cite{Najnudel2021}
 
-parametrized gradients via adjoint equations with block matrices, robust optimization condition analysis, no interesting numerical experiments~\cite{Günther2023}
+Unlike the approach from~\cite{Najnudel2021}, the authors of~\cite{Schwerdtner2021, SV2021, Schwerdtner2022, Schwerdtner2023} parametrize the the matrices not as the relevant components of the matrices as in~\eqref{eq:skew-symmetric-basis-decomposition} and~\eqref{eq:spsd-basis-decomposition}, but rather as (strictly) upper triangular and full matrices.
+To this end we introduce the vector-to-matrix functions
+\begin{align}
+    &\vecmat \colon \bb{C}^{n \cdot m} \to \bb{C}^{n \times m}, \theta \mapsto \begin{pmatrix}
+        v_1 & \cdots & v_n \\
+        \vdots & \ddots & \vdots \\
+        v_{(n - 1) \cdot m + 1} & \cdots & v_{n \cdot m}
+    \end{pmatrix} \label{eq:v2m}\\
+    &\vecupper \colon \bb{C}^{\frac{n (n + 1)}{2}} \to \bb{C}^{n \times n}, \theta \mapsto \begin{pmatrix}
+        v_1 & v_2 & \cdots & v_n \\
+        0 & v_{n + 1} & \cdots & v_{2n - 1} \\
+        0 & 0 & \ddots & \vdots \\
+        0 & 0 & 0 & v_{\frac{n (n + 1)}{2}}
+    \end{pmatrix} \label{eq:v2u}\\
+    &\vecstrict \colon \bb{C}^{\frac{n (n - 1)}{2}} \to \bb{C}^{n \times n}, \theta \mapsto \begin{pmatrix}
+        0 & v_1 & v_2 & \cdots & v_{n - 1} \\
+        0 & 0 & v_n & \cdots & v_{2n - 2} \\
+        0 & 0 & 0 & \ddots & \vdots \\
+        0 & 0 & 0 & 0 v_{\frac{n (n - 1)}{2}}
+    \end{pmatrix} \label{eq:v2s}
+\end{align}
+and their inverse matrix-to-vector functions
+\begin{equation*}
+    \matvec \colon \bb{C}^{n \times m} \to \bb{C}^{n \cdot m},\quad \uppervec \colon \bb{C}^{n \times n} \to \bb{C}^{\frac{n (n + 1)}{2}},\quad \strictvec \colon \bb{C}^{n \times n} \to \bb{C}^{\frac{n (n - 1)}{2}}.
+\end{equation*}
 
 parametrization of ph system and analytical gradients of maximum singular value difference~\cite{Schwerdtner2021}; default loss, not yet ``leveled least squares'', includes noisy errors
 
