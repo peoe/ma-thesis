@@ -1,7 +1,7 @@
 \section{Structure Preserving Linear MOR}\label{sec:structure-preserving-mor}
 
 In Section~\ref{sec:system-mor} we covered some systemtheoretic linear MOR frameworks.
-Now we want to cover some more aspects of linear MOR for LTI systems by introducing structure preserving qualities into the Balanced Truncation and Interpolation-Based Reduction methods.
+Now we want to cover some more aspects of linear MOR for \acp{LTI} by introducing structure preserving qualities into the Balanced Truncation and Interpolation-Based Reduction methods.
 This is by no means easy because the restriction from the general set of matrices to more specific sets like the family of skew-symmetric or symmetric positive definite matrices causes the underlying optimization set to no longer be convex.
 Thus, the corresponding optimization problems to find optimal systems become either hard to solve or the solutions may no longer be unique, adding locally optimal systems to the set of problems we have to face.
 
@@ -15,9 +15,9 @@ This method relies on the fact that positive real systems are closely linked to 
     Analogously, the transfer function is called \emph{strictly positive real} if in addition to the other two conditions the matrix sum is positive definite.
 \end{definition}
 
-To extend the standard balancing procedure to result in positive real systems we relate the passivity of an LTI $(A, B, C, D, E)$ with its positive real transfer funciton $\zeta$ as indicated by~\cite[Corollary~2.7]{CGH2022}.
+To extend the standard balancing procedure to result in positive real systems we relate the passivity of an \ac{LTI} $(A, B, C, D, E)$ with its positive real transfer funciton $\zeta$ as indicated by~\cite[Corollary~2.7]{CGH2022}.
 In addition, we can also formulate the condition $D + D\trans \succcurlyeq 0$ on the system's feedthrough term; cf.~\cite[Definition~5]{Gugercin2007}.
-Similarly to the Lyapunov equations~\eqref{eq:lyapunov-equations} it can be shown that an LTI $(A, B, C, D, \id)$ is strictly positive real if and only if there exist symmetric positive definite matrices $K, L \in \bb{C}^{n \times n}$ such that the following algebraic Riccati equations (AREs) are satisfied
+Similarly to the Lyapunov equations~\eqref{eq:lyapunov-equations} it can be shown that an \ac{LTI} $(A, B, C, D, \id)$ is strictly positive real if and only if there exist symmetric positive definite matrices $K, L \in \bb{C}^{n \times n}$ such that the following algebraic Riccati equations (AREs) are satisfied
 \begin{equation}\label{eq:riccati-equations}
     \begin{aligned}
         A\trans K + K A + (K B - C\trans) (D + D\trans)\inv (K B - C\trans)\trans &= 0 \\
@@ -36,13 +36,13 @@ The solutions $K, L$ of~\eqref{eq:riccati-equations} are related by $K = L\inv$,
 To balance the strictly positive real system we then perform the same calculations as in~\eqref{eq:balancing} on the minimal solutions $K_{\msc{min}}$ and $L_{\msc{min}}$.
 Such a system is then called strictly positive real balanced if $K_{\msc{min}} = L_{\msc{min}}$ can be written as the diagonal matrix $\diag{\pi_1 \id[s_1], \dots, \pi_q \id[s_q]}$ with the $\pi_i$ ordered such that $0 < \pi_q < \cdots < \pi_1 \leq 1$ and $s_i$ the corresponding multiplicities summing up to $\sum s_i = n$.
 
-\itodo{change complex numbers to real ones here, we're talking about pr systems and assumed real numbers for ph systems! don't forget herm to trans!}
+\itodo{change complex numbers to real ones here, we're talking about pr systems and assumed real numbers for \ac{PH} systems! don't forget herm to trans!}
 
-For the rest of this subsection we focus on demonstrating the necessary conditions such that a positive real LTI system can be represented in port-Hamiltonian form.
-First off result, we require a few additional definitions which relate observability and controllability to the minimality of the LTI system.
+For the rest of this subsection we focus on demonstrating the necessary conditions such that a positive real \ac{LTI} can be represented in port-Hamiltonian form.
+First off result, we require a few additional definitions which relate observability and controllability to the minimality of the \ac{LTI}.
 
 \begin{definition}[{Cf.~\cite[Equation~(8)]{CGH2022} or~\cite[Theorem~6.2]{Freund2004}}]\label{def:behaviourally-controllable}
-    An LTI system $(A, B, C, D, E)$ is said to be \emph{behaviourally controllable} if
+    An \ac{LTI} $(A, B, C, D, E)$ is said to be \emph{behaviourally controllable} if
     \begin{equation}\label{eq:behaviourally-controllable}
         \forall \lambda  \in \bb{C} \colon \rank{\begin{matrix}
             \lambda E - A & B
@@ -51,7 +51,7 @@ First off result, we require a few additional definitions which relate observabi
 \end{definition}
 
 \begin{definition}[{Cf.~\cite[Equation~(8)]{CGH2022} or~\cite[Theorem~6.2]{Freund2004}}]\label{def:behaviourally-observable}
-    An LTI system $(A, B, C, D, E)$ is said to be \emph{behaviourally observable} if
+    An \ac{LTI} $(A, B, C, D, E)$ is said to be \emph{behaviourally observable} if
     \begin{equation}\label{eq:behaviourally-observable}
         \forall \lambda  \in \bb{C} \colon \rank{\begin{matrix}
             \lambda {(E - A)}\trans & C\trans
@@ -60,7 +60,7 @@ First off result, we require a few additional definitions which relate observabi
 \end{definition}
 
 \begin{lemma}[{Cf.~\cite{Verghese1981, Dai1989}}]\label{lem:minimality-conditions}
-    An LTI descriptor system $(A, B, C, D, E)$ is minimal if and only if it fulfills Equations~\eqref{eq:behaviourally-controllable} and~\eqref{eq:behaviourally-observable} as well as the following conditions
+    An \ac{LTI} descriptor system $(A, B, C, D, E)$ is minimal if and only if it fulfills Equations~\eqref{eq:behaviourally-controllable} and~\eqref{eq:behaviourally-observable} as well as the following conditions
     \begin{equation*}
         \rank{\begin{matrix}
             E & B
@@ -80,7 +80,7 @@ In the same manner as~\cite[Equation~(37)]{CGH2022} we construct the Laurent exp
 \itodo{make sure you define what the $k$ is in this expansion, this might not be consistent with other sources!}
 
 \begin{lemma}[{Adapted from~\cite[Lemma~5.1]{CGH2022}}]\label{lem:lti-laurent-series}
-    Let $(A, B, C, D, E)$ be a positive real LTI descriptor system with a transfer function $\zeta$ with its Laurent series as defined in Equation~\eqref{eq:laurent-series}.
+    Let $(A, B, C, D, E)$ be a positive real \ac{LTI} descriptor system with a transfer function $\zeta$ with its Laurent series as defined in Equation~\eqref{eq:laurent-series}.
     Then we can write the transfer function as a sum of a proper rational function $\zeta_{\msc{p}}$ and the matrix $M_1$
     \begin{equation}\label{eq:pr-lti-laurent-series}
         \zeta(s) = \zeta_{\msc{p}}(s) + M_1 s.

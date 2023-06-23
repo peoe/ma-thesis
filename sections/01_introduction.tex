@@ -28,8 +28,8 @@ These methods often require more computational effort, but in turn create reduce
 In the context of port-Hamiltonian systems we are particularly interested in preserving the specific system matrix structures because these induce the physical properties of the system, namely energy conservation.
 For port-Hamiltonian systems there exist a few varieties of reduction methods, cf.~\cite{Polyuga2010}:
 \begin{itemize}
-    \item The first idea is to start off with a system theoretic superset of (linear) port-Hamiltonian problems: \emph{Linear Time-Invariant} (LTI) systems.
-        The idea is to reduce a LTI represenation of the full order port-Hamiltonian model and then find the closest port-Hamiltonian representation of the reduced order LTI system; cf.~\cite{Gillis2018, Cherifi2019}.
+    \item The first idea is to start off with a system theoretic superset of (linear) port-Hamiltonian problems: \ac{LTI} systems.
+        The idea is to reduce a \ac{LTI} represenation of the full order port-Hamiltonian model and then find the closest port-Hamiltonian representation of the reduced order \ac{LTI} system; cf.~\cite{Gillis2018, Cherifi2019}.
     \item The second method is to interpolate the transfer function of the port-Hamiltonian system in a specific way to obtain a \emph{realization} of the transfer function which satisfies the structural requirements of a port-Hamiltonian system; cf.~\cite{BGD2020, Schwerdtner2021, Poussot2022}.
         The downside of this approach is that we actually need to sample the frequency domain of the underlying system instead of just relying on time domain data.
     \item The third idea is closely linked to the second, however it tries to get around the frequency domain by sampling the time domain and only then transform the data gathered into the frequency space by means of discrete Fourier transforms; cf.~\cite{Najnudel2021, Cherifi2022, Günther2023}.
@@ -43,10 +43,10 @@ Profiting from the nonlinear capabilities of (Deep/Convolutional) Neural Network
 A few publications in particular employ Deep Convolutional Autoencoders, a component of neural networks explicitly designed for dimensionality reduction of data; cf.~\cite{Lee2020, Benner2022, Romor2023, Buchfink2023}.
 The most substantial problems of this line of thinking are twofold: firstly, training of Neural Network components heavily relies on data treatment and can be very time demanding, and secondly, Neural Networks tend to function as black boxes thus leaving all desires for explainability of the underlying computations unfulfilled.
 
-Aside from these direct neural network approximation methods one can also consider the machine learning-based identification problems for nonlinear dynamics through the so-called SINDy framework; cf.~\cite{Brunton2016, Kaheman2020}.
+Aside from these direct neural network approximation methods one can also consider the machine learning-based identification problems for nonlinear dynamics through the so-called \acs{SINDy} framework; cf.~\cite{Brunton2016, Kaheman2020}.
 This framework cannot only handle general nonlinear functions used for approximation, but also incorporate control variables and structure-preserving methods such as for port-Hamiltonian systems; cf.~\cite{Kaiser2018, Lee2022}.
-The downside to structure-preserving SINDy is that, so far, this method has only been implemented using a neural network approach which we want to avoid.
-For this purpose we give a reformulation of SINDYc with respect to port-Hamiltonian systems that entirely relies on constrained optimization.
+The downside to structure-preserving \acs{SINDy} is that, so far, this method has only been implemented using a neural network approach which we want to avoid.
+For this purpose we give a reformulation of \acs{SINDYc} with respect to port-Hamiltonian systems that entirely relies on constrained optimization.
 
 As another alternative to the high handed Neural Network approach polynomial approximation has been proposed in mitigating nonlinear models.
 This ansatz involves generating higher order polynomial data sets from an originally linear set of fitting data, however because to the infeasible exponential growth of the data dimension for increasing polynomial orders, most authors restrict themselves to second or third order terms, resulting in quadratically or cubically embedded manifolds.

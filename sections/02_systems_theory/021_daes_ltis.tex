@@ -28,7 +28,7 @@ This output again takes the shape of a time dependent function $y \colon I \to \
 for two matrices $C \in \bb{C}^{q \times n}, D \in \bb{C}^{q \times q}$.
 
 \begin{definition}\label{def:lti}
-    A \emph{linear time-invariant (descriptor) system} $\Sigma_{\msc{LTI}}$ is a system of equations
+    A \emph{linear time-invariant (descriptor) system} $\Sigma_{\msc{lti}}$ is a system of equations
     \begin{equation}\label{eq:lti}
         \Sigma_{\msc{lti}} \colon \left\lbrace
         \begin{aligned}
@@ -55,14 +55,14 @@ for two matrices $C \in \bb{C}^{q \times n}, D \in \bb{C}^{q \times q}$.
     In practice, these systems mostly come up when we either do not have the derivative data $\dot{x}_i \coloneqq \dot{x}(t_i)$ available to us or when we discretize a continuous system using a time stepping procedure.
 \end{remark}
 
-Any LTI system in this form is said to act in the time domain, meaning that the inputs of both the \emph{states} $x, \dot{x}$, and the control $u$ and output variable $y$ are functions of time.
+Any \ac{LTI} system in this form is said to act in the time domain, meaning that the inputs of both the \emph{states} $x, \dot{x}$, and the control $u$ and output variable $y$ are functions of time.
 From a system theoretic point of view however it is necessary to also consider the system from the \emph{frequency domain}.
 We thus describe the system not for a point in time, but rather for a certain frequency with which we excite the system.
 We compute this frequency formulation by applying the \emph{Laplace transform}
 \begin{equation*}\label{eq:laplace-trafo}
     \mcl{L}[f](\omega) = \int\limits_0^\infty \exp{(- \omega t)} f(t) \dif t
 \end{equation*}
-to the individual components in the LTI system; cf.~\cite{Arendt2011}.
+to the individual components in the \ac{LTI} system; cf.~\cite{Arendt2011}.
 \begin{equation}
     X = \mcl{L}[x],\quad \dot{X} = \mcl{L}[\dot{x}],\quad U = \mcl{L}[u],\quad Y = \mcl{L}[y].
 \end{equation}
@@ -79,7 +79,7 @@ Therefore, under the assumption that the matrix pencil $\omega E - A$ is regular
     \implies & & (\omega E - A) X(\omega) &= E x(0) + B U(\omega) \\
     \implies & & X(\omega) &= (\omega E - A)\inv E x(0) + (\omega E - A)\inv B U(\omega).
 \end{alignat*}
-We apply this result to the second equation of the LTI system~\eqref{eq:lti} thus describing the output in terms of the frequency-based control by the equation
+We apply this result to the second equation of the \ac{LTI} system~\eqref{eq:lti} thus describing the output in terms of the frequency-based control by the equation
 \begin{equation}\label{eq:frequency-output}
     \begin{aligned}
         Y(\omega) &= C X(\omega) + D U(\omega) \\
@@ -94,7 +94,7 @@ More general definitions can also incorporate the initial state dependency in th
 We codify the control-output relation by defining the intermediate $\zeta$ such that $Y(\omega) = \zeta(\omega) U(\omega)$.
 
 \begin{definition}\label{def:transfer-function}
-    The \emph{transfer function} $\zeta \colon \bb{C} \to \bb{C}^{q \times q}$ of an LTI system~\eqref{eq:lti} is defined by the expression
+    The \emph{transfer function} $\zeta \colon \bb{C} \to \bb{C}^{q \times q}$ of an \ac{LTI} system~\eqref{eq:lti} is defined by the expression
     \begin{equation}\label{eq:transfer-function}
         \zeta(\omega) = C (\omega E - A)\inv B + D
     \end{equation}
@@ -144,9 +144,9 @@ We codify the control-output relation by defining the intermediate $\zeta$ such 
     The realization $(A, B, C, D, E)$ of the associated transfer function $\zeta$ is said to be \emph{minimal} if the number of states $n$ used in the realization is minimal.
 \end{definition}
 
-The transfer function of an LTI system is an essential tool for constructing reduced order models.
+The transfer function of an \ac{LTI} system is an essential tool for constructing reduced order models.
 We will discuss this further in Chapter~\ref{chap:linear-mor}, however we now introduce two key ideas for this later topic: stability of a system and the poles of a transfer function.
-Following~\cite{Benner2017}, an LTI system is called \emph{stable} if all the finite generalized eigenvalues of the matrix pencil $\omega E - A$ are contained in the left half of the complex plain $\bb{C}_{-} = \iset{\sigma \in \bb{C}}{\fk{Re}(\sigma) < 0}$.
+Following~\cite{Benner2017}, an \ac{LTI} system is called \emph{stable} if all the finite generalized eigenvalues of the matrix pencil $\omega E - A$ are contained in the left half of the complex plain $\bb{C}_{-} = \iset{\sigma \in \bb{C}}{\fk{Re}(\sigma) < 0}$.
 Stable in this context refers to the fact that a solution for any stable system tends to zero for $t \rightarrow \infty$ as long as no control is applied ($u(t) \equiv 0$).
 This property guarantees that a system is asymptotically stable.
 Very closely connected to the eigenvalues of $\omega E - A$ are the poles of the transfer function associated with the realization $(A, B, C, D, E)$.

@@ -16,7 +16,7 @@ To train the encoder-decoder pair, we typically choose a loss function that corr
     \mcl{L}_{\msc{data}}(\theta) \coloneqq \frac{1}{\abs{\mcl{S}}{}} \sum\limits_{x \in \mcl{S}} \norm{x - d\left( e(x) \right)}{}^2.
 \end{equation}
 In addition to this loss function we can also express systemic constraints on the reduced order models.
-As an example, the approach highlighted in~\cite{Buchfink2023} introduces a second loss function $\mcl{L}_{\msc{sympl}}(\theta)$ such that the combined loss function $\mcl{L} \coloneqq \alpha \mcl{L}_{\msc{data}} + (1 - \alpha) \mcl{L}_{\msc{sympl}}$ not only generates a reduced order model but also weakly constraints this reduced order model to exhibit symplectic structure very much similar to the restrictions we enforced upon LTI systems to conform to the port-Hamiltonian view.
+As an example, the approach highlighted in~\cite{Buchfink2023} introduces a second loss function $\mcl{L}_{\msc{sympl}}(\theta)$ such that the combined loss function $\mcl{L} \coloneqq \alpha \mcl{L}_{\msc{data}} + (1 - \alpha) \mcl{L}_{\msc{sympl}}$ not only generates a reduced order model but also weakly constraints this reduced order model to exhibit symplectic structure very much similar to the restrictions we enforced upon \acp{LTI} to conform to the port-Hamiltonian view.
 
 When we consider Neural Network-based approximation we get a clear distinction between the offline and the online phases: We have to perform expensive calculations while training the model offline, and thereafter we can efficiently evaluate the simple structure of the network to quickly get results in the online phase.
 Unfortunately, the training process conceptually obfuscates how the low order state representation $e(x)$ is connected to the full order state $x$.

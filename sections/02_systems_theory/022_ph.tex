@@ -74,7 +74,7 @@ In this case we restrict ourselves to a quadratic Hamiltonian formulation
 \end{definition}
 
 \begin{remark}
-    Because we inherently derived this representation from the matrices $(A, B, C, D, E)$, we can in turn describe any linear time-invariant port-Hamiltonian system $\Sigma_{\msc{phlti}}$ as an LTI system $\Sigma_{\msc{lti}}$ by defining its system matrices to be
+    Because we inherently derived this representation from the matrices $(A, B, C, D, E)$, we can in turn describe any linear time-invariant port-Hamiltonian system $\Sigma_{\msc{phlti}}$ as an \ac{LTI} system $\Sigma_{\msc{lti}}$ by defining its system matrices to be
     \begin{equation*}
         A \coloneqq (J - R) Q,\quad B \coloneqq G - P,\quad C = (G + P)\trans Q, D = S - N.
     \end{equation*}
@@ -87,7 +87,7 @@ In this case we restrict ourselves to a quadratic Hamiltonian formulation
     \begin{equation*}
         H \coloneqq Q\trans E,\quad \tilde{J} \coloneqq Q\trans J Q,\quad \tilde{R} \coloneqq Q\trans R Q, \tilde{G} \coloneqq Q\trans G, \tilde{P} \coloneqq Q\trans P.
     \end{equation*}
-    Using this substitution we can write our original pH system as
+    Using this substitution we can write our original \ac{PH} system as
     \begin{equation*}
         \Sigma \colon \left\lbrace
         \begin{aligned}
@@ -100,7 +100,7 @@ In this case we restrict ourselves to a quadratic Hamiltonian formulation
 \end{remark}
 
 \begin{remark}
-    For a nonzero direct feedthrough term $D \coloneqq S - N$ we can reformulate any pH LTI system $\Sigma_{\msc{phlti}}$ such that we eliminate the feedthrough term.
+    For a nonzero direct feedthrough term $D \coloneqq S - N$ we can reformulate any \ac{PH} \ac{LTI} system $\Sigma_{\msc{phlti}}$ such that we eliminate the feedthrough term.
     We begin by decomposing $D$ according to~\cite[Theorem~2.13]{Mehrmann2022} into $D = U_D \begin{pmatrix}
         D_1 & 0 \\
         0 & 0
@@ -178,7 +178,7 @@ Additionally, while we motivated the dissipation inequality as a property of por
 \end{remark}
 
 \begin{remark}
-    Any passive LTI system $\Sigma_{\msc{lti}}$ given by a realization $(A, B, C, D, E)$ with a quadratic Hamiltonian $\mcl{H}(x) = x\trans H x$ allows for a port-Hamiltonian $\Sigma_{\msc{phlti}}$ if the matrix $H$ is positive semidefinite and it satisfies $\knl{H} \subseteq \knl{A}$; cf.~\cite[Theorem~7.1]{VanDerSchaft2014}.
+    Any passive \ac{LTI} system $\Sigma_{\msc{lti}}$ given by a realization $(A, B, C, D, E)$ with a quadratic Hamiltonian $\mcl{H}(x) = x\trans H x$ allows for a port-Hamiltonian $\Sigma_{\msc{phlti}}$ if the matrix $H$ is positive semidefinite and it satisfies $\knl{H} \subseteq \knl{A}$; cf.~\cite[Theorem~7.1]{VanDerSchaft2014}.
 \end{remark}
 
 Generally speaking, Definition~\ref{def:phlti} is too restrictive because the system~\eqref{eq:phlti} only allows for coefficients constant in time.

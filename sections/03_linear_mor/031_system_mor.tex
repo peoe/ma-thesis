@@ -1,13 +1,13 @@
 \section{System Theoretic Linear MOR}\label{sec:system-mor}
 
-System-theoretic model order reduction offers two main perspectives: reduction resulting from the notion of LTIs as in Definition~\ref{def:lti}, and reduction by means of the transfer function from Definition~\ref{def:transfer-function}.
+System-theoretic model order reduction offers two main perspectives: reduction resulting from the notion of \acp{LTI} as in Definition~\ref{def:lti}, and reduction by means of the transfer function from Definition~\ref{def:transfer-function}.
 We give an idea of matrix-based reduction in Subsection~\ref{subsec:balanced-truncation} explaining the method of Balanced Truncation.
 Afterwards, we discuss reduction by means of interpolating the transfer function in Subsection~\ref{subsec:interpolation-reduction}.
 
 \subsection{Balanced Truncation}\label{subsec:balanced-truncation}
 
 \emph{Balanced Truncation} is a method consisting of a two step procedure: balancing and truncation.
-Firstly, balancing the LTI system means transforming the system so that states that are hard to reach by an outside acting control are also hard to observe.
+Firstly, balancing the \ac{LTI} means transforming the system so that states that are hard to reach by an outside acting control are also hard to observe.
 Secondly, truncation of the balanced system constitutes itself by omission of the matrix entries corresponding to the hard-to-reach and hard-to-observe system states.
 In so acting we create a system reflecting the easily observable and reachable states.
 
@@ -20,8 +20,8 @@ For our purposes, it suffices to consider ordinary balanced truncation and posit
 Positive real balanced truncation in particular is interesting in the context of this thesis because it produces passive systems which are closely linked to port-Hamiltonian systems.
 
 We commence with standard balanced truncation as described in~\cite{BB2017}.
-Consider $(A, B, C, D, E)$ to be an LTI system as in Definition~\ref{def:lti}.
-It is important to note that most balanced truncation literature employs LTIs that have $E = \id$.
+Consider $(A, B, C, D, E)$ to be an \ac{LTI} as in Definition~\ref{def:lti}.
+It is important to note that most balanced truncation literature employs \acp{LTI} that have $E = \id$.
 If $E$ is regular, then any system $(A, B, C, D, E)$ can easily be transformed into a system of the form $(\tilde{A}, \tilde{B}, C, D, \id)$ by appliying $E\inv$ to the state equation in~\eqref{eq:lti}.
 We utilize of abuse of notation and henceforth simply refer to our system by the matrices $(A, B, C, D, \id)$.
 
@@ -57,7 +57,7 @@ Such a balancing transformation can be constructed by computing the decompositio
 \begin{equation}\label{eq:balancing}
     P = S\trans S,\quad Q = R\trans R,\quad S R\trans = U \Sigma V\trans
 \end{equation}
-and then putting $T = \Sigma\inv[\frac{1}{2}] V\trans R$ we can transform the original LTI system $(A, B, C, D, \id)$ into its balanced form $(T A T\inv, T B, C T\inv, D, \id)$.
+and then putting $T = \Sigma\inv[\frac{1}{2}] V\trans R$ we can transform the original \ac{LTI} $(A, B, C, D, \id)$ into its balanced form $(T A T\inv, T B, C T\inv, D, \id)$.
 To finally truncate the system, that is obtain a reduced order system, we assume that the balanced system can be split into matrix blocks
 \begin{equation*}
     T A T\inv = \begin{pmatrix}
@@ -70,12 +70,12 @@ To finally truncate the system, that is obtain a reduced order system, we assume
         C_1 & C_2
     \end{pmatrix}.
 \end{equation*}
-We then define the balanced ROM as $(A_1, B_1, C_1, D, \id)$.
+We then define the balanced \ac{ROM} as $(A_1, B_1, C_1, D, \id)$.
 This reduction even yields an $\mcl{H}_\infty$-error estimate.
 
 \begin{theorem}[{Cf.~\cite[Theorem~6.4]{BB2017}}]\label{thm:h-inf-error}
     Let $\Sigma_{\msc{lti}}$ be an asymptotically stable and minimal system.
-    If $(A_{\msc{b}}, B_{\msc{b}}, C_{\msc{b}}, D_{\msc{b}}, \id)$ is a balanced realization with an ordered sequence of numbers $\sigma_1 > \cdots > \sigma_k > 0$ such that the Gramians $P = Q = \diag{\sigma_1 \id, \dots, \sigma_k \id}$ can be used to create the reduced system $\hat{\Sigma}_{\msc{LTI}} (\hat{A}, \hat{B}, \hat{C}, \hat{D}, \id)$, then $\hat{\Sigma}_{\msc{LTI}}$ is asymptotically stable, minimal, balanced, and fulfills
+    If $(A_{\msc{b}}, B_{\msc{b}}, C_{\msc{b}}, D_{\msc{b}}, \id)$ is a balanced realization with an ordered sequence of numbers $\sigma_1 > \cdots > \sigma_k > 0$ such that the Gramians $P = Q = \diag{\sigma_1 \id, \dots, \sigma_k \id}$ can be used to create the reduced system $\hat{\Sigma}_{\msc{lti}} (\hat{A}, \hat{B}, \hat{C}, \hat{D}, \id)$, then $\hat{\Sigma}_{\msc{lti}}$ is asymptotically stable, minimal, balanced, and fulfills
     \begin{equation*}
         \norm{\Sigma_{\msc{lti}} - \hat{\Sigma}_{\msc{lti}}}{} \leq 2 \sum\limits_{i = r + 1}^k \sigma_i.
     \end{equation*}
@@ -84,7 +84,7 @@ This reduction even yields an $\mcl{H}_\infty$-error estimate.
 \subsection{Interpolation-Based Reduction}\label{subsec:interpolation-reduction}
 
 Whereas balanced reduced models try to minimize the $\mcl{H}_\infty$ norm, interpolation-based reduced models aim to find bestapproximations with respect to the $\mcl{H}_2$ norm; cf.~\cite[Section~3]{Gugercin2008}.
-The problem with this type of optimization problem is that the set of stable LTI systems does not form a subspace of $\mcl{H}_2$, indicating that finding solutions to this problem is hard.
+The problem with this type of optimization problem is that the set of stable \acp{LTI} does not form a subspace of $\mcl{H}_2$, indicating that finding solutions to this problem is hard.
 As a replacement for this optimization set we consider the set of all proper rational transfer functions that have simple poles in the open left half plane $\bb{C}_{-}$
 \begin{equation*}
     \mcl{M}(\mu) \coloneqq \iset{\zeta \text{ proper rational transfer function}}{\zeta \text{ has simple poles at } \mu_i, i = 1, \dots, r}.

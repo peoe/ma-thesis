@@ -1,14 +1,14 @@
 \section{Inferring port-Hamiltonian Systems}\label{sec:inferring-ph-systems}
 
 We introduce several methods to infer port-Hamiltonian systems in a nonintrusive manner throughout this section.
-First, we commence by a hybrid approach in Subsection~\ref{subsec:realization-based-inference}: We apply a nonintrusive method to obtain an LTI system and afterwards compute a port-Hamiltonian realization from it.
+First, we commence by a hybrid approach in Subsection~\ref{subsec:realization-based-inference}: We apply a nonintrusive method to obtain an \ac{LTI} and afterwards compute a port-Hamiltonian realization from it.
 Lastly, there exist a number of optimization-based inference methods similar to the problems in Section~\ref{sec:mor-quadratically-embedded-manifolds} which we highlight in Subsection~\ref{subsec:optimization-based-inference}.
 
 \subsection{Realization-Based Inference}\label{subsec:realization-based-inference}
 
 Realization-based Operator Inference works as a two step procedure:
 \begin{enumerate}
-    \item Use the provided data $x_i, u_i, y_i, i = 1, \dots, k$ to infer an LTI realization $\Sigma_\msc{lti} \colon (A, B, C, D, E)$, and
+    \item Use the provided data $x_i, u_i, y_i, i = 1, \dots, k$ to infer an \ac{LTI} realization $\Sigma_\msc{lti} \colon (A, B, C, D, E)$, and
     \item Compute a port-Hamiltonian realization $\Sigma_\msc{ph}$ from $\Sigma_\msc{lti}$.
 \end{enumerate}
 This approach thus is inherently hybrid, because the second step requires access to the system matrices, and cannot be considered purely nonintrusive.
@@ -22,7 +22,7 @@ We thus only consider this framework as a theoretical stepping stone to introduc
 
 Alternatively, there exists the paradigm of the \emph{Loewner method}.
 The Loewner method uses samples of the transfer function and the corresponding tangential directions to construct system matrices.
-We commence as described in~\cite{BGD2020} with the transfer function $H$ of an LTI $\Sigma_\msc{lti}$ and the interpolation points
+We commence as described in~\cite{BGD2020} with the transfer function $H$ of an \ac{LTI} $\Sigma_\msc{lti}$ and the interpolation points
 \begin{equation*}
     v_i\trans \coloneqq  l_i\trans H(\mu_i),\quad w_i \coloneqq H(\lambda_i) r_i,\quad D\coloneqq H(\infty),
 \end{equation*}
@@ -69,9 +69,9 @@ Other authors have also directly incorporated higher order terms into the theore
 % Loewner for linear and bilinear-quadratic systems~\cite{Antoulas2019}
 % loewner multi model method with several transfer functions and iterative algorithm to match quadratic part to data of oscillatory inputs~\cite{GKA2021}
 
-In a similar fashion to the Least Squares problem in Section~\ref{sec:mor-quadratically-embedded-manifolds}, we can formulate a similar approach to fit operators in LTI systems.
+In a similar fashion to the Least Squares problem in Section~\ref{sec:mor-quadratically-embedded-manifolds}, we can formulate a similar approach to fit operators in \acp{LTI}.
 This idea relies on \emph{Dynamic Mode Decomposition} (DMD) as well as its extension Input-Output DMD (ioDMD) as introduced in~\cite{Annoni2016}.
-For an LTI system $\Sigma_\msc{lti}$ with a known matrix $E \in \bb{R}^{n \times n}$ under the control variable $u \in \bb{R}^m$ we concatenate the individual data snapshots for time points $t_i, i = 1, \dots, k$ into the matrices
+For an \ac{LTI} $\Sigma_\msc{lti}$ with a known matrix $E \in \bb{R}^{n \times n}$ under the control variable $u \in \bb{R}^m$ we concatenate the individual data snapshots for time points $t_i, i = 1, \dots, k$ into the matrices
 \begin{equation}\label{eq:iodmd-data-matrices}
     \Omega \coloneqq \begin{pmatrix}
         x_1 & \cdots & x_k \\
@@ -81,7 +81,7 @@ For an LTI system $\Sigma_\msc{lti}$ with a known matrix $E \in \bb{R}^{n \times
         y_1 & \cdots & y_k
     \end{pmatrix}.
 \end{equation}
-This allows us to write the entire LTI as $\Gamma = \Sigma \Omega$, where $\Sigma$ corresponds to the block matrix containing the remaining system matrices of $\Sigma_\msc{lti}$, cf.~\cite{Heiland2022}.
+This allows us to write the entire \ac{LTI} as $\Gamma = \Sigma \Omega$, where $\Sigma$ corresponds to the block matrix containing the remaining system matrices of $\Sigma_\msc{lti}$, cf.~\cite{Heiland2022}.
 The usual Least Squares problem
 \begin{equation*}
     \min\limits_{\Sigma \in \bb{R}^{n + m \times n + m}} \norm{\Gamma - \Sigma \Omega}{F}^2
@@ -93,13 +93,13 @@ The ioDMD framework can further be extended to bilinear and quadratic terms by a
 %fitting structured data with dmd/least squares formulations~\cite{Gosea2021}
 % overview article without direct connection to ltis~\cite{Heiland2022}
 
-Another way of inferring LTI systems is by measuring the output producec by a unit step input at the initial time point, cf.~\cite{Miller2012}.
+Another way of inferring \acp{LTI} is by measuring the output producec by a unit step input at the initial time point, cf.~\cite{Miller2012}.
 The essential idea in this approach is to estimate the system's transfer function and by extend its Gramians, somewhat reflecting the procedure of the time domain Loewner method.
 Afterwards, a realization is assembled using an SVD-based computation.
 
-Finally, as a last method to come up with an initial LTI realization, we propose to extend the \emph{Sparse Identification of Nonlinear Dynamics} (SINDy) framework.
-SINDy is based on a function library-based approach, which has been extended to implicit dynamical systems~\cite{Mangan2016, Kaheman2020} and systems with control terms~\cite{Kaiser2018}.
-The principle formulation of SINDy as given in~\cite{Brunton2016} acts on dynamical systems of the form
+Finally, as a last method to come up with an initial \ac{LTI} realization, we propose to extend the \ac{SINDy} framework.
+\ac{SINDy} is based on a function library-based approach, which has been extended to implicit dynamical systems~\cite{Mangan2016, Kaheman2020} and systems with control terms~\cite{Kaiser2018}.
+The principle formulation of \ac{SINDy} as given in~\cite{Brunton2016} acts on dynamical systems of the form
 \begin{equation}\label{eq:sindy-explicit-dynamical-system}
     \frac{\dif}{\dif t} x = f(x).
 \end{equation}
@@ -113,17 +113,17 @@ Similarly to DMD, we fit the transformed data such that
 \end{equation}
 where $P \in \bb{R}^{n \times n}$ is a sparse matrix of coefficients reflecting which library components have been selected in the final model.
 The solution $P$ has to be computed with a sparsity promoting solver such as Sequentially Thresholded Least Squares (LTLSQ)~\cite{Zhang2019}, the LASSO framework~\cite{Tibshirani1996}, or other similar methods as mentioned in~\cite{Kaiser2018, Kaheman2020}.
-To start to fit LTIs with SINDy, we have to convert the explicit system~\eqref{eq:sindy-explicit-dynamical-system} as well as the corresponding fitting equation~\eqref{eq:sindy-explicit-fit} into the implicit formulation
+To start to fit \acp{LTI} with \ac{SINDy}, we have to convert the explicit system~\eqref{eq:sindy-explicit-dynamical-system} as well as the corresponding fitting equation~\eqref{eq:sindy-explicit-fit} into the implicit formulation
 \begin{equation}\label{eq:sindy-implicit-equations}
     \begin{aligned}
         f(x, \dot{x}) &= 0, \\
         P \Theta(X, \dot{X}) &= 0.
     \end{aligned}
 \end{equation}
-This transformation yields the implicit-SINDy~\cite{Mangan2016} or SINDy-PI~\cite{Kaheman2020} methods, with the latter having demonstrated better performance results.
+This transformation yields the implicit-SINDy~\cite{Mangan2016} or \ac{SINDy-PI}~\cite{Kaheman2020} methods, with the latter having demonstrated better performance results.
 This slightly changes the conditions on the sparse coefficient matrix $P$, requiring that $\diag{P} = 0$ because otherwise $P = \id$ would be a trivial solution, cf.~\cite[Section~3~(b)]{Kaheman2020}.
-Incorporating control variables into the SINDy framework has been accomplished by including appropriate control and mixed state-control terms into the function library~\eqref{eq:sindy-explicit-library}, cf.~\cite{Kaiser2018}, yielding the so-called SINDYc procedure, which under certain conditions equals DMDc.
-Unlike the procedure of DMDc we propose to proceed with SINDYc but instead consider stacked variables instead of the usual extended library.
+Incorporating control variables into the \ac{SINDy} framework has been accomplished by including appropriate control and mixed state-control terms into the function library~\eqref{eq:sindy-explicit-library}, cf.~\cite{Kaiser2018}, yielding the so-called \ac{SINDYc} procedure, which under certain conditions equals DMDc.
+Unlike the procedure of DMDc we propose to proceed with \ac{SINDYc} but instead consider stacked variables instead of the usual extended library.
 This results in the explicit system
 \begin{equation}\label{eq:sindy-io}
     f(x, u) = P \Theta \begin{pmatrix}
@@ -138,12 +138,12 @@ This results in the explicit system
 \end{equation}
 where we have to adapt $\Theta$ such that the library allows for transformations on certain data components.
 Thereafter, we can extract the matrix blocks from the coefficient matrix $P$ as the system matrices $A, B, C, D$ by selecting the appropriate row and column indices.
-As an extension to the linear library we would employ if we were to fit an LTI system, we could also directly choose quadratic, other higher order polynomial, or even nonpolynomial nonlinear transformations, thus direclty affecting the objective of this thesis, however we postpone this discussion to Section~\ref{sec:quadratically-embedded-manifolds-ph-systems}.
-We also have to remark that while we can easily repurpose SINDy to procure an LTI realization, using this framework to compute port-Hamiltonian realizations is much more difficult as a cause of the structural matrix constraints.
-It would certainly be possible to find a depiction of the optimizational constraints for a pH realization, however the efficiency of the plain solvers as LTLSQ or LASSO would be lost alongside the convexity of the underlying optimization problem.
+As an extension to the linear library we would employ if we were to fit an \ac{LTI}, we could also directly choose quadratic, other higher order polynomial, or even nonpolynomial nonlinear transformations, thus direclty affecting the objective of this thesis, however we postpone this discussion to Section~\ref{sec:quadratically-embedded-manifolds-ph-systems}.
+We also have to remark that while we can easily repurpose \ac{SINDy} to procure an \ac{LTI} realization, using this framework to compute port-Hamiltonian realizations is much more difficult as a cause of the structural matrix constraints.
+It would certainly be possible to find a depiction of the optimizational constraints for a \ac{PH} realization, however the efficiency of the plain solvers as LTLSQ or LASSO would be lost alongside the convexity of the underlying optimization problem.
 Some authors have proposed remedies to this restriction, however their methods once again involve Neural Networks, therefore incurring the explainability issue, cf.~\cite{Lee2022}.
 
-\itodo{we don't actually need SINDy-PI, remove it!}
+\itodo{we don't actually need \ac{SINDy-PI}, remove it!}
 
 % sindy
 % first paper on sindy~\cite{Brunton2016}
@@ -151,12 +151,12 @@ Some authors have proposed remedies to this restriction, however their methods o
 % implicit sindy~\cite{Kaheman2020}
 % structure preserving sindy (especially pH) with nns~\cite{Lee2022}
 
-As soon as we have constructed an LTI system $\Sigma_\msc{lti}$, we can manipulate it until we are left with a port-Hamiltonian system.
+As soon as we have constructed an \ac{LTI} $\Sigma_\msc{lti}$, we can manipulate it until we are left with a port-Hamiltonian system.
 To this end, there are again various methods available in the literature, and we only discuss a few that are closely related to the concepts we brought up so far.
-It is imperative that we again mention the similarities between stable, positive real, and port-Hamiltonian systems as already mentioned in Subsection~\ref{subsec:prbt} and~\cite{Cherifi2022}, because most of the ideas to convert LTI systems to pH systems are closely linked to these concepts.
+It is imperative that we again mention the similarities between stable, positive real, and port-Hamiltonian systems as already mentioned in Subsection~\ref{subsec:prbt} and~\cite{Cherifi2022}, because most of the ideas to convert \acp{LTI} to \ac{PH} systems are closely linked to these concepts.
 
 First off, we discuss the results from~\cite{Beattie2022}.
-In this publication they explicitly derive properties that an LTI system needs to fulfill such that one can compute a port-Hamiltonian realization from $\Sigma_\msc{lti} = (A, B, C, D, \id)$.
+In this publication they explicitly derive properties that an \ac{LTI} needs to fulfill such that one can compute a port-Hamiltonian realization from $\Sigma_\msc{lti} = (A, B, C, D, \id)$.
 They use the real KYP linear matrix inequality~\eqref{eq:kyp-lmi}
 \begin{equation*}
     \begin{pmatrix}
@@ -171,7 +171,7 @@ Afterwards, they use the symmetric positive definite solution $\tilde{Q}$ to der
 is indeed port-Hamiltonian.
 This method is feasible only for small to medium scale problems, cf.~\cite{Cherifi2019}, leading them to propose two other methods.
 The first of these proposes to use a similar procedure based on a positive real balanced truncation, resulting in much better scaling with respect to large model orders.
-The second method takes a completely different angle: optimizing over the matrices to obtain a best fit oh a port-Hamiltonian system to the original LTI $\Sigma_\msc{lti}$.
+The second method takes a completely different angle: optimizing over the matrices to obtain a best fit oh a port-Hamiltonian system to the original \ac{LTI} $\Sigma_\msc{lti}$.
 This change of perspective opens up a set of optimization-based methods, which we discuss in Subsection~\ref{subsec:optimization-based-inference}.
 
 % ph system computation
@@ -187,7 +187,7 @@ As a final point one has to consider the initialization of the matrices.
 Most of the algorithms are very succeptible to initial value changes because the optimization problems are generally neither convex nor linear.
 
 The first method we mention is the \emph{Nearest Port-Hamiltonian System}, cf.~\cite{Gillis2018} and~\cite{Cherifi2019} respectively, where the connection between the two is immediate by the last comments of the preceding subsection and by Subsection~\ref{subsec:prbt}.
-The main minimization problem is given by the relation to the inferred LTI system $\Sigma_\msc{lti} = (A, B, C, D, E)$
+The main minimization problem is given by the relation to the inferred \ac{LTI} $\Sigma_\msc{lti} = (A, B, C, D, E)$
 \begin{equation}\label{eq:nearest-ph-system-minimization-problem}
     \begin{aligned}
         &\min\limits_{F, J, R, G, P, S, N} \mcl{J}(F, J, R, G, P, S, N) \coloneqq \norm{A - (J - R)}{F}^2 + \norm{B - (G - P)}{F}^2 + \norm{C - {(G + P)}\trans}{F}^2 + \norm{D - (S - N)}{F}^2 + \norm{E - F}{F}^2 \\
@@ -405,6 +405,8 @@ In order to compute the gradients of the inner functions $f_i$, we require the f
 
     Lastly, if we swap out $\vecmat$ by $\vecupper$, or $\vecstrict$, and $\matvec$ by $\uppervec$, or $\strictvec$ respectively, only the total dimension of the matrices $A$ and $E$, and the indexing from $e_i$ to the tuple $(k, l)$ change slightly.
     Hence, both of the remaining cases follow analogously.
+
+    \itodo{mention that $\uppervec, \strictvec$ can also operate on full matrices by omission of indices}
 \end{proof}
 
 \itodo{make sure that the class from which we parametrize is actually consistent. it should suffice to use real numbers instead of complex ones here!}
@@ -414,21 +416,22 @@ In order to compute the gradients of the inner functions $f_i$, we require the f
     If the singular value $\sigma_i \neq 0$ is simple, then the function $\theta \mapsto \sigma_i(\mcl{H}(s) - \mcl{H}_\theta(s))$ is differentiable in an open neighbourhood of $\xi$.
     In particular, using the shorthand $\Sigma_\msc{ph}(\xi) = (E, J, R, G, P, S, N)$ we can define the additional terms
     \begin{equation}\label{eq:inner-sobmor-gradient-helpers}
-        F \coloneqq (s E - (J - R)),\quad a \coloneqq F\inv (G - P) r,\quad b\herm \coloneqq l\herm {(G + P)}\trans F\inv
+        F \coloneqq (s E - (J - R)),\quad a \coloneqq F\inv (G - P) r,\quad b\herm \coloneqq \ell\herm {(G + P)}\trans F\inv
     \end{equation}
     such that the gradient $\nabla_\theta \sigma_i(\mcl{H}(s) - \mcl{H}_\xi(s)) = {({\dif E}\trans, {\dif J}\trans, {\dif R}\trans, {\dif G}\trans, {\dif P}\trans, {\dif S}\trans, {\dif N}\trans)}\trans$ with respect to $\theta$ is made up of the components
     \begin{equation}\label{eq:inner-sobmor-gradient-components}
         \begin{aligned}
             \dif E &= \re{\uppervec\left( s \vecupper(\theta_\msc{E}) (a b\herm + {(a b\herm)}\trans) \right)}, \\
-            \dif J &= - \re{\strictvec({(a b\herm)}\trans - a b\herm)}, \\
+            \dif J &= - \re{\strictvec(a b\herm - {(a b\herm)}\trans)}, \\
             \dif R &= \re{\uppervec\left( \vecupper(\theta_\msc{R}) (a b\herm + {(a b\herm)}\trans) \right)}, \\
-            \dif G &= - \re{\matvec(a l\herm + {(r b\herm)}\trans)}, \\
-            \dif P &= - \re{\matvec(a l\herm - {(r b\herm)}\trans)}, \\
-            \dif S &= - \re{\uppervec\left( \vecupper(\theta_S) (r l\herm + {(r l\herm)}\trans) \right)}, \text{ and} \\
-            \dif N &= \re{\strictvec(r l\herm - {(r l\herm)}\trans)}.
+            \dif G &= - \re{\matvec(a \ell\herm + {(r b\herm)}\trans)}, \\
+            \dif P &= - \re{\matvec(a \ell\herm - {(r b\herm)}\trans)}, \\
+            \dif S &= - \re{\uppervec\left( \vecupper(\theta_S) (r \ell\herm + {(r \ell\herm)}\trans) \right)}, \text{ and} \\
+            \dif N &= \re{\strictvec(r \ell\herm - {(r \ell\herm)}\trans)}.
         \end{aligned}
     \end{equation}
 
+    \itodo{fix strict triangular matrices! The terms are wrong there!}
     \itodo{improve mention that $Q = \id$}
     \itodo{replace $n_u$ with a consistent denomination for the dimension of the output!}
 \end{theorem}
@@ -457,7 +460,7 @@ In order to compute the gradients of the inner functions $f_i$, we require the f
     Afterwards, we compute
     \begin{equation}\label{eq:sobmor-e-variation}
         \begin{aligned}
-            \mcl{H}_{\theta + \varepsilon e_i} &= {(G + P)}\trans Q {\left( s (E + \varepsilon \Delta_E + \varepsilon^2 {\vecupper(e_i)}\trans \vecupper(e_i)) - (J - R) Q \right)}\inv (G - P) + (S - N) \\
+            \mcl{H}_{\theta + \varepsilon e_i}(s) &= {(G + P)}\trans Q {\left( s (E + \varepsilon \Delta_E + \varepsilon^2 {\vecupper(e_i)}\trans \vecupper(e_i)) - (J - R) Q \right)}\inv (G - P) + (S - N) \\
              &= {(G + P)}\trans Q \underbrace{{\left( F + s \varepsilon \Delta_E + s \varepsilon^2 {\vecupper(e_i)}\trans \vecupper(e_i) \right)}\inv}_{\eqqcolon (*)} (G - P) + (S - N)
         \end{aligned}
     \end{equation}
@@ -477,21 +480,60 @@ In order to compute the gradients of the inner functions $f_i$, we require the f
     As argued in~\cite[Theorem~1]{Schwerdtner2022}, the map $\varepsilon \mapsto \sigma_i\left( \mcl{H}(s) - \mcl{H}_{\theta + \varepsilon e_i}(s) \right)$ is differentiable for small enough $\varepsilon > 0$ as a consequence of~\cite{Lancaster1964}, thusly admitting the following way of expressing the gradient component
     \begin{equation}\label{eq:sobmor-e-trace-form}
         \begin{aligned}
-            &\res{\frac{\dif}{\dif \varepsilon} \sigma_i(\mcl{H}(s) - \mcl{H}_{\theta + \varepsilon e_i}(s))}{\varepsilon = 0} = \re{s r\herm {(G + P)}\trans Q F\inv \Delta_E F\inv (G - P) l} \\
-             &\underbrace{=}_{(\msc{A})} \re{\trace{s F\inv (G - P) l r\herm {(G + P)}\trans Q F\inv \Delta_E}} \\
-            %  &= \re{\trace{s F\inv (G - P) l r\herm {(G + P)}\trans Q F\inv \left( {\vecupper(e_i)}\trans \vecupper(\theta_E) + {\vecupper(\theta_E)}\trans \vecupper(e_i) \right)}} \\
+            &\res{\frac{\dif}{\dif \varepsilon} \sigma_i(\mcl{H}(s) - \mcl{H}_{\theta + \varepsilon e_i}(s))}{\varepsilon = 0} = \re{s \ell\herm {(G + P)}\trans Q F\inv \Delta_E F\inv (G - P) r} \\
+             &\underbrace{=}_{(\msc{A})} \re{\trace{s F\inv (G - P) r \ell\herm {(G + P)}\trans Q F\inv \Delta_E}} \\
              &= \re{\trace{s a b\herm \left( {\vecupper(e_i)}\trans \vecupper(\theta_E) + {\vecupper(\theta_E)}\trans \vecupper(e_i) \right)}} \\
-             &\underbrace{=}_{(\msc{B})} \re{\trace{\left( a b\herm {\vecupper(\theta_E)}\trans + {(a b\herm)}\trans {\vecupper(\theta_E)}\trans \right) \vecupper(e_i)}} \\
+             &\underbrace{=}_{(\msc{B})} \re{\trace{\left( {(a b\herm)}\trans {\vecupper(\theta_E)}\trans + a b\herm {\vecupper(\theta_E)}\trans \right) \vecupper(e_i)}} \\
              &\underbrace{=}_{(\msc{C})} \re{s \uppervec\left( \vecupper(\theta_E) \bigl( a b\herm + {(a b\herm)}\trans \bigr) \right)}.
         \end{aligned}
     \end{equation}
     In this transformation, we have applied the following arguments:
-    \begin{enumerate}[label= (\scshape{\alph*})]
+    \begin{enumerate}[label= (\scshape{\alph*}):]
         \item For a vector product $u\herm v$ it is equivalent to compute $\trace{v u\herm}$,
-        \item for the first summand of $\Delta_E$ we exploit that the trace operator is cyclic and invariant under transposition $\trace{A B C\trans D} = \trace{D\trans C B\trans A\trans} = \trace{{(A B)}\trans D\trans C}$, and
+        \item for the first summand of $\Delta_E$ we exploit that the trace operator is cyclic and invariant under transpositions, resulting in $\trace{A B C\trans D} = \trace{D\trans C B\trans A\trans} = \trace{{(A B)}\trans D\trans C}$, and
         \item Lemma~\ref{lem:v2m-function-trace}.
     \end{enumerate}
+    The other matrices contained in the definition of $F$ can be computed in a similar way, with slight changes in the variational terms corresponding to $\Delta_E$.
+    As an example, we compute the final steps of the equivalent of~\eqref{eq:sobmor-e-trace-form} for $J$ with $\Delta_J = {\vecstrict(e_i)}\trans - \vecstrict(e_i)$
+    \begin{equation*}
+        \begin{aligned}
+            &\res{\frac{\dif}{\dif \varepsilon} \sigma_i(\mcl{H}(s) - \mcl{H}_{\theta + \varepsilon e_i}(s))}{\varepsilon = 0} = - \re{\trace{a b\herm \Delta_J}} = - \re{\trace{a b\herm \left({\vecstrict(e_i)}\trans - \vecstrict(e_i)\right)}} \\
+             &\underbrace{=}_{(\msc{b})} - \re{\trace{\left( {(a b\herm)}\trans - a b\herm \right) \vecstrict(e_i)}} \underbrace{=}_{(\msc{c})} - \re{\strictvec\left( a b\herm - {(a b\herm)}\trans \right)}.
+        \end{aligned}
+    \end{equation*}
 
+    For the matrices $G$ and $P$ we can follow an easier procedure.
+    As before we compute the matrix $G$ for the updated parameter $\theta_G + \varepsilon e_i$, and define $\Delta_G \coloneqq \vecmat(e_i)$.
+    Similarly to~\eqref{eq:sobmor-e-variation} we calculate the updated transfer function to be
+    \begin{equation*}
+        \begin{aligned}
+            \mcl{H}_{\theta + \varepsilon e_i}(s) &= {(G + \varepsilon \Delta_G + P)}\trans Q F\inv (G + \varepsilon \Delta_G - P) + (S - N) \\
+             &= \mcl{H}_\theta(s) + \varepsilon {\Delta_G}\trans Q F\inv (G - P) + \varepsilon {(G + P)}\trans Q F\inv \Delta_G + \varepsilon^2 {\Delta_G}\trans Q F\inv \Delta_G.
+        \end{aligned}
+    \end{equation*}
+    By considering the Taylor expansion of $\mcl{H}_{\theta + \varepsilon e_i}$ as in~\eqref{eq:sobmor-e-taylor}, we can observe that the derivative of the singular value $\sigma_i(\mcl{H}(s) - \mcl{H}_{\theta + \varepsilon e_i}(s))$ equals
+    \begin{equation*}
+        \begin{aligned}
+            &\res{\frac{\dif}{\dif \varepsilon} \sigma_i(\mcl{H}(s) - \mcl{H}_{\theta + \varepsilon e_i}(s))}{\varepsilon = 0} = - \re{\ell\herm \left( {\Delta_G}\trans Q F\inv (G - P) + {(G + P)}\trans Q F\inv \Delta_G \right) r} \\
+             &\underbrace{=}_{(\msc{a})} - \re{\trace{Q F\inv (G - P) r \ell\herm {\Delta_G}\trans + r \ell\herm {(G + P)}\trans Q F\inv \Delta_G}} \\
+             &= - \re{\trace{a \ell\herm {\Delta_G}\trans + r b\herm \Delta_G}} \underbrace{=}_{(\msc{b})} - \re{\trace{\left( {(a \ell\herm)}\trans + r b\herm \right) \Delta_G}} \\
+             &= -\re{\trace{\left( {(a \ell\herm)}\trans + r b\herm \right) \vecmat(e_i)}} \underbrace{=}_{(\msc{c})} -\re{\matvec\left( a \ell\herm + {(r b\herm)}\trans \right)}.
+        \end{aligned}
+    \end{equation*}
+    The result for $P$ can be computed analogously with a change of signs.
+
+    Finally, the computation for the matrices $S$ and $N$ is a combination of the two previously described procedures.
+    With $\Delta_S \coloneqq {\vecupper(e_i)}\trans \vecupper(\theta_S) + {\vecupper(\Delta_S)}\trans \vecupper(e_i)$ we can repeat~\eqref{eq:sobmor-e-trace-form} for $S$
+    \begin{equation*}
+        \begin{aligned}
+            &\res{\frac{\dif}{\dif \varepsilon} \sigma_i(\mcl{H}(s) - \mcl{H}_{\theta + \varepsilon e_i}(s))}{\varepsilon = 0} = - \re{\trace{r l\herm \Delta_S}} \\
+             &= - \re{\trace{\left( {(r l\herm)}\trans + r l\herm \right) {\vecupper(\theta_S)}\trans \vecupper(e_i)}} \\
+             &= - \re{\uppervec\left( \vecupper(\theta_S) \left( r l\herm + {(r l\herm)}\trans \right) \right)}.
+        \end{aligned}
+    \end{equation*}
+    Again, these equalities can be applied to $N$ in an analogous manner to prove the theorem.
+
+    \itodo{remove $Q$ or change the definitions to use $c$ vector as well!}
     \itodo{find statement that if singular values are simple, then the stencil is invertible (though this may already result from the assumptions we have made on the system matrices\dots)}
 \end{proof}
 
