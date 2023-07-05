@@ -1,6 +1,6 @@
 \section{Linear Time-Invariant Systems}\label{sec:ltis}
 
-As detailed in~\cite{Kunkel2006}, a \emph{differential-algebraic equation} can be expressed as
+As detailed in~\cite{Kunkel2006}, a \acf{DAE} can be expressed as
 \begin{equation}\label{eq:general-dae}
     F(t, x, \dot{x}) = 0,
 \end{equation}
@@ -8,12 +8,12 @@ where for natural numbers $n, m$ the function $F \colon I \times \Omega_x \times
 The source we referred to purposefully keeps the meaning of $\dot{x}$ ambiguous, referring to either the derivative with respect to time of a function $x$ or as an independent variable in the formulation.
 For the purposes of this thesis however, we choose to only consider $\dot{x}$ to be the time derivative $\frac{\dif}{\dif t} x$.
 
-In the case of linear DAEs with constant coefficients, we can express the implicit formulation of Equation~\eqref{eq:general-dae}
+In the case of linear \acp{DAE} with constant coefficients, we can express the implicit formulation of Equation~\eqref{eq:general-dae}
 \begin{equation}\label{eq:lin-const-coeff-dae}
     E \dot{x}(t) = A x(t) + f(t)
 \end{equation}
 in terms of matrices $A, E \in \bb{C}^{n \times n}$ and a time dependent function $f \colon I \to \bb{C}^n$.
-We further assume that the function $f$ serves as an influence on the solution of the DAE.\@
+We further assume that the function $f$ serves as an influence on the solution of the \ac{DAE}.
 The interpretation here is that $f$ is a \emph{control} acting on the system over time.
 We explicitly formulate the control in terms of yet another linear matrix product
 \begin{equation}\label{eq:control-substitution}
@@ -28,7 +28,7 @@ This output again takes the shape of a time dependent function $y \colon I \to \
 for two matrices $C \in \bb{C}^{q \times n}, D \in \bb{C}^{q \times q}$.
 
 \begin{definition}\label{def:lti}
-    A \emph{linear time-invariant (descriptor) system} $\Sigma_{\msc{lti}}$ is a system of equations
+    A \acf{LTI} $\Sigma_{\msc{lti}}$ is a system of equations
     \begin{equation}\label{eq:lti}
         \Sigma_{\msc{lti}} \colon \left\lbrace
         \begin{aligned}
@@ -39,6 +39,8 @@ for two matrices $C \in \bb{C}^{q \times n}, D \in \bb{C}^{q \times q}$.
     \end{equation}
     with matrices $A, E \in \bb{C}^{n \times n}, B \in \bb{C}^{n \times q}, C \in \bb{C}^{q \times n}, D \in \bb{C}^{q \times q}$ constant in time, and state functions $x, \dot{x} \colon I \to \bb{C}^n$ and interaction variables $u, y \colon I \to \bb{C}^q$ varying over time.
 \end{definition}
+
+\itodo{mention that if $E \neq \id$, then this can also be called LTI descriptor system}
 
 \begin{remark}
     Definition~\ref{def:lti} signifies a continuous dynamical system.

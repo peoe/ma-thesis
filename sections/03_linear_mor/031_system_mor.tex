@@ -17,7 +17,7 @@ Standard balancing (also called Lyapunov balancing according to~\cite{Gugercin20
 To mitigate this drawback, approximate balanced truncation methods have been developped.
 These include, among others, stochastic balancing~\cite{Desai1984, Green1988}, frequency weighted balancing~\cite{Enns1984, Wang1999}, bounded real balancing~\cite{Opdenacker1988, Reis2009} or positive real balancing~\cite{Desai1984, Ober1991}.
 For our purposes, it suffices to consider ordinary balanced truncation and positive real balances truncation.
-Positive real balanced truncation in particular is interesting in the context of this thesis because it produces passive systems which are closely linked to port-Hamiltonian systems.
+Positive real balanced truncation in particular is interesting in the context of this thesis because it produces passive systems which are closely linked to \ac{PH} systems.
 
 We commence with standard balanced truncation as described in~\cite{BB2017}.
 Consider $(A, B, C, D, E)$ to be an \ac{LTI} as in Definition~\ref{def:lti}.
@@ -129,11 +129,11 @@ Plugging this into~\eqref{eq:interpolation-points-newton-step} breaks down to
 \begin{equation*}
     \sigma^{(k + 1)} = - \lambda(\sigma^{(k)}).
 \end{equation*}
-Algorithm~\ref{alg:irka} shows how this Newton step is used in the Iterative Rational Krylov Algorithm (IRKA).
+Algorithm~\ref{alg:irka} shows how this Newton step is used in the \ac{IRKA}.
 This algorithm relies heavily on a realization-based formulation, however variants independent of specific realizations using the Loewner framework also exist; cf.~\cite[Algorithm~7.2]{Beattie2017}.
 
 \begin{algorithm}\label{alg:irka}
-    \caption{Iterative Rational Krylov Algorithm (IRKA); cf.~\cite[Algorithm~7.1]{Beattie2017}}
+    \caption{\ac{IRKA}; cf.~\cite[Algorithm~7.1]{Beattie2017}}
     \KwData{Initial interpolation points $\sigma$ closed and initial tangent directions $r_1^{(0)}, \dots, r_r^{(0)}, \ell_1^{(0)}, \dots, \ell_r^{(0)}$ under complex conjugation, full order model $\Sigma$}
     $V_r^{(0)} \coloneqq \left( {(\sigma_1^{(0)} E - A)}\inv B r_1^{(0)}, \dots, {(\sigma_r^{(0)} E - A)}\inv B r_r^{(0)} \right)$\;
     $W_r^{(0)} \coloneqq \left( {(\sigma_1^{(0)} E - A\trans)}\inv C\trans \ell_1^{(0)}, \dots, {(\sigma_r^{(0)} E - A\trans)}\inv C\trans \ell_r^{(0)} \right)$\;

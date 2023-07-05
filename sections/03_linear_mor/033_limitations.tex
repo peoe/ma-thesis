@@ -1,16 +1,16 @@
 \section{Abstract Limitations of Linear MOR}\label{sec:limitations-linear-mor}
 
 This section is not directly linked to the systemtheoretic scope of this thesis, however it demonstrates an important motivation for the next chapter.
-We thus think it reasonable to make a small detour and talk about the direct limitations of linear MOR for PDEs.
+We thus think it reasonable to make a small detour and talk about the direct limitations of linear MOR for \acp{PDE}.
 In effect, we want to transpose this motivation onto the problem inherent in this manuscript, however no such rigorous results as we present in this section are available as of the time of writing.
 
-To make clear what we want to demonstrate here, we commence Subsection~\ref{subsec:greedy-algorithms} with the description of the greedy algorithms, a technique for reducing parametric PDEs without inputs or outputs.
+To make clear what we want to demonstrate here, we commence Subsection~\ref{subsec:greedy-algorithms} with the description of the greedy algorithms, a technique for reducing parametric \acp{PDE} without inputs or outputs.
 We then give the context for a few model problems which serve as a good intuition on how the model we consider for reduction can impact the effectiveness of the reduction procedure in Subsection~\ref{subsec:kolmogorov-n-width}.
 
 \subsection{Greedy Approximation Algorithms}\label{subsec:greedy-algorithms}
 
 Unlike the truncation-based or interpolation-based methods presented in Section~\ref{sec:system-mor}, greedy algorithms rely on a solution snapshot based linear subspace approximation; cf.~\cite{Grepl2005, Rozza2008, Buffa2012}.
-In this setting, solution snapshots are defined as the solutions $u(\mu_i)$ to a PDE of interest for differing parameters $\mu_i$.
+In this setting, solution snapshots are defined as the solutions $u(\mu_i)$ to a \ac{PDE} of interest for differing parameters $\mu_i$.
 Using a more heuristic approach we are going to choose a momentarily optimal basis element to improve the approximation in each iteration instead of computing a singular value decomposition over the set of all gathered snapshots like in Proper Orthogonal Decomposition; cf.~\cite{Pinkus1985, Pinnau2008}.
 
 The idea is as follows: given a sample set of parameters $\mcl{S}_r$ and an associated reduced linear subspace $V_r$ spanned by the solution snapshots $u(\mu_i), i = 1, \dots, r$, we want to choose the next sample parameter $\mu_{r + 1}$ such that the snapshot $u_r(\mu_{r + 1})$ induces the largest error over all possible sampling parameters with repect to the full order solution $u(\mu_{r + 1})$.
@@ -39,7 +39,7 @@ With the greedy basis $u_1 = u(\mu_1), \dots, u_r = u(\mu_r)$ computed from Algo
 \begin{equation*}
     U = \left( u_1, \dots, u_r \right) \in \bb{R}^{n \times r}.
 \end{equation*}
-Using this matrix to project the full order space $\bb{R}^n$ onto the linear subspace $\bb{R}^r$ we can transform an exemplary full order discretized PDE such as $A u = L$ with $A \in \bb{R}^{n \times n}, L \in \bb{R}^n$ to a reduced model by projecting the operators
+Using this matrix to project the full order space $\bb{R}^n$ onto the linear subspace $\bb{R}^r$ we can transform an exemplary full order discretized \ac{PDE} such as $A u = L$ with $A \in \bb{R}^{n \times n}, L \in \bb{R}^n$ to a reduced model by projecting the operators
 \begin{equation*}
     \tilde{A} = U\trans A U,\quad \tilde{L} = U\trans L.
 \end{equation*}
