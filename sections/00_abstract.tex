@@ -1,24 +1,21 @@
 \chapter*{Abstract}
 
-This thesis describes an approach to combine recent advances in \ac{MOR} and Systems Theory.
-In particular, we are going to examine quadratically embedded manifolds for reduced models and apply the ideas thereof to \ac{PH} systems.
-The inherent goal of this combination is to couple physically motivated descriptions of dynamical systems to ideas mitigating certain restrictions in approximation theory.
-We commence by describing aspects of the underlying theory in systems theory, highlighting reduced modelling and its constraints before closing with our proposed method in combination with numerical experiments.
+This thesis describes a combined approach that unifies recent advances in polynomially embedded manifolds for nonlinear \acl{MOR} and \acl{PH} Systems Theory.
+In particular, we will examine quadratically embedded manifolds for \acl{PH} reduced models combining two areas of \acl{MOR} that are as of yet unrelated.
+The inherent goal of this combination is to couple physically motivated descriptions of dynamical systems with ideas mitigating restrictions in linear approximation theory.
+Later on, we discuss how this foundation can be extended upon with adaptive optimization and hyperreduction methods.
 
-The necessary background in systems theory will focus on the class of \ac{PH} systems, a subset of dynamical systems incorporating both energry preserving and energy dissipating elements.
-This description is particularly interssting because \ac{PH} systems consider two aspects of a model: the internal \emph{states} and \emph{ports} through which the system and the outside environment can interact with each other by so called \emph{controls} and \emph{outputs}.
-Modelling in such a manner makes it incredibly easy to combine multiple systems into a more complex large scale system.
+The necessary background in Systems Theory will focus on the class of \acl{PH} systems, a subset of dynamical systems incorporating both energy preserving and energy dissipating elements.
+This description is particularly interesting because \acl{PH} systems consider two aspects of a model: The internal states, and ports through which the system and the outside environment can interact with each other by so-called controls and outputs.
+In this context, controls refer to outside forces and influences in interaction with the principle component of the dynamical system, and outputs in turn model the effect of the system on this external domain.
+Modelling dynamical systems in this manner makes it incredibly easy to combine multiple systems into a complex large scale system by interconnection.
+We use this interconnectivity in combining linear and higher order approximations of \acl{PH} systems.
 
-Reducing \ac{PH} systems unfortunately is not as easy as reducing systems with less structure, however appropriate methods exist in literature.
-Usually, they are more involved than the basic model reduction algorithms from whom they derive because more caution has to be taken to keep mathematical structures intact.
-The benefit of choosing among these structure-preserving methods is that the individual components of the full order \ac{PH} system keep their properties: energy dissipating elements remain energy dissipating even after the model reduction, and similarly for the other components.
+Reducing \acl{PH} systems unfortunately is not as straightforward as reducing systems with no inherent physical structure, however appropriate methods which derive from the unstructured approach are prevalent in literature.
+Usually, the structure-preserving procedures are more computationally involved compared to the basic model reduction algorithms from whom they derive because more caution has to be taken.
+The benefit of choosing one of these structure-preserving methods is that the system's overarching properties remain the same: energy dissipating system elements remain energy dissipating even after model reduction, and similarly conservative components remain energy preserving.
 
-Most classical \ac{MOR} approaches suffer from the fact that their approximative qualities are directly linked to the type of full order model.
-This can result in very good decays of the so-called \emph{Kolmogorov N-width} for elliptic parameter dependent problems, but also in very slow decay rates for more unforgiving models such as wave equations.
-To bypass this constraint, recent publications have proposed methods taken from machine learning such as neural networks and autoencoders.
-These deliver good results but are computationally less efficient during the offline (read: training) phases and lack the simple explainability of linear models.
-To incorporate more explainable terms and sill imporve model error rates, polynomial terms have been included in usually linear model reduction methods.
-
-The goal of this thesis is to extend reduced models with quadratic terms to \ac{PH} systems.
-Along the way we make use of a few different frameworks and highlight how they all come together.
-We end this work with numerical experiments showcasing a fww model problems and discussing the results attained.
+Most classical \acl{MOR} approaches suffer from the fact that the decay rate of the projection error between full order and reduced order model is linked to the kind of model and the specific initial conditions.
+This can result in very good decay rates of the so-called Kolmogorov $N$-width for elliptic problems, but also in very slow decay rates for models such as wave equations under non-sinusoidal initial conditions.
+In mitigating these drawbacks, some authors have resorted to complex methods based on \aclp{NN} and autoencoders, however these lose all sense of explainability as an effect of their intransparent training process.
+The goal of this thesis is thus to incorporate explainability alongside the benefits of nonlinear \acl{MOR} by using polynomial terms in conjunction with conventionally reduced linear \acl{PH} models.
