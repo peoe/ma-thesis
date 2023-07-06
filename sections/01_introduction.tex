@@ -1,67 +1,74 @@
 \chapter{Introduction}
 
-This introduction serves as an overview of the ideas we discuss in this thesis, it claims by no means to be complete or indeed very thorough.
-For more rigorous definitions and explanations we refer to both the more detailed chapters as listed at the end of this one as well as the references included in the Bibliography.
-We first give an idea of \ac{PH} systems theory, then give a description of linear \ac{MOR}, the limitations thereof and proposed methods to overcome these limitations, and finally conclude with a motivation of combining both ideas.
+We commence this thesis with an overview of the theoretical ideas we cover, focussing on dynamical systems and \ac{PH} systems.
+As far as this chapter is concerned, we can by no means claim exhaustive definitions or detailed explanations, however we direct the reader first towards the subsequent chapters as well as the sources included in this thesis' bibliography.
+First off, we discuss dynamical systems and \ac{MOR} in abstract terms.
+Thereafter, we discuss the motivation for the object of this thesis, and finally conclude this chapter with the description of the overall structure of this manuscript.
 
-Dynamical systems are descriptions of complex systems evolving over time under an outside interaction called \emph{control} producing an \emph{output} available to the environment; cf.~\cite{Hinrichsen2005}.
-The general definition of these systems does not incorporate a lot of inherent structure, however certain problem descriptions can hugely benefit from this additional information.
-Foremost, the energy contained within a system can be considered as a physical quantity of interest.
-In the Hamiltonian setting of physics, energy conservation plays a central role: energy can only be transformed from one type to another, but never be created out of nowhere or destroyed; cf.~\cite{Taylor2005, Giorgilli2022}.
-Thus, to add energy to a system or remove it from the very same, additional outside influence has to take place.
-The removal of energy is codified as \emph{dissipation} while the acting of an outside force on a system throguh some control may increase the energy stored within.
-In particular, when we think of this process schematically, we can describe the relation of the system with respect to the environment to act through \emph{ports}.
-This in turn gives rise to the name of \ac{PH} systems, a rigorous mathematical description of dynamical systems with a port-based interaction model; cf.~\cite{Duindam2009, Jacob2012, VanDerSchaft2014, Mehrmann2022}.
+Dynamical systems are descriptions of the evolution of complex moodels over time.
+These models are subject to the outside influence of a control, and themselves produce an output that interplays with the environment; cf.~\cite{Hinrichsen2005}.
+The general definition of these systems distinguishes between the control and output variables, as well as the internal states of the system, where the system's output is a combination of potentially both the current states as well as the control.
+Generally, dynamical systems do not include physically motivated structural relations between states, controls, and outputs, however problem descriptions that result from physical considerations can hugely benefit from this additional information in the form of e.g.\ energy preservation and similar conservation laws.
+With respect to the problems relevant to this thesis we especially consider the energy contained within a dynamical system as a quantity of interest.
+In the physics equivalent of this abstract thought, Hamiltonian Mechanics, energy conservation plays a central role: Energy can only be transformed from one type to another, but never be created out of nowhere or destroyed; cf.~\cite{Taylor2005, Giorgilli2022}.
+Thus, to add energy to a system or remove it from the very same, additional outside forces have to interact with the relevant dynamical system.
+The removal of energy by state-state, or state-control effects is codified as dissipation, while only the action of an outside force on a system through some control may increase the energy stored within, thus a conservative system cannot create energy on its own, but only dissipate energy to its surroundings.
+In particular, when we think of this energy exchange process schematically, we can describe the relation of the system with respect to the environment through ports, entities that facilitate the storage, dissipation, and the external forces.
+This in turn gives rise to the name of \ac{PH} systems, a rigorous energy preserving mathematical description of dynamical systems with a port-based interaction model; cf.~\cite{Duindam2009, Jacob2012, VanDerSchaft2014, Mehrmann2022}.
 
 \ac{MOR} as a framework provides many different approaches to creating reduced order models.
-One of the simplest to understand is \emph{Proper Orthogonal Decomposition} (POD).
-It resembles the Singular Value Decomposition in that it decomposes a data matrix in order to find a basis of the full order model which incorporates as much information as possible into each individual basis element such that we can approximate the higher dimensional solutions rather well using a small number of representative elenents; cf.~\cite{Hotelling1936, Karhunen1946, Pinnau2008}.
-While it would be possible to use POD for the reduction of system theoretic problems, there are methods which directly take the underlying system descriptions into account.
-This mostly happens through the means of \emph{transfer funcionts}.
-These functions describe the models frequency response, that is how it reacts to excitation at certain frequencies.
-Formally, transfer funcitons are derived from the control-output (sometimes also called input-output) mapping by taking the Laplace transform, wherefore transfer functions map from the frequency domain instead of the temporal domain.
-When reducing a model using its transfer function the objective turns away from estimating the most influential full order basis elements to truncate hard to reach and hard to observe system components, cf.~\cite{Moore1981, Enns1984, Antoulas2005, Gugercin2007, BB2017}, or interpolating the full order transfer funciton while using the fewest interpolation points possible, cf.~\cite{Antoulas2005, Gugercin2009, Beattie2017}.
-This procedure is influenced by different properties of the transfer function such as its complex-valued poles: depending on their position on the complex (half-) plane, a reduction algorithm may become unstable or even completely fail to produce a suitable reduced order model.
+One of the most intuitive are greedy algorithms, where we iteratively select elements such that after every iteration the projection error of the \ac{ROM} decreases by the largest amount possible.
+For more detailed descriptions of greedy reduction methods we refer to~\cite{Grepl2005, Rozza2008, Buffa2012}, as well as the other publications cited therein.
+The greedy approximation can be adapted for the reduction of dynamical systems, however because the underlying dynamics are directly linked to the system's transfer function, \ac{MOR} techniques often avoid the construction of explicit bases in favour of performing frequency domain based operations.
+The problem with reducing a dynamical system with a fixed set of reduced bases is the fact that these systems also have a frequency-based description which does not rely on a set of specific bases.
+Hence, frequency-based reduction is more versatile in the fact that the reduction of a system is independent of the specific realization of the system's matrices.
+For this thesis, interpolatory \ac{MOR} and \ac{BT} are of particular interest because their extensions to structure-preserving methods have been well researched.
+Interpolatory \ac{MOR} adaptively chooses sampling points, and then uses these to construct realization specific reduced system matrices; cf.~\cite{Antoulas2005, Gugercin2009, Beattie2017}.
+In contrast, \ac{BT} defines the concepts of observability and controllability for system states, and reduces the dynamical system by truncating system matrix components that correspond to unobservable and uncontrollable states; cf.~\cite{Moore1981, Enns1984, Antoulas2005, Gugercin2007, BB2017}.
+In practice, these methods create stable methods by exploiting inherent properties of the dynamical systems to ensure stability of the system behaviour in cases where there is no external control influencing the system.
 
-More complex MOR algorithms strive to preserve the models underlying structure.
-These methods often require more computational effort, but in turn create reduced models with desirable structural properties.
-In the context of \ac{PH} systems we are particularly interested in preserving the specific system matrix structures because these induce the physical properties of the system, namely energy conservation.
-For \ac{PH} systems there exist a few varieties of reduction methods, cf.~\cite{Polyuga2010}:
+More complex MOR algorithms strive to preserve the model's underlying structure.
+These methods often require more computational effort, but in turn create reduced models that keep desirable properties.
+In the context of \ac{PH} systems, we are particularly interested in preserving the system's matrix structures because these encode the model's physical properties, namely energy conservation.
+For \ac{PH} systems, there exists a variety of reduction methods, cf.~\cite{Polyuga2010}:
 \begin{itemize}
-    \item The first idea is to start off with a system theoretic superset of (linear) \ac{PH} problems: \ac{LTI} systems.
-        The idea is to reduce a \ac{LTI} represenation of the full order \ac{PH} model and then find the closest \ac{PH} representation of the reduced order \ac{LTI} system; cf.~\cite{Gillis2018, Cherifi2019}.
-    \item The second method is to interpolate the transfer function of the \ac{PH} system in a specific way to obtain a \emph{realization} of the transfer function which satisfies the structural requirements of a \ac{PH} system; cf.~\cite{BGD2020, Schwerdtner2021, Poussot2022}.
-        The downside of this approach is that we actually need to sample the frequency domain of the underlying system instead of just relying on time domain data.
-    \item The third idea is closely linked to the second, however it tries to get around the frequency domain by sampling the time domain and only then transform the data gathered into the frequency space by means of discrete Fourier transforms; cf.~\cite{Najnudel2021, Cherifi2022, Günther2023}.
-    \item There are also additional algorithms which avoid the previous ideas and choose different strategies, however they often originate from a motivation that is not direclty linked to \ac{MOR}.
-        The most prominent of these for this thesis is the \ac{PHDMD} algorithm which we discuss later on because its main application is in the domain of Operator Inference; cf.~\cite{Morandin2022}.
+    \item The first idea to obtain a reduced (linear) \ac{PH} problem is to reduce an \ac{LTI} representation of the full order \ac{PH} model, and afterwards find the closest \ac{PH} realization of the reduced order \ac{LTI} system; cf.~\cite{Gillis2018, Cherifi2019}.
+    \item The second method is to interpolate the \ac{PH} system in the frequency domain using its transfer function to obtain a realization of the transfer function that satisfies the structural requirements of a \ac{PH} system; cf.~\cite{BGD2020, Schwerdtner2021, Poussot2022}.
+    \item The third idea is closely linked to the second, however it tries to omit evaluations in the frequency domain by sampling the time domain, and then transform the gathered data into frequency space measurements by means of discrete Fourier and Z-transforms; cf.~\cite{Najnudel2021, Cherifi2022, Günther2023}.
+    \item There additionally is the thought of fitting a \ac{PH} system with optimization algorithms based around some select parts of the dynamical system's data.
+        Among these are the \ac{PHDMD} algorithm, cf.~\cite{Morandin2022}, and the SOBMOR algorithm, cf.~\cite{Schwerdtner2023}, which aim to approximate the system matrices using control-output data, and transfer function measurements respectively.
 \end{itemize}
 
-The problem with all these methods is that most linear MOR algorithms struggle to approximate certain types of problems such as nonlinear formulations with small reduced orders.
-This failure in approximative quality is caused by the Kolmogorov N-width, a theoretical measure for describing how well the solution manifold of a problem can be described by a set of linear subspaces of fixed dimension; some authors even explicitly exclaim this to be the ``Kolmogorov Barrier'', a hinderance to be overcome by means other than linear approximation.
-Profiting from the nonlinear capabilities of (Deep/Convolutional) \acp{NN}, several publications have applied techniques from Machine Learning to try and dislodge this roadblock in model reduciton.
-A few publications in particular employ Deep Convolutional Autoencoders, a component of \acp{NN} explicitly designed for dimensionality reduction of data; cf.~\cite{Lee2020, Benner2022, Romor2023, Buchfink2023}.
-The most substantial problems of this line of thinking are twofold: firstly, training of \ac{NN} components heavily relies on data treatment and can be very time demanding, and secondly, \acp{NN} tend to function as black boxes thus leaving all desires for explainability of the underlying computations unfulfilled.
+The problem with all these methods is that most linear MOR algorithms struggle to efficiently reduce nonlinear \acp{FOM} to small \acp{ROM} under specific initial conditions.
+A codification of this drawback can be observed in the Kolmogorov $N$-width, a theoretical measure for describing how well the solution manifold of a problem can be described by a set of linear subspaces of fixed dimension.
+For some problems and initial conditions, the Kolmogorov $N$-width provides an explicit bound on the projection error, however for others, it has been shown that the Kolmogorov $N$-width decays slowly, thus resulting in almost no theoretical statements about the ability of linear \ac{MOR} to approximate \acp{ROM} for this setting; some authors even explicitly exclaim this to be the ``Kolmogorov Barrier'', a hinderance to be overcome by means other than linear approximation; cf.~\cite{Barnett2022}.
+Profiting from the nonlinear capabilities of Deep \acfp{NN}, several publications have applied techniques from Machine Learning to avoid this bottleneck in model reduction.
+In particular, publications such as~\cite{Lee2020, Benner2022, Romor2023, Buchfink2023} employ \acp{DCAE}, components of Deep \acp{NN} explicitly designed for reducing data dimensionality.
+The downsides of this approach reflect common negative effects of using \acp{NN}: Firstly, training of \ac{NN} components can be very expensive in terms of computational resources, and secondly, \acp{NN} function as black boxes with respect to their internal weights, disregarding explainability of the underlying computations.
+\itodo{make sure to avoid the $N$-width fallacy!}
 
-Aside from these direct \ac{NN} approximation methods one can also consider the machine learning-based identification problems for nonlinear dynamics through the so-called \acs{SINDY} framework; cf.~\cite{Brunton2016, Kaheman2020}.
-This framework cannot only handle general nonlinear functions used for approximation, but also incorporate control variables and structure-preserving methods such as for \ac{PH} systems; cf.~\cite{Kaiser2018, Lee2022}.
-The downside to structure-preserving \acs{SINDY} is that, so far, this method has only been implemented using a \ac{NN} approach which we want to avoid.
-For this purpose we give a reformulation of \acs{SINDYC} with respect to \ac{PH} systems that entirely relies on constrained optimization.
+Aside from these direct \ac{NN} approximation methods, one can also consider the \ac{OI} identification problems for nonlinear dynamics through the so-called \acs{SINDY} framework; cf.~\cite{Brunton2016, Kaheman2020}.
+This framework cannot only handle general nonlinear functions in the approximation, but also incorporate additional control variables and structure-preserving methods; cf.~\cite{Kaiser2018, Lee2022}.
+The downside to structure-preserving \acs{SINDY} is that, at the time of writing, this method has only been implemented using the aforementioned \ac{NN} approach, which we explicitly want to avoid.
 
-As another alternative to the high handed \ac{NN} approach polynomial approximation has been proposed in mitigating nonlinear models.
-This ansatz involves generating higher order polynomial data sets from an originally linear set of fitting data, however because to the infeasible exponential growth of the data dimension for increasing polynomial orders, most authors restrict themselves to second or third order terms, resulting in quadratically or cubically embedded manifolds.
-Some of these publications have presented promising results for generic dynamical systems with simple structural constraints, cf.~\cite{Gu2011, Peherstorfer2016, Jain2017, Rutzmoser2017, Kramer2019, BGK2020, BGH2020, Qian2020, Gosea2021, Barnett2022, Khodabakhshi2022, Qian2022, Geelen2023}, however no such progress has been made for the more restrictive setting of \ac{PH} systems.
+As another alternative to the expensive \ac{NN} approach, polynomial approximation has been proposed in mitigating nonlinear models in several forms such as QLMOR, cf.~\cite{Gu2011}, data-driven \ac{OI}, cf.~\cite{Peherstorfer2016, Kramer2019, BGK2020, Qian2022, Geelen2023}, or by using modal derivatives, cf.~\cite{Jain2017, Rutzmoser2017}.
+This ansatz involves generating higher order polynomial data from an originally linear set of fitting data, however because of the exponential growth of the data dimension for increasing polynomial orders, most authors restrict themselves to second or third order terms, resulting in quadratically or cubically embedded manifolds.
+Some of these publications have also presented results for generic dynamical systems with simple structural constraints, cf.~\cite{BGH2020, Qian2020, Gosea2021, Khodabakhshi2022}, however no such progress has been made for the more restrictive setting of \ac{PH} systems.
+Additionally, hyper-reduction can be applied to non-polynomial nonlinear systems with methods such as the \ac{DEIM}, cf.~\cite{Chaturantabut2010}, with the positive side effect that \ac{DEIM} also directly allows application to \ac{PH} systems as outlined in~\cite{Chaturantabut2016}.
 
-\itodo{include some words on DEIM}
+Our goal therefore is to derive a method to incorporate \ac{MOR} methods with quadratically embedded manifolds into the \ac{PH} system setting.
+While other ideas for polynomial terms can solely rely on solving least squares problems, the inherent structure of \ac{PH} systems makes this a lot harder because the solutions no longer have a closed form solution.
+Therefore we use optimization-based \ac{OI} techniques to identify \ac{PH} systems.
+The principal algorithm we consider is \ac{SOBMOR} proposed by~\cite{Schwerdtner2023}.
+This algorithm infers a \ac{PH} realization from parametrized matrices by fitting transfer function measurements.
+On the other hand, we compare \ac{SOBMOR} with the \ac{PHDMD} algorithm as detailed in~\cite{Morandin2022}, because \ac{PHDMD} directly uses a time domain-based \ac{LSQ} objective function instead of the frequency domain.
+This comparison stands in analogy to the comparison of frequency-based \ac{MOR} methods with state-based reduction as mentioned earlier.
 
-Our goal therefore is to derive a method to incorporate quadratic reduced order approximation methods into the \ac{PH} formulation.
-While other ideas for polynomial terms can solely rely on solving least squares problems, the inherent structure of \ac{PH} systems makes this a lot harder.
-Thus, we take a detour via Operator Inference and System Identification techniques for \ac{PH} systems and in particular explore the application of the \ac{PHDMD} algorithm to obtain the system matrices acting on the quadratic data.
-
-This thesis is structured as follows:
-\begin{itemize}
-    \item In Chapter~\ref{chap:systems-theory} we discuss system theoretic foundations necessary to understand \ac{PH} systems.
-    \item Following this, Chapter~\ref{chap:linear-mor} gives an overview of \ac{MOR}: beginning with a basic understanding of linear systemtheoretic reducion methods, incorporating struture-preservation variants, and describing the abstract limitations of linear MOR by considering Proper Orthogonal Decomposition and the Kolmogorov $N$-width.
-    \item In Chapter~\ref{chap:nonlinear-mor} we present ways in which we can extend the linear techniques to nonlinear formulations through use of \acp{NN}, Discrete Empirical Interpolation (DEIM), and Operator Inference/Identification.
-    \item Finally, Chapter~\ref{chap:numerical-experiments} closes this thesis with numerical experiments to highlight the algorithms described, as well as discussions on the practicality of our proposed method.
-\end{itemize}
+This thesis is structured in three parts.
+Firstly, we give an introduction to Systems Theory as a foundation for \ac{LTI} and \ac{PH} systems, and showcase elect some examples of how these system classes can model complex physical problems in Chapter~\ref{chap:systems-theory}.
+Next, we review both standard and structure-preserving \ac{MOR} techniques before closing with a discussion of the abstract limitations of linear reduction methods through the point of view of the Kolmogorov $N$-width in Chapter~\ref{chap:linear-mor}.
+We thereafter use Chapter~\ref{chap:inferring-models} to show how nonlinear terms may be introduced into the aforementioned linear \ac{MOR} procedures.
+In particular, we focus on \ac{OI} methods such as \ac{SOBMOR} and \ac{PHDMD}.
+To showcase the effects of the quadratically embedded manifold contributions, we present three numerical experiments in Chapter~\ref{chap:numerical-experiments}.
+These constitute a Mass-Spring-Damper system, a \ac{PH} formulation of the damped wave equation, and a inviscid Burgers' equation.
+Finally, we close this manuscript with a summary, and a short discussion of the results and possible extensions in Chapter~\ref{chap:summary}.
