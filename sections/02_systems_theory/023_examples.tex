@@ -1,33 +1,103 @@
-\section{Examples of \aclp{LTI} and \acl{PH} Systems}
+\section{Examples of \texorpdfstring{\ac{LTI}}{LTI} and \texorpdfstring{\ac{PH}}{PH} Systems}
 
-To begin this section we showcase a few models in the \ac{LTI} setting.
-Firstly, Example~\ref{ex:heating} models a controlled heat eqaution which might appear in cases of optimal heating.
+To begin this section, we showcase a few \ac{LTI} models.
+Firstly, Example~\ref{ex:heating} models a simple controlled heat equation.
+Thereafter we discuss a more complex advection-reaction-diffusion equation in the context of air quality simulations.
+Lastly, we demonstrate how higher order systems can be transformed to first order \ac{LTI} systems in Example~\ref{ex:casting-second-order}.
 
 \begin{example}[Controlled Heating]\label{ex:heating}
-    We consider a standard heat equation, apply a control to it amounting to a heating surface, and measure the heat distribution within the system at some finite set of sensor points as the output.
-    We commence from the standard formulation and add in a boundary control term
+    Let $\Omega \subseteq \bb{R}^N$ be a closed domain with sufficiently smooth boundary $\Gamma \in \subseteq \bb{R}^{N - 1}$.
+    % We consider a linear heat equation, apply a control to it amounting to a heating surface, and measure the heat distribution within the system at some finite set of sensor points as the output.
+    % We commence from the standard formulation and add in a boundary control term
+    We consider a linear heat equation, and apply a control $u$ on the boundary $\Gamma$ ressembling an exterior heating element to get
     \begin{equation*}
-        \pd[t]{} x = \lapl{x} + b \res{u}{\Gamma}
+        \pd[t]{} x = \lapl{x} + b \cdot \res{u}{\Gamma}.
     \end{equation*}
-    such that $\Gamma$ is a subset of the domain boundary.
-    The output $y$ is directly coupled to a set of sensor points $\mcl{S}$
+    The output $y$ is the measured heat distribution at a set of sensor points $\mcl{S} \subseteq \Omega$ which we compute from
     \begin{equation*}
-        y = c \res{x}{\mcl{S}} + d \res{u}{\Gamma \cap \mcl{S}}.
+        y = C \res{x}{\mcl{S}}.
     \end{equation*}
-    We can immediately put this problem into the \ac{LTI} formulation with $A u = \lapl{u}, B u = b \res{u}{\Gamma}, C x = c \res{x}{\mcl{S}}, D u = d \res{u}{\Gamma \cap \mcl{S}}$.
+    With this equation, we can immediately transform this problem into the \ac{LTI} formulation~\eqref{eq:lti} with the system matrices $A = \lapl{}, B = b, C, D = 0, E = \id$.
+    Figure~\ref{fig:lti-heating} depicts a simple example of this model for a rectangular 2D-domain.
+    For this illustration, the sample points are labelled $\mcl{S} = \sset{s_1, \dots, s_4}$.
+
+    \begin{figure}[h]
+        \centering
+        \begin{tikzpicture}[scale=0.6, auto, swap]
+            \node[ghost] (sw) at (0, 0) {};
+            \node[ghost] (ne) at (11, 6) {};
+            \node[bounded domain, fit=(sw.north east) (ne.south west)] (test) {$\Omega$};
+
+            \node[ghost] (alignmenthelper) at (-3, 0) {};
+
+            \node[ghost] (boundarynode) at (11, 4.75) {};
+            \node[barlabel] (boundarylabel) at (14, 6) {$\Gamma$};
+            \path[labelline] (boundarylabel) -- (boundarynode);
+
+            \foreach \pos / \name in {%
+                {(0, 3.25)/$s_1$}, {(11, 3.25)/$s_2$},%
+                {(5.5, 1.5)/$s_3$}, {(8, 5)/$s_4$}%
+            }%
+                \node[sensor, label=below right:\name] (\name) at \pos {};
+        \end{tikzpicture}
+        \caption{A 2D rectangular domain with sample points $s_1, \dots, s_4$ for a controlled heating problem.}%
+        \label{fig:lti-heating}
+    \end{figure}
 \end{example}
 
-\begin{example}[Casting Second Order Systems as \acp{LTI}]
-    Consider a general description of a second order model
+\begin{example}[{Controlled Air Quality Simulations, adapted from~\cite[Section~2.3]{Antoulas2005}}]
+    Modern city scapes have to account for local air quality for several reasons such as health issues, policy-making, and economic factors.
+    Thus, being able to simulate different configurations in cheap models before running expensive real-world trials is important for many different interest groups.
+    A variety of models can be used to run simulations of the concentrations $c_i \in \bb{R}, i = 1, \dots, S$, of $S \in \bb{N}$ individual chemicals in an open domain $\Omega \subseteq \bb{R}^N$ depending on the velocity of the wind $v \in \bb{R}^N$, diffusion through turbulence $K \in \bb{R}^{N \times N}$, and reactions occuring at rates $R_i \in \bb{R}$.
+    Put together, we can express this model using the advection-reaction-diffusion equation
+    \begin{equation}\label{eq:air-quality-state-equation}
+        \pd[t]{} c_i(x, t) + \dvg \left( v(x, t) c_i(x, t) \right) - \dvg \left( K(x, t) \nabla c_i(x, t) \right) - R_i(c, x, t) = u_i(x, t),\quad i = 1, \dots, S.
+    \end{equation}
+    In contrast to the controlled heating model from Example~\ref{ex:heating}, we do not use a control variable on the boundary of the domain, but rather at specific places of interest such as factories, roads, residential zones, or forests.
+    This control $u_i \colon \Omega \times I \to \bb{R}$ acts in $M_i \in \bb{N}$ individual points for each chemical, and models both chemical emissions as well as localized air purification measures.
+    Discretizing~\eqref{eq:air-quality-state-equation} yields the state equation of an \ac{LTI} system $\Sigma_{\msc{lti}}$.
+    For the output of the system $\Sigma_{\msc{lti}}$, we consider a set of sensors $\mcl{S} \subseteq \Omega$ placed at locations that may differ from the positions of the control points.
+    This can then be codified in the usual manner a linear combination of the internal states $c_i$ and the controls $u_i$ in the equation
+    \begin{equation*}
+        y_i(t) = C c_i(x, t) + D u_i(x, t).
+    \end{equation*}
+    We showcase a domain similar to the one from to Example~\ref{ex:heating} for the 2D setting in Figure~\ref{fig:air-quality}.
+
+    \begin{figure}[h]
+        \centering
+        \begin{tikzpicture}[scale=0.6, auto, swap]
+            \node[ghost] (sw) at (0, 0) {};
+            \node[ghost] (ne) at (11, 6) {};
+            \node[bounded domain, fit=(sw.north east) (ne.south west)] (test) {$\Omega$};
+
+            \foreach \pos / \name in {%
+                {(2, 1)/$u_1$}, {(3.5, 5)/$u_2$},%
+                {(8, 5)/$u_3$}%
+            }%
+                \node[control, label=below right:\name] (\name) at \pos {};
+
+            \foreach \pos / \name in {%
+                {(0, 3.25)/$s_1$}, {(9, 2.25)/$s_2$},%
+                {(5.5, 1.5)/$s_3$}%
+            }%
+                \node[sensor, label=below right:\name] (\name) at \pos {};
+        \end{tikzpicture}
+        \caption{A 2D rectangular domain with controls $u_1, u_2, u_3$, and sample points $s_1, s_2, s_3$ for an air quality control problem with a single chemical of interest.}%
+        \label{fig:air-quality}
+    \end{figure}
+\end{example}
+
+\begin{example}[Casting Second Order Systems as \acp{LTI}]\label{ex:casting-second-order}
+    We consider a second order model
     \begin{align*}
-        M \ddot{q} + E \dot{q} &= A q + B u \\
+        M \ddot{q} + E \dot{q} &= A q + B u, \\
         y &= C q + D u.
     \end{align*}
-    To express this as a first order \ac{LTI} we apply the transformation $x = \begin{pmatrix}
+    To express this as a first order \ac{LTI} system, we apply the transformation $x = \begin{pmatrix}
         q \\
         \dot{q}
     \end{pmatrix}$
-    and compute the constituent relations $M \dot{x}_2 = A x_1 - E x_2 + Bu, \dot{x_1} = x_2$.
+    and compute the transformation relations $\dot{x_1} = x_2, M \dot{x}_2 = A x_1 - E x_2 + Bu$.
     These in term can be put into \ac{LTI} form
     \begin{equation*}
         \Sigma_{\msc{lti}} \colon \left\lbrace
@@ -50,55 +120,40 @@ Firstly, Example~\ref{ex:heating} models a controlled heat eqaution which might 
     \end{equation*}
 \end{example}
 
-\begin{example}[{Air Quality Simulations; cf.~\cite[Section~2.3]{Antoulas2005}}]
-    Modern city scapes have to account for local air quality for several reasons such as health issues, policy-making, and economic factors.
-    Thus, being able to simulate different settings in cheap models before running expensive trials is important for many different interest groups.
-    A variety of models can be used to run simulations of the concentrations $c_i$ of individual chemicals, among them conservation laws such as
-    \begin{equation}\label{eq:air-quality-state-equation}
-        \pd[t]{} c_i + \nabla \cdot v(x, t) c_i - \nabla \cdot (K(x, t) \nabla c_i) = R_i(c) + u_i,\quad i = 1, \dots, S
-    \end{equation}
-    incorporating advection along the wind velocity vector $v(x, t)$, diffusion via turbulence $K(x, t)$, reaction terms $R_i(c)$ indicating the rate of change of the concentration of each chemical, and $U_i$ the control term acting as sources or sinks for the chemicals.
-    Discretizing~\eqref{eq:air-quality-state-equation} yields the state equation of an \ac{LTI} $\Sigma_{\msc{lti}}$.
-    For the output of $\Sigma_{\msc{lti}}$ we can imagine a set of sensors placed around locations of interest such as factories, roads, or residential zones.
-    These can be codified in the usual manner as
+To illustrate the abstract port-based modelling discussed at the end of Section~\ref{sec:phltis}, we showcase a few examples of problems in the \ac{PH} framework.
+In Example~\ref{ex:ms-system}, we give a direct application of classical mechanical physics adapted from~\cite[Example~2.1]{VanDerSchaft2014}.
+Finally, we highlight the approach to construct a \ac{PH} formulation with a cubic storage function for the inviscid Burgers' equation adapted from~\cite[Example~2.1]{Maschke2005} in Example~\ref{ex:inviscid-burgers}.
+
+\begin{example}[Mass-Spring-Damper System]\label{ex:ms-system}
+    We consider a \ac{MSD} that consists of three components: a mass $m$, a linear damper with damping coefficient $c$, and a linear spring with spring constant $k$ as depicted in Figure~\ref{fig:single-msd}.
+    Under the assumption that the mass moves in only one direction and without any friction, we can express the movement of the mass in terms of its kinetic energy $\frac{1}{2m} p^2$ and its potential energy $\frac{1}{2} k q^2$ with the system's states $p \in \bb{R}$ and $q \in \bb{R}$.
+    To this end, we apply Hooke's law and calculate the following effort and flow variables $e_m, e_s$ and $f_m, f_s$ respectively
     \begin{equation*}
-        y_i = C c_i + D u_i.
+        f_m = -\dot{p},\quad f_s = -\dot{q},\quad e_m = \frac{\dif}{\dif p} \left( \frac{1}{2m} p^2 \right) - c \cdot e_s,\quad e_s = \frac{\dif}{\dif q} \left( \frac{1}{2} k q^2 \right).
     \end{equation*}
-
-    \itodo{make sure this really only is advection reaction}
-\end{example}
-
-To illustrate the abstract port-based modelling discussed at the end of Section~\ref{sec:ltis} we state a few examples of problems stated in the potr-Hamiltonian framework.
-In Example~\ref{ex:ms-system} we give a direct application of classical mechanical physcs adapted from~\cite[Example~2.1]{VanDerSchaft2014}.
-Example~\ref{ex:burgers} highlights the approach for the viscuous Burgers' equation resulting in a cubic Hamiltonian; cf.~\cite[Example~2.1]{Maschke2005}.
-Finally, in an effort to illustrate the capability to model veen more complex systems, we rephrase Maxwell's equations as a \ac{PH} system; cf.~\cite[Section~2]{Haine2022}.
-
-\itodo{MHD equadtions too?}
-
-\begin{example}[Mass Spring System]\label{ex:ms-system}
-    Consider a system made up from two components: a point mass and a linear spring.
-    Under the assumptions that the mass moves in only one direction and without friction we can express the movement of the mass in terms of its kinteic energgy $\frac{1}{2m} p^2$
-    \begin{equation*}
-        \dot{p} = -f_m,\quad e_m = \frac{\dif}{\dif p} \left( \frac{1}{2m} p^2 \right).
-    \end{equation*}
-    In a similar way we apply Hooke's law to compute the spring's potential energy $\frac{1}{2} k q^2$
-    \begin{equation*}
-        \dot{q} = -f_s,\quad e_s = \frac{\dif}{\dif q} \left( \frac{1}{2} k q^2 \right).
-    \end{equation*}
-    All that is left now is to state the interconnection between both systems.
-    To this end, we have to link the force exerted at the end of the spring $e_s$ to the force applied to the point mass $-f_m$, and necessarily also connect the mass' velocity $e_m$ to the velocity of the spring end point $e_s$.
+    % w.r.t.\ its kinetic energy $\frac{1}{2m} p^2$ to calculate the effort and flow variables
+    % \begin{equation*}
+    %     f_m = -\dot{p},\quad e_m = \frac{\dif}{\dif p} \left( \frac{1}{2m} p^2 \right).
+    % \end{equation*}
+    % Similarly, we apply Hooke's law to compute the spring's potential energy $\frac{1}{2} k q^2$
+    % \begin{equation*}
+    %     \dot{q} = -f_s,\quad e_s = \frac{\dif}{\dif q} \left( \frac{1}{2} k q^2 \right).
+    % \end{equation*}
+    All that is left now, is to formulate the interconnection between both systems.
+    For this, we have to join the effort exerted at the end of the spring $e_s$ to the force applied to the point mass $-f_m$, and furthermore also tie the mass' velocity effort $e_m$ to the force of the spring end point $f_s$.
     This results in the interconnection
     \begin{equation*}
         -f_s = e_m,\quad f_m = e_s.
     \end{equation*}
-    All in all we obtain the Hamiltonian $\mcl{H}(p, q) = \frac{1}{2m} p^2 + \frac{1}{2} k q^2$, and the corresponding system in \ac{PH} formulation
+    All in all, we obtain the storage function $\mcl{H}(p, q) = \frac{1}{2m} p^2 + \frac{1}{2} k q^2$.
+    Therefore, the corresponding system in \ac{PH} formulation takes the form
     \begin{equation*}
         \begin{pmatrix}
             \dot{p} \\
             \dot{q}
         \end{pmatrix} =
         \begin{pmatrix}
-            0 & -1 \\
+            -c & -1 \\
             1 & 0
         \end{pmatrix}
         \begin{pmatrix}
@@ -111,77 +166,122 @@ Finally, in an effort to illustrate the capability to model veen more complex sy
         \end{pmatrix}.
     \end{equation*}
 
-    \itodo{insert image?}
+    \begin{figure}[h]
+        \centering
+        \begin{tikzpicture}[scale=0.6, auto, swap,%
+            damper/.pic = {
+                \coordinate (-east);
+                \coordinate[left=1mm of -east] (-west);
+                \draw[very thick] ($(-east)+(0,2mm)$) -- ++ (0,-4mm);
+                \draw[semithick]  ($(-east)+(0,3mm)$) -| ++ (-1mm,-6mm) -- ++ (1mm,0);
+            }]
+            \foreach \pos / \name in {%
+                {(.5, 0)/wallbottom}, {(.5, 4)/walltop},%
+                {(0, .5)/wall0}, {(0, 1.5)/wall1},%
+                {(0, 2.5)/wall2}, {(0, 3.5)/wall3},%
+                {(0, 4.5)/wall4}, {(.5, 1)/wallpoint1},%
+                {(.5, 2)/wallpoint2}, {(.5, 3)/wallpoint3},%
+                {(3, 2.75)/springmasspoint}, {(.5, 2.75)/springwallpoint},%
+                {(1.75, 1.25)/damperpoint}, {(3, 1.25)/dampermasspoint},%
+                {(.5, 1.25)/damperwallpoint},%
+                {(3, .5)/mass0}, {(7, .5)/mass1},%
+                {(7, 3.5)/mass2}, {(3, 3.5)/mass3},%
+                {(9.5, 2)/controlpoint}, {(7, 2)/controlmasspoint}%
+            }%
+                \node[ghost] (\name) at \pos {};
+
+            \path[labelline] (wall0) -- (wallbottom) -- (walltop) -- (wall4);
+            \path[labelline] (wall1) -- (wallpoint1);
+            \path[labelline] (wall2) -- (wallpoint2);
+            \path[labelline] (wall3) -- (wallpoint3);
+
+            \draw[decoration={aspect=0.3, segment length=1.5mm, amplitude=2mm,coil},decorate] (springwallpoint) -- (springmasspoint);
+            \pic (damper) at (damperpoint) {damper};
+            \path[labelline] (damper-east) -- (dampermasspoint);
+            \path[labelline] (damper-west) -- (damperwallpoint);
+
+            \path[labelline] (mass0) -- (mass1);
+            \path[labelline] (mass1) -- (mass2);
+            \path[labelline] (mass2) -- (mass3);
+            \path[labelline] (mass3) -- (mass0);
+            \node[ghost] (masscenter) at (5, 2) {$m$};
+
+            \path[force, label=test] (controlpoint) -- (controlmasspoint);
+            \node[ghost, label=above:$u$] (controlghost) at (8.25, 2) {};
+        \end{tikzpicture}
+        \caption{A \acl{MSD} system with one element.}%
+        \label{fig:single-msd}
+    \end{figure}
 \end{example}
 
-\begin{example}[{Burgers' Equation; cf.~\cite[Example~2.1]{Maschke2005}}]\label{ex:burgers}
-    Consider the inviscid homogeneous Burgers' equation on a one-dimensional spatial domain $\interval[open]{a}{b}$
-    \begin{equation*}
+\begin{example}[{Burgers' Equation adapted from~\cite[Example~2.1]{Maschke2005}}]\label{ex:inviscid-burgers}
+    To demonstrate non-quadratic Hamiltonians, we first consider the inviscid homogeneous Burgers' equation on a one-dimensional spatial domain $\interval[open]{a}{b} \subset \bb{R}$ in the form of
+    \begin{equation}\label{eq:inviscid-burgers}
         \pd[t]{} u + \pd[x]{} u^2 = 0.
-    \end{equation*}
-    In this case we can express the associated Hamiltonian as
-    \begin{equation*}
+    \end{equation}
+    In this case, we can express the associated Hamiltonian as
+    \begin{equation}\label{eq:burgers-hamiltonian}
         \mcl{H}(u) = \int\limits_a^b \frac{u^3}{6} \dif x.
-    \end{equation*}
-    Applying the variational derivative $\delta_u H(u) = \frac{u^2}{2}$ we compute the \ac{PH} reformulation
+    \end{equation}
+    Applying the variational derivative $\delta_u H(u) = \frac{u^2}{2}$, we compute the reformulation of Equation~\eqref{eq:inviscid-burgers} in terms of the Hamiltonian~\eqref{eq:burgers-hamiltonian} as the following equation
     \begin{equation*}
-        \pd[t]{} u = - \pd{} \delta_u H(u) = -\pd{} \frac{u^2}{2}.
+        \pd[t]{} u = - \pd{} \left( \delta_u \mcl{H}(u) \right) = -\pd{} \frac{u^2}{2}.
     \end{equation*}
-    In this case the time derivative of the Hamiltonian $\mcl{H}$ is constrained by
+    In this case, the time derivative of the Hamiltonian $\mcl{H}$ is conserved by
     \begin{equation*}
-        \frac{\dif}{\dif t} \mcl{H}(u) = - \int\limits_a^b \delta_u \mcl{H}(u) \cdot \pd{} \delta_u \mcl{H}(u) \dif x = \frac{1}{2} \left( {u(b)}^4 - {u(a)}^4 \right)
+        \frac{\dif}{\dif t} \mcl{H}(u) = - \int\limits_a^b \delta_u \mcl{H}(u) \cdot \pd{} \left( \delta_u \mcl{H}(u) \right) \dif x = \frac{1}{2} \left( {u(b)}^4 - {u(a)}^4 \right),
     \end{equation*}
     where we computed the last equality using integration by parts.
 \end{example}
 
-\begin{example}[Maxwell's Equations]\label{ex:maxwell}
-    For an electric field $E$, a magnetic field $B$, auxiliary fields $D$ and $H$, a free charge density $\rho$, and a free current density $j$ Maxwell's equations are given by
-    \begin{equation*}
-        \begin{aligned}
-            \pd[t]{} D - \curl{H} &= -j, &\pd[t]{} B + \curl{E} &= 0, \\
-            \dvg{D} &= \rho, &\dvg{B} &= 0.
-        \end{aligned}
-    \end{equation*}
-    On the boundary a \ac{LTI} impedance bonudary condition
-    \begin{equation*}
-        \pi_t(E) = k * \left( \res{H}{\Gamma} \times n \right)
-    \end{equation*}
-    is imposed for the unit outer normal $n$, the time-domain convolution $*$, and a causal kernel $k$, meaning that its Laplace tranfsorm is a positive-real function.
-    The derivation of the power balance is quite involved so we refer the reader to $\cdot$.
-    Initially, we use the integral equality
-    \begin{equation*}
-        \inner{E}{\pd[t]{} D}{\Omega} + \inner{H}{\pd[t]{} B}{\Omega} = - \inner*{\res{H}{\Gamma} \times n}{\pi_t(E)}{\Gamma} - \inner{j}{E}{\Omega}.
-    \end{equation*}
-    Combined with the following three constitutive relations
-    \begin{equation*}
-        D(t, x) = \eps(x) E(t, x),\quad H(t, x) = \frac{1}{\mu(x)} B(t, x),\quad j(t, x) = \sigma(x) E(t, x)
-    \end{equation*}
-    for $\eps$ the dielectric permittivity, $\mu$ the magnetic permittivity, and $\sigma \geq 0$ the conductivity, this results in the Hamiltonian
-    \begin{equation*}
-        \mcl{H} = \frac{1}{2} \inner{E}{D}{\Omega} + \frac{1}{2} \inner{H}{B}{\Omega}.
-    \end{equation*}
-    With the energy variables $\alpha_D = D, \alpha_B = B, f_j = E$ and the coenergy varables $e_D = \delta_D \mcl{H} = E, e_B = \delta_B \mcl{H} = H, e_j = j$ we deduce
-    \begin{equation*}
-        \mcl{H} = \frac{1}{2} \inner*{\frac{1}{\eps} \alpha_D}{\alpha_D}{\Omega} + \frac{1}{2} \inner*{\frac{1}{\mu} \alpha_B}{\alpha_B}{\Omega}
-    \end{equation*}
-    as well as with the output $\inner{y}{u}{\Gamma} = - \inner{\res{H}{\Gamma} \times n}{\pi_t(E)}{\Gamma}$ the final \ac{PH} system is
-    \begin{equation*}
-        \begin{pmatrix}
-            \pd[t]{} \alpha_D \\
-            \pd[t]{} \alpha_B \\
-            f_j
-        \end{pmatrix} =
-        \begin{pmatrix}
-            0 & \curl & -\id \\
-            -\curl & 0 & 0 \\
-            \id & 0 & 0
-        \end{pmatrix}
-        \begin{pmatrix}
-            e_D \\
-            e_B \\
-            e_j
-        \end{pmatrix}.
-    \end{equation*}
+% \begin{example}[Maxwell's Equations]\label{ex:maxwell}
+%     For an electric field $E$, a magnetic field $B$, auxiliary fields $D$ and $H$, a free charge density $\rho$, and a free current density $j$ Maxwell's equations are given by
+%     \begin{equation*}
+%         \begin{aligned}
+%             \pd[t]{} D - \curl{H} &= -j, &\pd[t]{} B + \curl{E} &= 0, \\
+%             \dvg{D} &= \rho, &\dvg{B} &= 0.
+%         \end{aligned}
+%     \end{equation*}
+%     On the boundary a \ac{LTI} impedance bonudary condition
+%     \begin{equation*}
+%         \pi_t(E) = k * \left( \res{H}{\Gamma} \times n \right)
+%     \end{equation*}
+%     is imposed for the unit outer normal $n$, the time-domain convolution $*$, and a causal kernel $k$, meaning that its Laplace tranfsorm is a positive-real function.
+%     The derivation of the power balance is quite involved so we refer the reader to $\cdot$.
+%     Initially, we use the integral equality
+%     \begin{equation*}
+%         \inner{E}{\pd[t]{} D}{\Omega} + \inner{H}{\pd[t]{} B}{\Omega} = - \inner*{\res{H}{\Gamma} \times n}{\pi_t(E)}{\Gamma} - \inner{j}{E}{\Omega}.
+%     \end{equation*}
+%     Combined with the following three constitutive relations
+%     \begin{equation*}
+%         D(t, x) = \eps(x) E(t, x),\quad H(t, x) = \frac{1}{\mu(x)} B(t, x),\quad j(t, x) = \sigma(x) E(t, x)
+%     \end{equation*}
+%     for $\eps$ the dielectric permittivity, $\mu$ the magnetic permittivity, and $\sigma \geq 0$ the conductivity, this results in the Hamiltonian
+%     \begin{equation*}
+%         \mcl{H} = \frac{1}{2} \inner{E}{D}{\Omega} + \frac{1}{2} \inner{H}{B}{\Omega}.
+%     \end{equation*}
+%     With the energy variables $\alpha_D = D, \alpha_B = B, f_j = E$ and the coenergy varables $e_D = \delta_D \mcl{H} = E, e_B = \delta_B \mcl{H} = H, e_j = j$ we deduce
+%     \begin{equation*}
+%         \mcl{H} = \frac{1}{2} \inner*{\frac{1}{\eps} \alpha_D}{\alpha_D}{\Omega} + \frac{1}{2} \inner*{\frac{1}{\mu} \alpha_B}{\alpha_B}{\Omega}
+%     \end{equation*}
+%     as well as with the output $\inner{y}{u}{\Gamma} = - \inner{\res{H}{\Gamma} \times n}{\pi_t(E)}{\Gamma}$ the final \ac{PH} system is
+%     \begin{equation*}
+%         \begin{pmatrix}
+%             \pd[t]{} \alpha_D \\
+%             \pd[t]{} \alpha_B \\
+%             f_j
+%         \end{pmatrix} =
+%         \begin{pmatrix}
+%             0 & \curl & -\id \\
+%             -\curl & 0 & 0 \\
+%             \id & 0 & 0
+%         \end{pmatrix}
+%         \begin{pmatrix}
+%             e_D \\
+%             e_B \\
+%             e_j
+%         \end{pmatrix}.
+%     \end{equation*}
 
-    \itodo{check for the definition of $\pi_t$ in Buffa, Costabel, Sheen; 2002: On traces for $H(curl, \Omega)$ in Lipschitz domains}
-\end{example}
+%     \itodo{check for the definition of $\pi_t$ in Buffa, Costabel, Sheen; 2002: On traces for $H(curl, \Omega)$ in Lipschitz domains}
+% \end{example}
