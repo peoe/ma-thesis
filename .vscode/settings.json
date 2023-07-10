@@ -21,9 +21,17 @@
 		"**/*.toc": true,
 		"**/*.nav": true,
 		"**/*.snm": true,
+		"**/*.dvi": true,
+		"**/*.svg": true,
+		"**/titlepage.pdf": true,
+		"config/titlepage/svg-inkscape": true,
 		".vscode": true,
 		".github": true,
-		"titlepage.pdf": true
+		".gitignore": true,
+		"thesis_description.pdf": true,
+		"bundle.pdf": true,
+		"pres.pdf": true,
+		"README.md": true
 	},
 	"cmake.configureOnOpen": false
 }
