@@ -1,5 +1,6 @@
 %        Heading updates        %
 \usepackage{titlesec}
+\usepackage{fancyhdr}
 
 %        Chapter heading        %
 \titleformat{\chapter}[hang]{%
@@ -7,3 +8,12 @@
 }{%
     \thechapter%
 }{1em}{}
+
+%        No capital header        %
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[RE]{\slshape\nouppercase{\rightmark}}
+\fancyhead[RO]{\slshape\nouppercase{\thepage}}
+\fancyhead[LO]{\slshape\nouppercase{\leftmark}}
+\fancyhead[LE]{\slshape\nouppercase{\thepage}}
+\renewcommand{\headrule}{}

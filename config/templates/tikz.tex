@@ -1,6 +1,8 @@
 %        Tikz Styles        %
 \usepackage{tikz}
-\usetikzlibrary{spy, arrows, arrows.meta, shapes, shapes.multipart, fit, matrix}
+\usetikzlibrary{spy, arrows, arrows.meta, calc, decorations.pathmorphing, fit, matrix, patterns, shapes, shapes.multipart, shapes.misc}
+
+\tikzset{cross/.style={cross out, draw=black, minimum size=2*(#1-\pgflinewidth), inner sep=0pt, outer sep=0pt}, cross/.default={1pt}}
 
 %        Graph Theory        %
 \tikzstyle{vertex} = [circle, fill=black!25, minimum size=20pt, inner sep=0pt]
@@ -22,11 +24,18 @@
 \tikzstyle{dominates} = [draw, thick, -Stealth]
 \tikzstyle{divides} = [draw, thick, dash pattern=on 5pt off 2pt on 1pt off 2pt]
 \tikzstyle{points} = [draw, -Stealth]
-\tikzstyle{ghost} = [draw=none]
+\tikzstyle{ghost} = [draw=none, minimum size=0pt, inner sep=0pt]
 \tikzstyle{barlabel} = [rectangle, behind path]
+\tikzstyle{labelline} = [draw]
 
 %        Matrices        %
 \tikzstyle{vsubmatrix} = [rectangle, fill=black!25, minimum width=10pt, minimum height=50pt]
 \tikzstyle{hsupermatrix} = [matrix of math nodes, ampersand replacement=\&, column sep=1mm, left delimiter=(, right delimiter=)]
 \tikzstyle{hsubmatrix} = [rectangle, fill=black!25, minimum width=50pt, minimum height=10pt]
 \tikzstyle{vsupermatrix} = [matrix of math nodes, ampersand replacement=\&, row sep=1mm, left delimiter=(, right delimiter=)]
+
+%        Domains        %
+\tikzstyle{force} = [draw, -Stealth]
+\tikzstyle{sensor} = [cross, fill=black, minimum size=5pt, inner sep=0pt]
+\tikzstyle{control} = [circle, fill=black, minimum size=3pt, inner sep=0pt]
+\tikzstyle{bounded domain} = [rectangle, draw=black]
