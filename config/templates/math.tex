@@ -5,6 +5,7 @@
 \usepackage{amssymb}
 \usepackage{marvosym} % lightning symbol
 \usepackage{textcomp} % interrobang
+\usepackage{aligned-overset} % alignment in overset commands
 
 %        Theorems        %
 \usepackage{amsthm}
@@ -49,9 +50,10 @@
 \newcommand{\ISET}[2]{\iset{#1}{\text{#2}}}
 
 %        Matrix Commands        %
+\usepackage{xparse}
 \newcommand{\trans}{^{\mkern1mu \mathsf{T}}}
 \newcommand{\herm}{^{\mkern1mu \mathsf{H}}}
-\newcommand{\inv}[1][1]{^{-#1}}
+\newcommand{\inv}[1][]{\IfValueTF{#1}{^{-\mkern1mu \mathsf{H}}}{^{-1}}}
 \newcommand{\id}[1][]{\text{id}_{#1}}
 \newcommand{\diag}[1]{\mathop{}\!\mathrm{diag}\left(#1\right)}
 
