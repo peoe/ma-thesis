@@ -5,7 +5,7 @@ As far as this chapter is concerned, we can by no means claim exhaustive definit
 First off, we discuss dynamical systems and \ac{MOR} in abstract terms.
 Thereafter, we discuss the motivation for the object of this thesis, and finally conclude this chapter with the description of the overall structure of this manuscript.
 
-Dynamical systems are descriptions of the evolution of complex moodels over time.
+Dynamical systems are descriptions of the evolution of complex models over time.
 These models are subject to the outside influence of a control, and themselves produce an output that interplays with the environment; cf.~\cite{Hinrichsen2005}.
 The general definition of these systems distinguishes between the control and output variables, as well as the internal states of the system, where the system's output is a combination of potentially both the current states as well as the control.
 Generally, dynamical systems do not include physically motivated structural relations between states, controls, and outputs, however problem descriptions that result from physical considerations can hugely benefit from this additional information in the form of e.g.\ energy preservation and similar conservation laws.
@@ -45,13 +45,13 @@ For some problems and initial conditions, the Kolmogorov $N$-width provides an e
 Profiting from the nonlinear capabilities of Deep \acfp{NN}, several publications have applied techniques from Machine Learning to avoid this bottleneck in model reduction.
 In particular, publications such as~\cite{Lee2020, Benner2022, Romor2023, Buchfink2023} employ \acp{DCAE}, components of Deep \acp{NN} explicitly designed for reducing data dimensionality.
 The downsides of this approach reflect common negative effects of using \acp{NN}: Firstly, training of \ac{NN} components can be very expensive in terms of computational resources, and secondly, \acp{NN} function as black boxes with respect to their internal weights, disregarding explainability of the underlying computations.
-\itodo{make sure to avoid the $N$-width fallacy!}
-
-Aside from these direct \ac{NN} approximation methods, one can also consider the \ac{OI} identification problems for nonlinear dynamics through the so-called \acs{SINDY} framework; cf.~\cite{Brunton2016, Kaheman2020}.
+We can also consider the \ac{OI} identification problems for nonlinear dynamics through the so-called \acs{SINDY} framework; cf.~\cite{Brunton2016, Kaheman2020}.
 This framework cannot only handle general nonlinear functions in the approximation, but also incorporate additional control variables and structure-preserving methods; cf.~\cite{Kaiser2018, Lee2022}.
 The downside to structure-preserving \acs{SINDY} is that, at the time of writing, this method has only been implemented using the aforementioned \ac{NN} approach, which we explicitly want to avoid.
 
-As another alternative to the expensive \ac{NN} approach, polynomial approximation has been proposed in mitigating nonlinear models in several forms such as QLMOR, cf.~\cite{Gu2011}, data-driven \ac{OI}, cf.~\cite{Peherstorfer2016, Kramer2019, BGK2020, Qian2022, Geelen2023}, or by using modal derivatives, cf.~\cite{Jain2017, Rutzmoser2017}.
+\itodo{make sure to avoid the $N$-width fallacy!}
+
+As an alternative to the expensive \ac{NN} approach, polynomial approximation has been proposed in mitigating nonlinear models in several forms such as QLMOR, cf.~\cite{Gu2011}, data-driven \ac{OI}, cf.~\cite{Peherstorfer2016, Kramer2019, BGK2020, Qian2022, Geelen2023, Sharma2023}, or by using modal derivatives, cf.~\cite{Jain2017, Rutzmoser2017}.
 This ansatz involves generating higher order polynomial data from an originally linear set of fitting data, however because of the exponential growth of the data dimension for increasing polynomial orders, most authors restrict themselves to second or third order terms, resulting in quadratically or cubically embedded manifolds.
 Some of these publications have also presented results for generic dynamical systems with simple structural constraints, cf.~\cite{BGH2020, Qian2020, Gosea2021, Khodabakhshi2022}, however no such progress has been made for the more restrictive setting of \ac{PH} systems.
 Additionally, hyper-reduction can be applied to non-polynomial nonlinear systems with methods such as the \ac{DEIM}, cf.~\cite{Chaturantabut2010}, with the positive side effect that \ac{DEIM} also directly allows application to \ac{PH} systems as outlined in~\cite{Chaturantabut2016}.
