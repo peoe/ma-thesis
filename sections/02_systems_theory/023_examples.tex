@@ -6,9 +6,7 @@ Thereafter we discuss a more complex advection-reaction-diffusion equation in th
 Lastly, we demonstrate how higher order systems can be transformed to first order \ac{LTI} systems in Example~\ref{ex:casting-second-order}.
 
 \begin{example}[Controlled Heating]\label{ex:heating}
-    Let $\Omega \subseteq \bb{R}^N$ be a closed domain with sufficiently smooth boundary $\Gamma \in \subseteq \bb{R}^{N - 1}$.
-    % We consider a linear heat equation, apply a control to it amounting to a heating surface, and measure the heat distribution within the system at some finite set of sensor points as the output.
-    % We commence from the standard formulation and add in a boundary control term
+    Let $\Omega \subseteq \bb{R}^n$ be a closed domain with sufficiently smooth boundary $\Gamma \in \subseteq \bb{R}^{n - 1}$.
     We consider a linear heat equation, and apply a control $u$ on the boundary $\Gamma$ ressembling an exterior heating element to get
     \begin{equation*}
         \pd[t]{} x = \lapl{x} + b \cdot \res{u}{\Gamma}.
@@ -48,7 +46,7 @@ Lastly, we demonstrate how higher order systems can be transformed to first orde
 \begin{example}[{Controlled Air Quality Simulations, adapted from~\cite[Section~2.3]{Antoulas2005}}]
     Modern city scapes have to account for local air quality for several reasons such as health issues, policy-making, and economic factors.
     Thus, being able to simulate different configurations in cheap models before running expensive real-world trials is important for many different interest groups.
-    A variety of models can be used to run simulations of the concentrations $c_i \in \bb{R}, i = 1, \dots, S$, of $S \in \bb{N}$ individual chemicals in an open domain $\Omega \subseteq \bb{R}^N$ depending on the velocity of the wind $v \in \bb{R}^N$, diffusion through turbulence $K \in \bb{R}^{N \times N}$, and reactions occuring at rates $R_i \in \bb{R}$.
+    A variety of models can be used to run simulations of the concentrations $c_i \in \bb{R}, i = 1, \dots, S$, of $S \in \bb{N}$ individual chemicals in an open domain $\Omega \subseteq \bb{R}^n$ depending on the velocity of the wind $v \in \bb{R}^n$, diffusion through turbulence $K \in \bb{R}^{n \times n}$, and reactions occuring at rates $R_i \in \bb{R}$.
     Put together, we can express this model using the advection-reaction-diffusion equation
     \begin{equation}\label{eq:air-quality-state-equation}
         \pd[t]{} c_i(x, t) + \dvg \left( v(x, t) c_i(x, t) \right) - \dvg \left( K(x, t) \nabla c_i(x, t) \right) - R_i(c, x, t) = u_i(x, t),\quad i = 1, \dots, S.
@@ -88,7 +86,7 @@ Lastly, we demonstrate how higher order systems can be transformed to first orde
 \end{example}
 
 \begin{example}[Casting Second Order Systems as \acp{LTI}]\label{ex:casting-second-order}
-    We consider a second order model
+    We consider a second order model with the matrices $M, E, A \in \bb{R}^{n \times n}, B \in \bb{R}^{n \times m}, C \in \bb{R}^{m \times n}, D \in \bb{R}^{m \times m}$ in the extended \ac{LTI} form
     \begin{align*}
         M \ddot{q} + E \dot{q} &= A q + B u, \\
         y &= C q + D u.

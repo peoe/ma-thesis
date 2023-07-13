@@ -54,6 +54,21 @@ This output again takes the shape of a time dependent function $y \colon I \to \
     These systems mostly come up when either the derivative data $\dot{x}$ is not available to us, or when we discretize a continuous system using a time stepping procedure.
 \end{remark}
 
+\begin{remark}
+    In contrast to systems of \acp{ODE}, \acp{DAE} can include equations that are not differential in nature.
+    In this sense, the system
+    \begin{align}
+        \dot{x} &= A x + B u, \label{eq:dae-ode-difference-state}\\
+        \dot{y} &= C x + D u\label{eq:dae-ode-difference-ode-io}
+    \end{align}
+    classifies as both a system of \acp{ODE}, as well as a \ac{DAE}.
+    In contrast, if Equation~\eqref{eq:dae-ode-difference-ode-io} read
+    \begin{equation}\label{eq:dae-ode-difference-dae-io}
+        y = C x + D u
+    \end{equation}
+    instead, then the system consisting of Equations~\eqref{eq:dae-ode-difference-state} and~\eqref{eq:dae-ode-difference-dae-io} no longer is a system of \acp{ODE}, but only a \ac{DAE}.
+\end{remark}
+
 Any \ac{LTI} system in the form~\eqref{eq:lti} is said to act in the time domain, meaning that the inputs of both the states $x, \dot{x}$, the control $u$, and output variable $y$ are functions of time.
 From a Systems Theory point of view however, it is necessary to also consider the system from within the frequency domain.
 In the frequency domain we no longer consider how the system along with the control and the output change over time, but rather how their time behaviour can be represented by oscillations depending on frequency.
@@ -175,7 +190,7 @@ Additionally, we connect the stability of a system to its poles.
     \begin{align*}
         {(\omega E - A)}^m x_m = 0,\quad {(\omega E - A)}^{m - 1} x_m \neq 0.
     \end{align*}
-    However, if the realization $(A, B, C, D, E)$ is minimal, both sets are equal, cf.~\cite[Section~2]{Benner2017}.
+    However, if the realization $(A, B, C, D, E)$ is minimal as defined in Definition~\ref{def:minimal-system}, both sets are equal, cf.~\cite[Section~2]{Benner2017}.
 \end{remark}
 
 \begin{definition}[{Cf.~\cite[Section~2]{Benner2017}}]\label{def:lti-stability}

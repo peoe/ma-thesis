@@ -9,6 +9,7 @@ The main difference here is that in the chapter on \ac{MOR} methods, the algorit
 
 These following remarks closely follow~\cite[Definition~4.9]{Mehrmann2022}.
 In \ac{PH} systems, we split the state interaction matrix $A \in \bb{R}^{m \times n}$ into two matrices $J, R \in \bb{R}^{m \times m}$, and a state transformation matrix $Q \in \bb{R}^{m \times n}$.
+In this split, it is very useful if $Q$ has full rank because some of the following calculations will be much simpler, and otherwise the system can grow unboundedly as pointed out in~\cite[Remark~4.10]{Mehrmann2022}.
 The $J$ matrix is responsible for preserving energy in the system, reflected in the skew-symmetry of the matrix $-J = J\trans$, a property often encountered in Hamiltonian Mechanics.
 The $R$ matrix on the other hand dissipates energy within the internal states, which can reflect e.g.\ friction, resistance, or chemical reactions.
 We consider $R$ to be a symmetric positive semidefinite matrix, denoted $R \in \mcl{S}_{\curlyeqsucc}^{n \times n}(\bb{R})$.
@@ -81,10 +82,10 @@ In our case, we restrict ourselves to a quadratic Hamiltonian formulation
     \end{equation*}
 \end{remark}
 
-\begin{remark}
+\begin{remark}[{Adapted from~\cite[Section~4.3]{Mehrmann2022}}]
     In Definition~\ref{def:phlti}, we stated the general definition of a \ac{PH} system.
     In practice, it is common to transform the system such that the $Q$ matrix is reduced to $Q = \id$.
-    This is achieved by multiplying the first equation in~\eqref{eq:phlti} by $Q\trans$ from the left and defining
+    If $Q$ has full rank, then this is achieved by multiplying the first equation in~\eqref{eq:phlti} by $Q\trans$ from the left and defining
     \begin{equation*}
         H \coloneqq Q\trans E,\quad \tilde{J} \coloneqq Q\trans J Q,\quad \tilde{R} \coloneqq Q\trans R Q, \tilde{G} \coloneqq Q\trans G, \tilde{P} \coloneqq Q\trans P.
     \end{equation*}
