@@ -1,64 +1,67 @@
 \section{System Theoretic Linear MOR}\label{sec:system-mor}
 
-System-theoretic model order reduction offers two main perspectives: reduction resulting from the notion of \acp{LTI} as in Definition~\ref{def:lti}, and reduction by means of the transfer function from Definition~\ref{def:transfer-function}.
-We give an idea of matrix-based reduction in Subsection~\ref{subsec:balanced-truncation} explaining the method of Balanced Truncation.
-Afterwards, we discuss reduction by means of interpolating the transfer function in Subsection~\ref{subsec:interpolation-reduction}.
+\acl{MOR} for Systems Theory offers two main perspectives: reduction resulting from the system matrices of \ac{LTI} systems as in Definition~\ref{def:lti}, and reduction by means of the associated transfer function from Definition~\ref{def:transfer-function}.
+We give an idea of truncation, a reduction method focussed on the system's matrices, in Subsection~\ref{subsec:balanced-truncation} explaining the method of \acf{BT}.
+Afterwards, we discuss reduction by means of interpolating the transfer function which leads us to the \acf{IRKA} in Subsection~\ref{subsec:interpolation-reduction}.
 
 \subsection{Balanced Truncation}\label{subsec:balanced-truncation}
 
-\emph{Balanced Truncation} is a method consisting of a two step procedure: balancing and truncation.
-Firstly, balancing the \ac{LTI} means transforming the system so that states that are hard to reach by an outside acting control are also hard to observe.
-Secondly, truncation of the balanced system constitutes itself by omission of the matrix entries corresponding to the hard-to-reach and hard-to-observe system states.
-In so acting we create a system reflecting the easily observable and reachable states.
+\acl{BT} is a method consisting of a two step procedure: balancing and truncation.
+Firstly, balancing an \ac{LTI} system in a heuristic way means transforming the system such that hard-to-reach states are simultaneously hard to observe.
+Secondly, truncation of the balanced system constitutes itself by omission of the matrix blocks that correspond to hard-to-reach and hard-to-observe system states.
+In so acting, we create a system that prioritizes easily controllable and easily observable states.
 
-This procedure was originally described in~\cite{Mullis1976} and later extended by~\cite{Moore1981, Enns1984}.
-Within the balanced truncation framework, several balancing options are available to cater to different system requirements.
-Standard balancing (also called Lyapunov balancing according to~\cite{Gugercin2007}) often requires large computational time budgets because during this procedure one has to compute expensive dense matrix factorizations.
+This procedure was originally described in~\cite{Mullis1976}, and later extended by~\cite{Moore1981, Enns1984}.
+Within the \ac{BT} methodology, several balancing options are available to cater to different system requirements.
+Standard Lyapunov balancing often requires large computational times as~\cite{Gugercin2007} points out, because during this procedure one has to compute expensive dense matrix factorizations.
 To mitigate this drawback, approximate balanced truncation methods have been developped.
-These include, among others, stochastic balancing~\cite{Desai1984, Green1988}, frequency weighted balancing~\cite{Enns1984, Wang1999}, bounded real balancing~\cite{Opdenacker1988, Reis2009} or positive real balancing~\cite{Desai1984, Ober1991}.
-For our purposes, it suffices to consider ordinary balanced truncation and positive real balances truncation.
-Positive real balanced truncation in particular is interesting in the context of this thesis because it produces passive systems which are closely linked to \ac{PH} systems.
+These include, among others, stochastic balancing~\cite{Desai1984, Green1988}, frequency weighted balancing~\cite{Enns1984, Wang1999}, bounded real balancing~\cite{Opdenacker1988, Reis2009}, or positive real balancing~\cite{Desai1984, Ober1991}.
+For our purposes, it suffices to consider Lyapunov \ac{BT} and \ac{PRBT} because we are not primarily interested in the theory of balancing \ac{MOR} methods.
+\ac{PRBT} in particular is interesting in the context of this thesis because it produces passive systems which are closely linked to \ac{PH} systems, however we cover this connection later on in Subsection~\ref{subsec:prbt}.
 
-We commence with standard balanced truncation as described in~\cite{BB2017}.
-Consider $(A, B, C, D, E)$ to be an \ac{LTI} as in Definition~\ref{def:lti}.
-It is important to note that most balanced truncation literature employs \acp{LTI} that have $E = \id$.
-If $E$ is regular, then any system $(A, B, C, D, E)$ can easily be transformed into a system of the form $(\tilde{A}, \tilde{B}, C, D, \id)$ by appliying $E\inv$ to the state equation in~\eqref{eq:lti}.
-We utilize of abuse of notation and henceforth simply refer to our system by the matrices $(A, B, C, D, \id)$.
+We commence with standard Lyapunov \ac{BT} as described in~\cite{BB2017}.
+Consider $(A, B, C, D, E)$ to be a realization of an \ac{LTI} system as in Definition~\ref{def:lti}.
+It is important to note that some \ac{BT} literature employs \acp{LTI} systems that have the trivial matrix $E = \id$.
+If $E$ is regular, then any system $(A, B, C, D, E)$ can easily be transformed into a system of the form $(\tilde{A}, \tilde{B}, C, D, \id)$ by applying $E\inv$ to the state equation in~\eqref{eq:lti}.
+Henceforth, we refer to our \ac{LTI} system $\Sigma_\msc{lti}$ by the matrices $(A, B, C, D, \id)$.
 
-\begin{definition}[{Cf.~\cite[Definition~6.2]{BB2017}}]\label{def:controllability}
-    The system $(A, B, C, D, \id)$ is \emph{controllable} if for all states $x_0, x_1 \in \bb{C}^n$ and a final time $T \geq 0$ there exists a suitable control $u \colon \interval{0}{T} \to \bb{C}^q$ such that the solution $x(t)$ of the system satisfies $x(0) = x_0, x(T) = x_1$.
+\begin{definition}[{Adapted from~\cite[Definition~6.2]{BB2017}}]\label{def:controllability}
+    The system $(A, B, C, D, \id)$ is controllable if for all states $x_0, x_1 \in \bb{R}^n$ and a final time $T \geq 0$ there exists an admissible control $u \colon \interval{0}{T} \to \bb{R}^q$ such that the system's solution $x(t)$ satisfies $x(0) = x_0$ and $x(T) = x_1$.
 \end{definition}
 
-\begin{definition}[{Cf.~\cite[Definition~6.3]{BB2017}}]\label{def:observability}
-    The state $x_1 \in \bb{C}^n$ of a system $(A, B, C, D, \id)$ is \emph{unobservable} if the output of the system with $x(0) = x_1$ is $y \equiv 0$ for all points in time.
-    This in particular means that $x_1$ cannot be distinguished from the zero state $x_0 = 0 \in \bb{C}^n$.
-    A system is \emph{observable} if the set of all unobservable states trivially consists of only the zero state $x_0$.
+\begin{definition}[{Adapted from~\cite[Definition~6.3]{BB2017}}]\label{def:observability}
+    The state $x_1 \in \bb{R}^n$ of a system $(A, B, C, D, \id)$ is unobservable if the output of the system with the initial condition $x(0) = x_1$ constantly is $y(t) \equiv 0$ for all points in time.
+    In particular, an unobservable state $x_1$ means that $x_1$ cannot be distinguished from the zero state no matter the control applied to the system.
+    A system is observable if the set of all unobservable states consists of only the trivial zero state.
 \end{definition}
 
-To characterize which system states are observable and which system states are controllable, we define the system's infinite \emph{Controllability Gramian} in accordance with~\cite[Equation~6.8]{BB2017}
+To characterize which system states are observable and which system states are controllable, we define the system's infinite Controllability Gramian as given in~\cite[Equation~6.8]{BB2017}
 \begin{equation}\label{eq:controllability-gramian}
-    P = \int\limits_0^\infty \exp{(A t)} B B\trans \exp{(A\trans t)} \dif t \in \bb{C}^{n \times n}
+    P = \int\limits_0^\infty \exp{(A t)} B B\trans \exp \left( A\trans t \right) \dif t \in \bb{R}^{n \times n},
 \end{equation}
-alongside the corresponding infinite \emph{Observability Gramian}
+alongside the corresponding infinite Observability Gramian
 \begin{equation}\label{eq:observability-gramian}
-    Q = \int\limits_0^\infty \exp{(A\trans t)} C\trans C \exp{(A t)} \dif t \in \bb{C}^{n \times n}.
+    Q = \int\limits_0^\infty \exp \left( A\trans t \right) C\trans C \exp{(A t)} \dif t \in \bb{R}^{n \times n}.
 \end{equation}
-For asymptotically stable and minimal systems, these matrices satisfy the Lyapunov equalities
+For asymptotically stable and minimal systems as defined in Definitions~\ref{def:minimal-system} and~\ref{def:lti-stability}, these matrices satisfy the Lyapunov equalities
 \begin{equation}\label{eq:lyapunov-equations}
     \begin{aligned}
         A P + P A\trans + B B\trans &= 0, \\
         A\trans Q + Q A + C\trans C &= 0
     \end{aligned}
 \end{equation}
-according to~\cite{Antoulas2005, Hinrichsen2005}.
+as has been shown in~\cite{Antoulas2005, Hinrichsen2005}.
 
-The act of balancing now constitutes finding a transformation matrix $T$ such that the two matrices $T P T\trans, T\inv[T] Q T\inv$ are diagonal matrices.
-Such a balancing transformation can be constructed by computing the decompositions
+\itodo{test}
+
+The act of balancing now constitutes itself in finding a transformation matrix $T \in \bb{R}^{n \times n}$ such that the two matrices $T P T\trans$ and $T\inv[T] Q T\inv$ are diagonal matrices.
+One such balancing transformation can be constructed by computing the Cholesky decompositions
 \begin{equation}\label{eq:balancing}
-    P = S\trans S,\quad Q = R\trans R,\quad S R\trans = U \Sigma V\trans
+    P = S\trans S,\quad Q = R\trans R,\quad S R\trans = U \Sigma V\trans,
 \end{equation}
-and then putting $T = \Sigma\inv[\frac{1}{2}] V\trans R$ we can transform the original \ac{LTI} $(A, B, C, D, \id)$ into its balanced form $(T A T\inv, T B, C T\inv, D, \id)$.
-To finally truncate the system, that is obtain a reduced order system, we assume that the balanced system can be split into matrix blocks
+and then defining the transformation matrix as $T \coloneqq \Sigma\inv[\frac{1}{2}] V\trans R$.
+With this $T$ we can transform the original \ac{LTI} system $(A, B, C, D, \id)$ into its balanced form $(T A T\inv, T B, C T\inv, D, \id)$.
+To finally truncate the system, that is to obtain a reduced order system, we split the balanced system into matrix blocks
 \begin{equation*}
     T A T\inv = \begin{pmatrix}
         A_1 & A_2 \\
@@ -70,80 +73,76 @@ To finally truncate the system, that is obtain a reduced order system, we assume
         C_1 & C_2
     \end{pmatrix}.
 \end{equation*}
-We then define the balanced \ac{ROM} as $(A_1, B_1, C_1, D, \id)$.
-This reduction even yields an $\mcl{H}_\infty$-error estimate.
+Thereafter, we define the balanced \ac{ROM} as $(A_1, B_1, C_1, D, \id)$.
+This reduction even yields the following estimate of the $\mcl{H}_\infty$ projection error $\norm{\zeta}{\mcl{H}_\infty} \coloneqq \sup\limits_{\omega \in \bb{R}} \sigma_{\max} \left( \zeta(\iu \omega) \right)$.
 
-\begin{theorem}[{Cf.~\cite[Theorem~6.4]{BB2017}}]\label{thm:h-inf-error}
-    Let $\Sigma_{\msc{lti}}$ be an asymptotically stable and minimal system.
-    If $(A_{\msc{b}}, B_{\msc{b}}, C_{\msc{b}}, D_{\msc{b}}, \id)$ is a balanced realization with an ordered sequence of numbers $\sigma_1 > \cdots > \sigma_k > 0$ such that the Gramians $P = Q = \diag{\sigma_1 \id, \dots, \sigma_k \id}$ can be used to create the reduced system $\hat{\Sigma}_{\msc{lti}} (\hat{A}, \hat{B}, \hat{C}, \hat{D}, \id)$, then $\hat{\Sigma}_{\msc{lti}}$ is asymptotically stable, minimal, balanced, and fulfills
+\begin{theorem}[{Adapted from~\cite[Theorem~6.4]{BB2017}}]\label{thm:h-inf-error}
+    Let $(A_\msc{b}, B_\msc{b}, C_\msc{b}, D_\msc{b}, \id)$ be a balanced realization of an asymptotically stable and minimal system as defined in Definitions~\ref{def:minimal-system} and~\ref{def:lti-stability} with an ordered sequence of real numbers $\sigma_1 > \cdots > \sigma_k > 0$ such that the Gramians read $P = Q = \diag{\sigma_1 \id, \dots, \sigma_k \id}$.
+    Then the reduced system $\hat{\Sigma}_\msc{lti}$ obtained by truncating $\Sigma_\msc{lti}$ is asymptotically stable, minimal, balanced, and fulfills
     \begin{equation*}
-        \norm{\Sigma_{\msc{lti}} - \hat{\Sigma}_{\msc{lti}}}{} \leq 2 \sum\limits_{i = r + 1}^k \sigma_i.
+        \norm{\zeta - \hat{\zeta}}{\mcl{H}_\infty} \leq 2 \sum\limits_{i = r + 1}^k \sigma_i
     \end{equation*}
+    for the transfer functions $\zeta$ and $\hat{\zeta}$ corresponding to $\Sigma_\msc{lti}$ and $\hat{\Sigma}_\msc{lti}$.
 \end{theorem}
 
 \subsection{Interpolation-Based Reduction}\label{subsec:interpolation-reduction}
 
-Whereas balanced reduced models try to minimize the $\mcl{H}_\infty$ norm, interpolation-based reduced models aim to find bestapproximations with respect to the $\mcl{H}_2$ norm; cf.~\cite[Section~3]{Gugercin2008}.
-The problem with this type of optimization problem is that the set of stable \acp{LTI} does not form a subspace of $\mcl{H}_2$, indicating that finding solutions to this problem is hard.
-As a replacement for this optimization set we consider the set of all proper rational transfer functions that have simple poles in the open left half plane $\bb{C}_{-}$
+Whereas balanced \acp{ROM} try to minimize the $\mcl{H}_\infty$-norm, interpolation-based reduced models aim to find bestapproximations with respect to the $\mcl{H}_2$-norm as defined in~\cite[Section~3]{Gugercin2008} by $\norm{\zeta}{\mcl{H}_2}^2 \coloneqq \frac{1}{2 \pi} \int\limits_{- \infty}^\infty \norm{\zeta(\iu \omega)}{}^2 \dif \omega$.
+The problem with this type of optimization problem, indicates~\cite[Section~3.1]{Gugercin2008}, is that the set of stable \acp{LTI} does not form a subspace of $\mcl{H}_2$, whence the $\mcl{H}_2$ optimal approximation is not easy to characterize.
+As a replacement for this optimization set, we instead consider the set of all proper rational transfer functions as defined in~\cite[Section~1.3.1]{Corless2003} with the simple poles $\mu \coloneqq {\sset{\mu_i}}_{i = 1}^r \subseteq \bb{C}^r$ in the open left half plane $\bb{C}_{-}$
 \begin{equation*}
     \mcl{M}(\mu) \coloneqq \iset{\zeta \text{ proper rational transfer function}}{\zeta \text{ has simple poles at } \mu_i, i = 1, \dots, r}.
 \end{equation*}
-This results in an actual closed subspace of $\mcl{H}_2$ with the properties that
+Following~\cite[Theorem~3.1]{Gugercin2008}, this results in an subset of $\mcl{H}_2$ with the properties that
 \begin{enumerate}
-    \item $H \in \mcl{M}(\mu)$ is the transfer function of a stable system with $\dim{(H)} = r$,
-    \item $\mcl{M}(\mu)$ is a $(r - 1)$-dimensional subspace of $\mcl{H}_2$,
-    \item $\zeta_r \in \mcl{M}(\mu)$ is the unique bestapproximation of $\zeta$ in $\mcl{H}_2$ if and only if it holds that $\inner{\zeta - \zeta_r}{H}{\mcl{H}_2} = 0$ for all other transfer functions $H \in \mcl{M}(\mu)$.
+    \item $H \in \mcl{M}(\mu)$ is the transfer function of a stable \ac{LTI} system with $\dim{(H)} = r$,
+    \item $\mcl{M}(\mu)$ is an $(r - 1)$-dimensional subspace of $\mcl{H}_2$,
+    \item $\zeta_r \in \mcl{M}(\mu)$ is the unique bestapproximation of $\zeta \in \mcl{H}_2$ if and only if it holds that $\inner{\zeta - \zeta_r}{H}{\mcl{H}_2} = 0$ for all other transfer functions $H \in \mcl{M}(\mu)$.
 \end{enumerate}
-A further relation between the approximation of transfer functions via the mirror images of the system poles is highlighted in~\cite[Section~3.1]{Gugercin2008}, indicating that a system can be optimally interpolated by choosing the mirror images of the poles as interpolation points.
-While these minimizers may be unique, the original optimization set is not convex, and hence multiple local minimizers may be characterized as in~\cite[Theorem~3.2]{Gugercin2008}.
-Though this formulation may unify multiple optimization conditions, we continue with the interpolatory framework.
+As a consequence of~\cite[Theorem~3.1]{Gugercin2008}, if we interpolate the \ac{FOM} transfer function $\zeta$ at the mirror images $\hat{\sigma} = -a + \iu \cdot b$ of its poles $\sigma = a + \iu b$, then the subspace transfer function $\zeta_\msc{r} \in \mcl{M}(\mu)$ is $\mcl{H}_2$-optimal among all \acp{ROM} with the same reduced poles $\mu$.
+% While these minimizers may be unique, the set $\mcl{M}(\mu)$ is still not convex, hence multiple local minimizers may be characterized as in~\cite[Theorem~3.2]{Gugercin2008}.
+% Though this formulation may unify multiple optimization conditions, we continue with the interpolatory framework.
 
-\itodo{show that $\mcl{M}$ is closed subspace in $\mcl{H}_2$}
-\itodo{source for proper rational transfer functions}
-
-For any local minimizer we can formulate the following necessary optimality conditions of the $\mcl{H}_2$ SISO bestapproximation problem
-\begin{equation}\label{eq:siso-conditions}
-    \zeta_r(- \omega_i) = \zeta(- \omega_i),\quad \zeta'_r(- \omega_i) = \zeta'(- \omega_i) \quad \forall i = 1, \dots, r.
-\end{equation}
-These conditions~\eqref{eq:siso-conditions} can be generalized to MIMO systems such that they read
-\begin{equation}\label{eq:mimo-conditions}
-    \zeta_r(- \omega_i) b_i = \zeta(- \omega_i) b_i,\quad c_i\trans \zeta_r(- \omega_i) = c_i\trans \zeta(- \omega_i),\quad c_i\trans \zeta'_r(- \omega_i) b_i = c_i\trans \zeta(- \omega_i) b_i.
+For any local minimizer, we can formulate the following necessary optimality conditions of the $\mcl{H}_2$ bestapproximation problem with the interpolation points $\sigma_i \in \bb{C}$ and the tangential directions $b_i, c_i \in \bb{C}^{m}$ for an \ac{LTI} system with $m \in \bb{N}$ inputs and outputs
+\begin{equation}\label{eq:h2-optimality-conditions}
+    \zeta_\msc{r}(- \sigma_i) b_i = \zeta(- \sigma_i) b_i,\quad c_i\trans \zeta_\msc{r}(- \sigma_i) = c_i\trans \zeta(- \sigma_i),\quad c_i\trans \zeta'_\msc{r}(- \sigma_i) b_i = c_i\trans \zeta(- \sigma_i) b_i.
 \end{equation}
 
-While these conditions are very handy, solving the optimal approximation problem is still very hard.
-To combat this difficulty, the publication~\cite{Gugercin2008} proposes an algorithm derived from a standard Newton update formulation.
-Let $\sigma \coloneqq \sset{\sigma_1, \dots, \sigma_r}$ denote the set of interpolation points of the reduced model $\Sigma_r$.
-From this model we compute its transfer funciton $\zeta_r$ and the poles $\lambda(\sigma) = \sset{\lambda_1, \dots, \lambda_r}$ thereof.
-We now wnat to minimize the difference between the mirror image of the interpolation points (remember that these mirror images produce an $\mcl{H}_2$ optimal system) and the poles $\lambda(\sigma)$.
-We thus define the function $g(\sigma) \coloneqq \lambda(\sigma) + \sigma$, aiming to finally obtain an optimal set $\sigma$ such that $g(\sigma) = 0$.
-This optimlaity condition directly corresponds to $\lambda(\sigma) = -\sigma$, thus satisfying the mirror image criterion mentioned previously.
-The authors of~\cite{Gugercin2008} propose the Newton step
+While these conditions are very useful, solving the optimal approximation problem remains hard.
+To combat this difficulty, the authors of~\cite{Gugercin2008} propose an algorithm derived from the standard Newton update formula.
+Let $\sigma \coloneqq {\sset{\sigma_i}}_{i = 1}^r \subset \bb{C}$ denote the set of interpolation points of the reduced model $\hat{\Sigma}_\msc{lti}$.
+From this model we compute its transfer function $\zeta_r$ and the poles $\lambda(\sigma) = {\sset{\lambda_i}}_{i = 1}^r$ thereof.
+We now want to minimize the difference between the mirror images of the interpolation points and the poles $\lambda(\sigma)$.
+To this end, we define the objective function $g(\sigma) \coloneqq \lambda(\sigma) + \sigma$, aiming to ultimately obtain an optimal set of interpolation points $\sigma_i$ such that $g\left( {\sset{\sigma_i}}_{i = 1}^r \right) = 0$.
+This optimality condition directly corresponds to $\lambda(\sigma) = -\sigma$, thus resulting in the interpolation points matching the mirror images of the poles if we consider complex conjugate pairs of interpolation points.
+The Newton step for this optimization in its full form is
 \begin{equation}\label{eq:interpolation-points-newton-step}
-    \sigma^{(k + 1)} = \sigma^{(k)} - (\id + J)\inv (\sigma^{(k)} + \lambda(\sigma^{(k)}))
+    \sigma^{(k + 1)} = \sigma^{(k)} - (\id + J)\inv (\sigma^{(k)} + \lambda(\sigma^{(k)})),
 \end{equation}
-with $J$ being the Jacobian in the canonical sense that $J_{i, j} = \pd[\sigma_j]{\lambda_i}$.
-In practice, explicitly computing this Jacobian quickly becomes prohibitively expensive.
-Therefore, we make the suitable substitution $J \equiv 0$ because close to an optimal set of interpolation points the Jacobian will be very close to zero.
-Plugging this into~\eqref{eq:interpolation-points-newton-step} breaks down to
+where $J$ is the Jacobian matrix in the sense that $J_{i, j} = \pd[\sigma_j]{} \lambda_i$.
+In practice, the explicit compution of this Jacobian quickly becomes prohibitively expensive.
+Therefore, we make the suitable substitution $J \approx 0$, because the Jacobian will be close to zero when the set of interpolation points is close to an optimal set.
+Applying this assumption in~\eqref{eq:interpolation-points-newton-step}, the Newton update reduces to
 \begin{equation*}
     \sigma^{(k + 1)} = - \lambda(\sigma^{(k)}).
 \end{equation*}
-Algorithm~\ref{alg:irka} shows how this Newton step is used in the \ac{IRKA}.
-This algorithm relies heavily on a realization-based formulation, however variants independent of specific realizations using the Loewner framework also exist; cf.~\cite[Algorithm~7.2]{Beattie2017}.
+Algorithm~\ref{alg:irka} shows how this Newton step is used in the \acf{IRKA} as described in~\cite[Algorithm~4.1]{Gugercin2008}.
+This algorithm heavily relies on a realization-based formulation, however there are some variants independent of specific realizations using the Loewner framework such as~\cite[Algorithm~7.2]{Beattie2017}.
+It is further notable, that, thanks to the complex conjugates in the interpolation points, the updated subspaces $V_\msc{r}$ and $W_\msc{r}$ can be chosen as real-valued as detailed in~\cite[Remark~4]{Gugercin2012}.
 
 \begin{algorithm}\label{alg:irka}
-    \caption{\ac{IRKA}; cf.~\cite[Algorithm~7.1]{Beattie2017}}
-    \KwData{Initial interpolation points $\sigma$ closed and initial tangent directions $r_1^{(0)}, \dots, r_r^{(0)}, \ell_1^{(0)}, \dots, \ell_r^{(0)}$ under complex conjugation, full order model $\Sigma$}
-    $V_r^{(0)} \coloneqq \left( {(\sigma_1^{(0)} E - A)}\inv B r_1^{(0)}, \dots, {(\sigma_r^{(0)} E - A)}\inv B r_r^{(0)} \right)$\;
-    $W_r^{(0)} \coloneqq \left( {(\sigma_1^{(0)} E - A\trans)}\inv C\trans \ell_1^{(0)}, \dots, {(\sigma_r^{(0)} E - A\trans)}\inv C\trans \ell_r^{(0)} \right)$\;
-    \While{Not converged}{
-        $\tilde{A} \coloneqq W\trans A V, \tilde{E} \coloneqq W\trans E V, \tilde{B} \coloneqq W\trans B, \tilde{C} = C V$\;
-        Compute pole-residue expansion $\zeta_r(s) = \tilde{C} {(s \tilde{E} - \tilde{A})}\inv \tilde{B} = \sum\limits_{i = 1}^r \frac{\tilde{\ell}_i \tilde{r}_i\trans}{s - {\lambda(\sigma^{(k)})}_i}$\;
-        $\sigma^{(\sigma^{(k + 1)})} \coloneqq - \lambda(\sigma^{(k)}), r^{(k + 1)} \coloneqq \tilde{r}, \ell^{(k + 1)} \coloneqq \tilde{\ell}$\;
-        $V_r^{(k + 1)} \coloneqq \left( {(\sigma_1^{(k + 1)} E - A)}\inv B r_1^{(k + 1)}, \dots, {(\sigma_r^{(k + 1)} E - A)}\inv B r_r^{(k + 1)} \right)$\;
-        $W_r^{(k + 1)} \coloneqq \left( {(\sigma_1^{(k + 1)} E - A\trans)}\inv C\trans \ell_1^{(k + 1)}, \dots, {(\sigma_r^{(k + 1)} E - A\trans)}\inv C\trans \ell_r^{(k + 1)} \right)$\;
+    \caption{\ac{IRKA}, adapted from~\cite[Algorithm~7.1]{Beattie2017}}
+    \KwData{Initial interpolation points ${\sset{\sigma_i^{(0)}}}_{i = 1}^r$ closed and initial tangent directions ${\sset{r_i^{(0)}}}_{i = 1}^r, {\sset{\ell_i^{(0)}}}_{i = 1}^r$ under complex conjugation, full order model $\Sigma$}
+    \tcc{Initialize reduced subspaces}
+    $V_r^{(0)} \coloneqq {\left( {(\sigma_i^{(0)} E - A)}\inv B r_i^{(0)} \right)}_{i = 1}^r,\quad W_r^{(0)} \coloneqq {\left( {(\sigma_i^{(0)} E - A\trans)}\inv C\trans \ell_i^{(0)} \right)}_{i = 1}^r$\;
+    $k \coloneqq 0$\;
+    \While{not converged}{
+        $k \coloneqq k + 1,\quad \tilde{A} \coloneqq W\trans A V,\quad \tilde{E} \coloneqq W\trans E V,\quad \tilde{B} \coloneqq W\trans B,\quad \tilde{C} = C V$\;
+        \tcc{Compute pole-residue expansion}
+        $\zeta_r(s) = \tilde{C} {(s \tilde{E} - \tilde{A})}\inv \tilde{B} = \sum\limits_{i = 1}^r \frac{\tilde{\ell}_i \tilde{r}_i\trans}{s - {\lambda(\sigma^{(k)})}_i}$\;
+        \tcc{Update interpolation points and tangential directions}
+        $\sigma_i^{(k)} \coloneqq - \lambda_i(\sigma^{(k - 1)}),\quad r_i^{(k)} \coloneqq \tilde{r}_i,\quad \ell_i^{(k)} \coloneqq \tilde{\ell}_i$\;
+        \tcc{Update reduced subspaces}
+        $V_\msc{r}^{(k)} \coloneqq {\left( {(\sigma_i^{(k)} E - A)}\inv B r_i^{(k)}\right)}_{i = 1}^r,\quad W_\msc{r}^{(k)} \coloneqq {\left( {(\sigma_i^{(k)} E - A\trans)}\inv C\trans \ell_i^{(k)} \right)}_{i = 1}^r$\;
     }
 \end{algorithm}
-
-\itodo{reference~\cite[Remark~4]{Gugercin2012} to note that the updated subspace in Algorithm~\ref{alg:ph-irka} can be chosen to be real (conjugate interpolation points, \dots)}

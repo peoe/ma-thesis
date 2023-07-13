@@ -1,13 +1,12 @@
-\chapter{Inferring Models}\label{chap:inferring-models}
+\chapter[Inferring \texorpdfstring{\ac{PH} Systems with Quadratically Embedded Manifolds}{PH}]{%
+    Inferring \texorpdfstring{\acl{PH}}{Port-Hamiltonian} Systems with \\
+    Quadratically Embedded Manifolds
+}\label{chap:inferring-models}
 
-In this chapter we highlight some approaches to nonlinear inferrential \ac{MOR}.
-We begin by introducing non-structured inference frameworks.
-Firstly, Section~\ref{sec:nn-mor} introduces the idea of fixing the problems of linear MOR as mentioned in Section~\ref{sec:limitations-linear-mor} by using \acp{NN} for high dimensional approximation.
-Afterwards, we contrast this high-handed idea with a much simpler \ac{LSQ}-based projection in Section~\ref{sec:mor-quadratically-embedded-manifolds}.
-Following this conceptual anchor point we introduce several ways how may obtain quadratic \ac{PH} models by means of operator inference/operator interpolation in Section~\ref{sec:inferring-ph-systems}.
-Lastly, we combine the idea of quadratic models and inference-based modelling in Section~\ref{sec:quadratically-embedded-manifolds-ph-systems}.
+In this chapter, we discuss how we use \ac{OI} methods to infer \ac{PH} systems and thereafter construct \ac{PH} systems in conjunction with quadratically embedded manifolds for nonlinear \ac{MOR}.
+We commence by describing some \ac{OI} techniques for \ac{PH} systems in Section~\ref{sec:inferring-ph-systems}.
+Among these are some methods that first construct a data-based \ac{LTI} realization, and then project this realization onto the closest positive real and respectively \ac{PH} realization.
+Finally we discuss how we can construct the quadratically embedded manifold with these inference methods in Section~\ref{sec:quadratically-embedded-manifolds-ph-systems}.
 
-\input{sections/04_nonlinear_mor/041_nns.tex}
-\input{sections/04_nonlinear_mor/042_quad_manifolds.tex}
-\input{sections/04_nonlinear_mor/043_inferring_ph.tex}
-\input{sections/04_nonlinear_mor/044_quad_ph.tex}
+\input{sections/04_nonlinear_mor/041_inferring_ph.tex}
+\input{sections/04_nonlinear_mor/042_quad_ph.tex}

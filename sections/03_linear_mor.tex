@@ -1,12 +1,16 @@
 \chapter{\acl{MOR}}\label{chap:linear-mor}
 
-This chapter introduces the concept of \ac{MOR}.
-The aim of MOR is to create models of smaller dimension from \acp{FOM} such that these \acp{ROM} provide the best approximation possible.
-Ultimately, the motivation behind creating low-dimensional ROMs is to speed up repeated computations in multi-query situations such as parameter optimization, model validation, or on-the-fly (online) computations for adjustments within real-world applications.
-As the central perspective for this thesis we introduce two of the most prominent system theoretic linear reduction frameworks in Section~\ref{sec:system-mor}.
-Because we want to consider certain subsets of sytems we also have to take a look at preserving structural constraints during the reduction in Section~\ref{sec:structure-preserving-mor}.
-Finally we demonstrate the drawbacks of linear model reduction by considering an essential benchmark for the approximation quality of linear reduced models in Section~\ref{sec:limitations-linear-mor}.
+This chapter introduces the concept of \acf{MOR}.
+The aim of MOR is to create models of smaller dimension from \acfp{FOM} such that these \acfp{ROM} provide the best approximation of the \acp{FOM} possible.
+Ultimately, the motivation behind creating low-dimensional ROMs is to speed up repeated computations in multi-query situations such as parameter optimization, model validation, or time-sensistive on-the-fly (online) computations for use within real-world applications.
+As the central perspective for this thesis, we introduce two of the most prominent linear reduction frameworks for \ac{LTI} systems in Section~\ref{sec:system-mor}.
+In order to effectively reduce \ac{PH} systems, we also have to take a look at preserving matrix structures during the reduction process.
+We discuss two such structure-preserving algorithms in Section~\ref{sec:structure-preserving-mor}.
+Afterwards, we demonstrate the drawbacks of linear model reduction by considering an abstract benchmark for aspects of the approximation quality of linear reduced models in Section~\ref{sec:limitations-linear-mor}.
+Finally, we discuss strategies to mitigate the downsides of linear \ac{MOR} through nonlinear procedures in Sections~\ref{sec:nn-mor} and~\ref{sec:mor-quadratically-embedded-manifolds}.
 
 \input{sections/03_linear_mor/031_system_mor.tex}
 \input{sections/03_linear_mor/032_structure_preservation.tex}
 \input{sections/03_linear_mor/033_limitations.tex}
+\input{sections/03_linear_mor/034_nns.tex}
+\input{sections/03_linear_mor/035_quad_manifolds.tex}

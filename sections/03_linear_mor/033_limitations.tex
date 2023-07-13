@@ -1,71 +1,66 @@
 \section{Abstract Limitations of Linear MOR}\label{sec:limitations-linear-mor}
 
-This section is not directly linked to the systemtheoretic scope of this thesis, however it demonstrates an important motivation for the next chapter.
-We thus think it reasonable to make a small detour and talk about the direct limitations of linear MOR for \acp{PDE}.
-In effect, we want to transpose this motivation onto the problem inherent in this manuscript, however no such rigorous results as we present in this section are available as of the time of writing.
+This section is not directly linked to the scope of this thesis, however it demonstrates an important motivation for the next chapter.
+We therefore think it reasonable to discuss the limitations of linear MOR for \acp{PDE}.
+In effect, we want to carry this motivation onto the problem inherent in this manuscript, however no similar results as we present in this section are available at the time of writing.
+We therefore commence with the description of a greedy reduction algorithm, and afterwards discuss what implications derive from the abstract Kolmogorov $N$-width.
 
-To make clear what we want to demonstrate here, we commence Subsection~\ref{subsec:greedy-algorithms} with the description of the greedy algorithms, a technique for reducing parametric \acp{PDE} without inputs or outputs.
-We then give the context for a few model problems which serve as a good intuition on how the model we consider for reduction can impact the effectiveness of the reduction procedure in Subsection~\ref{subsec:kolmogorov-n-width}.
+Unlike the truncation-based or interpolation-based methods presented in Section~\ref{sec:system-mor}, greedy algorithms rely on a solution snapshot based linear subspace approximation see e.g.~\cite{Grepl2005, Rozza2008, Buffa2012}.
+In this setting, solution snapshots are defined as individual solutions $u(\mu_i) \in \bb{R}^n$ of the parametric \ac{PDE}
+\begin{equation}\label{eq:parametric-pde}
+    A(\mu) u = L(\mu),
+\end{equation}
+with $A(\mu) \in \bb{R}^{n \times n}, L(\mu) \in \bb{R}^n$ on a parameter space $\mcl{P} \subseteq \bb{R}^P$ for differing parameters $\mu \in \mcl{S}$ in a sample set $\mcl{S} \subseteq \mcl{P}, \abs{\mcl{S}}{} = r \in \bb{N}$.
+Using a greedy approach we choose a momentarily optimal basis element to improve the approximation in each iteration instead of computing a basis which is optimal w.r.t.\ some criteria.
 
-\subsection{Greedy Approximation Algorithms}\label{subsec:greedy-algorithms}
-
-Unlike the truncation-based or interpolation-based methods presented in Section~\ref{sec:system-mor}, greedy algorithms rely on a solution snapshot based linear subspace approximation; cf.~\cite{Grepl2005, Rozza2008, Buffa2012}.
-In this setting, solution snapshots are defined as the solutions $u(\mu_i)$ to a \ac{PDE} of interest for differing parameters $\mu_i$.
-Using a more heuristic approach we are going to choose a momentarily optimal basis element to improve the approximation in each iteration instead of computing a singular value decomposition over the set of all gathered snapshots like in Proper Orthogonal Decomposition; cf.~\cite{Pinkus1985, Pinnau2008}.
-
-The idea is as follows: given a sample set of parameters $\mcl{S}_r$ and an associated reduced linear subspace $V_r$ spanned by the solution snapshots $u(\mu_i), i = 1, \dots, r$, we want to choose the next sample parameter $\mu_{r + 1}$ such that the snapshot $u_r(\mu_{r + 1})$ induces the largest error over all possible sampling parameters with repect to the full order solution $u(\mu_{r + 1})$.
-Choosing this parameter amounts to adding the basis element to our reduced subspace $V_{r + 1} = \lspn{V_r, u(\mu_{r + 1})}$ which created the largest error in the approximation with the previous basis, hence maximizing the reduction in error over all sampling parameters every step.
-A more rigorous statement of the greedy algorithm structure is given in Algorithm~\ref{alg:greedy}.
-
-Though this greedy approach must not result in an optimal subspace, the approximations have been shown to be of good quality.
-Besides the approximative properties however, the particular convergence rates of greedy algorithms heavily depend on the underlying full order model.
+The idea is as follows: Given a sample set of parameters $\mcl{S}$ and an associated reduced linear subspace $V_r \subseteq \bb{R}^r$, spanned by the solution snapshots $u(\mu_i), i = 1, \dots, r$, we then want to choose the next parameter sample $\mu_{r + 1}$ such that the \ac{ROM} solution $u_\msc{r}(\mu_{r + 1})$ creates the largest error over all possible parameters with respect to the full order solution $u(\mu_{r + 1})$.
+Afterwards, we add the basis element to our reduced subspace by computing the linear span $V_{r + 1} = \lspn{V_r, u(\mu_{r + 1})}$
+Because $u_\msc{r}(\mu_{r + 1})$ induced the largest error w.r.t.\ the previous basis $V_r$, we maximize the reduction in error over all selected sampling parameters in every iteration, however this cannot be guaranteed to result in the optimal basis for every problem.
+An algorithmic depiction of the greedy method is given in Algorithm~\ref{alg:greedy}.
 
 \begin{algorithm}\label{alg:greedy}
-    \caption{Greedy Algorithm; cf.~\cite[Algorithm~1]{Buffa2012}}
+    \caption{Greedy Algorithm, adapted from~\cite[Algorithm~1]{Buffa2012}}
     \KwData{Parameter domain $\mcl{P}$, full order solution map $u \colon \mcl{P} \to \mcl{X}$}
-    $\mu_1 \coloneqq \argmax\limits_{\mu \in \mcl{P}} \norm{u(\mu)}{\mcl{X}}, V_1 \coloneqq \lspn{u(\mu_1)} \subseteq \mcl{X}$\;
-    Compute the reduced solution map $u_1 \colon \mcl{P} \to V_1$\;
-    $r \coloneqq 1$\;
-    \While{$\argmax\limits_{\mu \in \mcl{P}} \norm{u(\mu) - u_r(\mu)}{\mcl{X}} \geq \tol$}{
-        $\mu_{r + 1} \coloneqq \argmax\limits_{\mu \in \mcl{P}} \norm{u(\mu) - u_r(\mu)}{\mcl{X}}, V_{r + 1} \coloneqq \lspn{V_r, u(\mu_{r + 1})} \subseteq \mcl{X}$\;
-        Compute the reduced solution map $u_{r + 1} \colon \mcl{P} \to V_{r + 1}$\;
+    \tcc{Initialize greedy reduced basis}
+    $\mu_1 \coloneqq \argmax\limits_{\mu \in \mcl{P}} \norm{u(\mu)}{\mcl{X}},\quad V_1 \coloneqq \lspn{u(\mu_1)} \subseteq \mcl{X},\quad r \coloneqq 1$\;
+    \While{$\argmax\limits_{\mu \in \mcl{P}} \norm{u(\mu) - u_\msc{r}(\mu)}{\mcl{X}} \geq \tol$}{
         $r \coloneqq r + 1$\;
+        \tcc{Find parameter with largest error}
+        $\mu_{r} \coloneqq \argmax\limits_{\mu \in \mcl{P}} \norm{u(\mu) - u_\msc{r}(\mu)}{\mcl{X}},\quad V_{r} \coloneqq \lspn{V_r, u(\mu_{r})}$\;
     }
 \end{algorithm}
 
-\subsection[The Kolmogorov N-Width]{The Kolmogorov {$N$}-Width}\label{subsec:kolmogorov-n-width}
-
-With the greedy basis $u_1 = u(\mu_1), \dots, u_r = u(\mu_r)$ computed from Algorithm~\ref{alg:greedy} we form a matrix $U$ spanning the reduced space $V_r$ with its columns
-\begin{equation*}
-    U = \left( u_1, \dots, u_r \right) \in \bb{R}^{n \times r}.
-\end{equation*}
-Using this matrix to project the full order space $\bb{R}^n$ onto the linear subspace $\bb{R}^r$ we can transform an exemplary full order discretized \ac{PDE} such as $A u = L$ with $A \in \bb{R}^{n \times n}, L \in \bb{R}^n$ to a reduced model by projecting the operators
+With the greedy basis ${\sset{u_i = u(\mu_i)}}_{i = 1}^r$ computed with Algorithm~\ref{alg:greedy} we form the projection matrix $U = \left( u_1, \dots, u_r \right) \in \bb{R}^{n \times r}$ spanning the reduced space $V_r$ with its columns.
+Using this matrix to project the full order space $\bb{R}^n$ onto the linear subspace $\bb{R}^r$, we can transform an exemplary full order discretized \ac{PDE} such as~\eqref{eq:parametric-pde} to a \ac{ROM} by projecting the operators
 \begin{equation*}
     \tilde{A} = U\trans A U,\quad \tilde{L} = U\trans L.
 \end{equation*}
-
-In practice, the matrix $U$ only serves as a projection onto a subspace with a much smaller dimension $d \ll n$ meaning that the resulting reduced solution $u_r$ will always introduce some error $\norm{u - u_r}{}$ with respect to the full order solution $u$ in some appropriate norm.
-To bound the error of the reduced solutions we have to consider so-called N-widths; cf.~\cite{Pinkus1985}.
-For linear approximations of problems defined on a parameter space $\mcl{P}$ we can provide an upper bound of the approximation quality of any reduced space $V_N$ with respect to the full order space $V$ by considering the \emph{Kolmogorov N-width} of a solution manifold $\mcl{M} = \iset{u(\mu)}{\mu \in \mcl{P}}$
-\begin{equation}
-    \kolm{\mcl{M}} \coloneqq \inf\limits_{\substack{V_N \subseteq V,\\\dim{(V_N)} = N}} \sup\limits_{v \in \mcl{M}} \inf\limits_{u_r \in V_N} \norm{v - u_r}{}.
+To bound the error of the reduced solutions, we have to consider so-called $N$-widths as defined in~\cite{Pinkus1985}.
+For linear approximations of coercive elliptic problems defined on the parameter space $\mcl{P}$ we can provide an abstract measure of the approximation quality of the reduced space $V_\msc{r}, \dim{(V_\msc{r})} = r \in \bb{R}$ with respect to the full order space $V \subseteq \bb{R}^n$.
+This is achieved by bounding the \ac{ROM} projection error with the Kolmogorov N-width of the solution manifold $\mcl{M} = \iset{u(\mu) \in \bb{R}^n}{\mu \in \mcl{P}}$
+\begin{equation}\label{eq:kolmogorov-n-width}
+    \kolm{\mcl{M}} \coloneqq \eqinf\limits_{\substack{V_\msc{r} \subseteq V,\\\dim{(V_\msc{r})} = r}} \sup\limits_{u \in \mcl{M}} \eqinf\limits_{u_\msc{r} \in V_N} \norm{u - u_\msc{r}}{}.
 \end{equation}
-For greedy algorithms, a fast decay of the N-width is observed; cf.~\cite{Binev2011, DeVore2013}.
-It can be shown that if the solutoins $u(\mu)$ depend analytically on $\mu$, then there exist constants $a, c > 0$ such that the Kolmogorov N-width can be bounded by
+For greedy algorithms applied to linear coercive elliptic \acp{PDE} with sufficiently smooth initial conditions, a fast decay of the Kolmogorov $N$-width~\eqref{eq:kolmogorov-n-width} is observed, for an introduction into the approximation theory see e.g.~\cite{Binev2011, DeVore2013}.
+It can be shown that if the solutions $u(\mu)$ depend analytically on $\mu$, then there exist constants $a, c > 0$ such that the Kolmogorov $N$-width is bounded from above by exponential decay
 \begin{equation*}
     \kolm{\mcl{M}} \leq c \exp{(-N^\alpha)}.
 \end{equation*}
 
-However, not all problems exhibit this analytical solution manifold behaviour.
-When considering advection dominated probles such as~\cite[Section~5.1]{Ohlberger2016} the upper bound on the Kolmogorov N-width instead turns into a lower bound limiting the decay
+However, not all problems allow for this kind of upper bound.
+When considering advection dominated problems such as~\cite[Section~5.1]{Ohlberger2016}, the bound on the Kolmogorov $N$-width~\eqref{eq:kolmogorov-n-width} of linear advection problems with jump discontinuities instead is a lower bound
 \begin{equation*}
     \kolm{\mcl{M}} \geq \frac{1}{2} N^{- \frac{1}{2}}.
 \end{equation*}
-Similarly, the hypberloic wave equation only decays with a lower bound of
+Similarly, as demonstrated in~\cite{Greif2019}, the Kolmogorov $N$-width~\eqref{eq:kolmogorov-n-width} of the hyperbolic wave equation on the unit interval with the initial condition $u_0(x) \coloneqq \begin{cases}
+    1, & x < 0 \\
+    -1, & x \geq 0
+\end{cases}$ exhibits a decay bounded from below
 \begin{equation*}
     \kolm{\mcl{M}} \geq \frac{1}{4} N^{- \frac{1}{2}}.
 \end{equation*}
-This slow decay becomes problematic when constructiong reduced models because one would require much larger reduced orders to make the error w.\ r.\ t.\ the full order model small enough.
-The drawback of these increasing bases is the simultaneous increase in computational cost reducing the (online) speedup gained from reducing the model.
-The consequence of these findings is immediate: To preserve the speedup obtained from order reduction we need to incorporate nonlinear parts into the reduced models.
-We highlight some of these nonlinear infering approaches in Chapter~\ref{chap:inferring-models}.
+
+While the slow decay has implications on the increase in approximation quality w.r.t.\ the \ac{ROM} dimension if the projection error can be bounded by the Kolmogorov $N$-width, this is by no means guaranteed and can therefore only be understood as an indication.
+Similarly, obtaining an upper bound on the projection error through~\eqref{eq:kolmogorov-n-width} does not guarantee that we can preemptively determine a reduced order for which a desired error tolerance is achieved, however a slow decay of the $N$-width often results in the need for larger \acp{ROM}.
+The drawback of these bases increasing in dimension is the simultaneous increase in computational cost, hence reducing the (online) speedup obtained from reducing the model.
+The consequence of these findings is immediate: To preserve the speedup obtained from \ac{MOR}, we need to incorporate nonlinear parts into the construction of the \acp{ROM}.

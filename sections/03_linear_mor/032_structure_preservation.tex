@@ -1,127 +1,123 @@
-\section{Structure Preserving Linear MOR}\label{sec:structure-preserving-mor}
+\section{Structure-Preserving Linear MOR}\label{sec:structure-preserving-mor}
 
-In Section~\ref{sec:system-mor} we covered some systemtheoretic linear MOR frameworks.
-Now we want to cover some more aspects of linear MOR for \acp{LTI} by introducing structure preserving qualities into the Balanced Truncation and Interpolation-Based Reduction methods.
-This is by no means easy because the restriction from the general set of matrices to more specific sets like the family of skew-symmetric or symmetric positive definite matrices causes the underlying optimization set to no longer be convex.
-Thus, the corresponding optimization problems to find optimal systems become either hard to solve or the solutions may no longer be unique, adding locally optimal systems to the set of problems we have to face.
+In Section~\ref{sec:system-mor}, we covered some linear \ac{MOR} frameworks for \ac{LTI} systems.
+Now, we want to extend these linear methods to \acp{PH} systems by introducing structure preservation into the \ac{BT} and \ac{IRKA} methods.
+This is by no means easy because the restriction from the set of unstructured matrices to more restrictive sets like the family of skew-symmetric or symmetric positive definite matrices causes even more complexity in the optimization step.
+However, these algorithms are the foundation for the linear \acp{ROM} we need when constructing more involved models.
+To start off this section, we expand the standard \ac{BT} formulation to positive real \ac{LTI} systems and demonstrate how these are related to \ac{PH} systems in Subsection~\ref{subsec:prbt}.
+Afterwards, we quickly illustrate \ac{PHIRKA}, an extension of the usual \ac{IRKA} algorithm, in Subsection~\ref{subsec:ph-irka}.
+Lastly, we mention \ac{DEIM} and effort to apply it to \ac{PH} systems in Subsection~\ref{subsec:ph-deim}.
 
 \subsection{Positive Real Balanced Truncation}\label{subsec:prbt}
 
-The first algorithm we take a look at is positive real balanced truncation.
-This method relies on the fact that positive real systems are closely linked to \ac{PH} systems by the fact that we can transform behaviourally controllable and behaviourally observable, that is minimal, positive real systems into \ac{PH} systems as we shall see later.
+The first algorithm we take a look at is \acf{PRBT}.
+This method relies on the fact that positive real systems are closely related to \ac{PH} systems by the fact that we can transform behaviourally controllable and behaviourally observable positive real systems into \ac{PH} systems as we will see at the end of this subsection in Equation~\eqref{eq:prbt-ph-system}.
+First of all, we require three additional definitions which relate to observability and controllability of the \ac{LTI} system, as well as the positive realness property.
 
-\begin{definition}[{Cf.~\cite[Definition~2.1]{Freund2004} or~\cite[Property~(PR)]{CGH2022}}]\label{def:positive-real}
-    A \ac{LTI} system $\Sigma_\msc{lti}$ is said to be \emph{positive real} if its transfer function $\zeta$ has no poles in the right complex halfplane $\sigma \in \bb{C}, \re{\sigma} > 0$, for all complex numbers $\sigma \in \bb{C}$ it holds that $\conj{\zeta(\sigma)} = \zeta(\conj{\sigma})$, and the the matrix $\zeta(\sigma) + \zeta(\sigma)\herm$ is positive semidefinite for all complex numbers $\sigma \in \bb{C}, \re{\sigma} > 0$.
-    Analogously, the transfer function is called \emph{strictly positive real} if in addition to the other two conditions the matrix sum is positive definite.
-\end{definition}
-
-To extend the standard balancing procedure to result in positive real systems we relate the passivity of an \ac{LTI} $(A, B, C, D, E)$ with its positive real transfer funciton $\zeta$ as indicated by~\cite[Corollary~2.7]{CGH2022}.
-In addition, we can also formulate the condition $D + D\trans \succcurlyeq 0$ on the system's feedthrough term; cf.~\cite[Definition~5]{Gugercin2007}.
-Similarly to the Lyapunov equations~\eqref{eq:lyapunov-equations} it can be shown that an \ac{LTI} $(A, B, C, D, \id)$ is strictly positive real if and only if there exist symmetric positive definite matrices $K, L \in \bb{C}^{n \times n}$ such that the following algebraic Riccati equations (AREs) are satisfied
-\begin{equation}\label{eq:riccati-equations}
-    \begin{aligned}
-        A\trans K + K A + (K B - C\trans) (D + D\trans)\inv (K B - C\trans)\trans &= 0 \\
-        A L + L A\trans + (L C\trans - B) (D + D\trans)\inv (L C\trans - B)\trans &= 0.
-    \end{aligned}
-\end{equation}
-For positive real systems all solutions $K, L$ can be bounded by minimal and maximal solutions
-\begin{equation*}
-    K_{\msc{max}} \succcurlyeq K \succcurlyeq K_{\msc{min}} \succcurlyeq 0,\quad L_{\msc{max}} \succcurlyeq L \succcurlyeq L_{\msc{min}} \succcurlyeq 0
-\end{equation*}
-which has been shown by the connection to bounded real systems in~\cite[Proposition~5.1]{Ober1991}.
-The solutions $K, L$ of~\eqref{eq:riccati-equations} are related by $K = L\inv$, thus further implying that
-\begin{equation*}
-    K_{\msc{min}} = L_{\msc{max}}\inv,\quad K_{\msc{max}} = L_{\msc{min}}\inv.
-\end{equation*}
-To balance the strictly positive real system we then perform the same calculations as in~\eqref{eq:balancing} on the minimal solutions $K_{\msc{min}}$ and $L_{\msc{min}}$.
-Such a system is then called strictly positive real balanced if $K_{\msc{min}} = L_{\msc{min}}$ can be written as the diagonal matrix $\diag{\pi_1 \id[s_1], \dots, \pi_q \id[s_q]}$ with the $\pi_i$ ordered such that $0 < \pi_q < \cdots < \pi_1 \leq 1$ and $s_i$ the corresponding multiplicities summing up to $\sum s_i = n$.
-
-\itodo{change complex numbers to real ones here, we're talking about pr systems and assumed real numbers for \ac{PH} systems! don't forget herm to trans!}
-
-For the rest of this subsection we focus on demonstrating the necessary conditions such that a positive real \ac{LTI} can be represented in \ac{PH} form.
-First off result, we require a few additional definitions which relate observability and controllability to the minimality of the \ac{LTI}.
-
-\begin{definition}[{Cf.~\cite[Equation~(8)]{CGH2022} or~\cite[Theorem~6.2]{Freund2004}}]\label{def:behaviourally-controllable}
-    An \ac{LTI} $(A, B, C, D, E)$ is said to be \emph{behaviourally controllable} if
+\begin{definition}[{Adapted from~\cite[Theorem~6.2]{Freund2004} and~\cite[Equation~(8)]{CGH2022}}]\label{def:behaviourally-controllable-observable}
+    An \ac{LTI} system with the realization $(A, B, C, D, E)$ is behaviourally controllable if for all $\lambda \in \bb{C}$ the following condition holds
     \begin{equation}\label{eq:behaviourally-controllable}
-        \forall \lambda  \in \bb{C} \colon \rank{\begin{matrix}
+        \rank{\begin{matrix}
             \lambda E - A & B
         \end{matrix}} = n.
     \end{equation}
-\end{definition}
-
-\begin{definition}[{Cf.~\cite[Equation~(8)]{CGH2022} or~\cite[Theorem~6.2]{Freund2004}}]\label{def:behaviourally-observable}
-    An \ac{LTI} $(A, B, C, D, E)$ is said to be \emph{behaviourally observable} if
+    Analogously, the system further is behaviourally observable if for all $\lambda \in \bb{C}$
     \begin{equation}\label{eq:behaviourally-observable}
-        \forall \lambda  \in \bb{C} \colon \rank{\begin{matrix}
+        \rank{\begin{matrix}
             \lambda {(E - A)}\trans & C\trans
-        \end{matrix}} = n.
+        \end{matrix}} = n
     \end{equation}
+    is satisfied.
 \end{definition}
 
-\begin{lemma}[{Cf.~\cite{Verghese1981, Dai1989}}]\label{lem:minimality-conditions}
-    An \ac{LTI} descriptor system $(A, B, C, D, E)$ is minimal if and only if it fulfills Equations~\eqref{eq:behaviourally-controllable} and~\eqref{eq:behaviourally-observable} as well as the following conditions
+\begin{definition}[{Adapted from~\cite[Definition~2.1]{Freund2004} and~\cite[Property~(PR)]{CGH2022}}]\label{def:positive-real}
+    An \ac{LTI} system $\Sigma_\msc{lti}$ is said to be positive real if its transfer function $\zeta$ has no poles in the right complex halfplane $\bb{C}_+$, for all complex numbers $\sigma \in \bb{C}$ it holds that $\conj{\zeta(\sigma)} = \zeta(\conj{\sigma})$, and the the matrix $\zeta(\sigma) + \zeta(\sigma)\herm$ is positive semidefinite for all complex numbers $\sigma \in \bb{C}, \re{\sigma} > 0$.
+    Analogously, the transfer function is called strictly positive real if, in addition to the other two conditions, the matrix sum is positive definite.
+\end{definition}
+
+To extend the standard balancing procedure to result in positive real systems we relate the passivity of an \ac{LTI} system and its accompanying realization $(A, B, C, D, E)$ with its positive real transfer function $\zeta$ through the result of~\cite[Corollary~2.7]{CGH2022}.
+In addition, we can also formulate the condition $D + D\trans \succcurlyeq 0$ on the system's feedthrough term following~\cite[Definition~5]{Gugercin2007}.
+Similarly to the Lyapunov equations~\eqref{eq:lyapunov-equations} it can be shown that an \ac{LTI} $(A, B, C, D, \id)$ is strictly positive real if and only if there exist symmetric positive definite matrices $K, L \in \bb{R}^{n \times n}$ such that the following \acp{ARE} are satisfied
+\begin{equation}\label{eq:riccati-equations}
+    \begin{aligned}
+        A\trans K + K A + (K B - C\trans) (D + D\trans)\inv (K B - C\trans)\trans &= 0, \\
+        A L + L A\trans + (L C\trans - B) (D + D\trans)\inv (L C\trans - B)\trans &= 0.
+    \end{aligned}
+\end{equation}
+For positive real systems, all solutions $K, L$ can be bounded by minimal and maximal solutions
+\begin{equation*}
+    K_{\max} \succcurlyeq K \succcurlyeq K_{\min} \succcurlyeq 0,\quad L_{\max} \succcurlyeq L \succcurlyeq L_{\min} \succcurlyeq 0,
+\end{equation*}
+as shown in~\cite[Proposition~5.1]{Ober1991} by the connection to bounded real systems.
+The solutions $K, L$ of the \acp{ARE}~\eqref{eq:riccati-equations} are related by $K = L\inv$, thus further implying that
+\begin{equation*}
+    K_{\min} = L_{\max}\inv,\quad K_{\max} = L_{\min}\inv.
+\end{equation*}
+To balance the strictly positive real system, we then perform the same Cholesky decomposition and following calculations as in~\eqref{eq:balancing} on the minimal solutions $K_{\min}$ and $L_{\min}$.
+Such a system is then called strictly positive real balanced if, after the transformation has been applied, $K_{\min} = L_{\min}$ can be written as the diagonal matrix $\diag{\pi_1 \id[s_1], \dots, \pi_q \id[s_q]}$ with the $\pi_i$ ordered such that $0 < \pi_q < \cdots < \pi_1 \leq 1$, and $s_i$ the corresponding multiplicities that sum up to $\sum s_i = n$.
+
+For the rest of this subsection, we focus on considering the necessary conditions such that a positive real \ac{LTI} admits a \ac{PH} form.
+
+\begin{lemma}[{Adapted from~\cite{Verghese1981, Dai1989}}]\label{lem:minimality-conditions}
+    An \ac{LTI} system with a realization $(A, B, C, D, E)$ is minimal in the sense of Definition~\ref{def:minimal-system} if and only if it fulfills the following two conditions
     \begin{equation*}
         \rank{\begin{matrix}
             E & B
         \end{matrix}} = \rank{\begin{matrix}
             E \\
             C
-        \end{matrix}} = n,\quad A \knl{E} \subseteq \range{E}.
+        \end{matrix}} = n,\quad A \knl{E} \subseteq \range{E}
     \end{equation*}
+    in addition to Equations~\eqref{eq:behaviourally-controllable} and~\eqref{eq:behaviourally-observable}.
 \end{lemma}
 
-For the next step we need to compute a specific form of the transfer function's Laurent series.
-In the same manner as~\cite[Equation~(37)]{CGH2022} we construct the Laurent expansion
+For the next step, we need to compute a specific form of the transfer function's Laurent series.
+In the same manner as in~\cite[Section~5]{CGH2022} we construct the Laurent expansion
 \begin{equation}\label{eq:laurent-series}
     \zeta(s) = \sum\limits_{i = -\infty}^{k - 1} M_i s^i.
 \end{equation}
-
-\itodo{make sure you define what the $k$ is in this expansion, this might not be consistent with other sources!}
+The $M_i$ within the Laurent series are the moments of the \ac{LTI} system.
+These moments allow us to give the following Lemma which connects positive real systems' transfer functions to the terms of the Laurent expansion.
 
 \begin{lemma}[{Adapted from~\cite[Lemma~5.1]{CGH2022}}]\label{lem:lti-laurent-series}
-    Let $(A, B, C, D, E)$ be a positive real \ac{LTI} descriptor system with a transfer function $\zeta$ with its Laurent series as defined in Equation~\eqref{eq:laurent-series}.
-    Then we can write the transfer function as a sum of a proper rational function $\zeta_{\msc{p}}$ and the matrix $M_1$
+    Let $(A, B, C, D, E)$ be a realization of a positive real \ac{LTI} system $\Sigma_\msc{lti}$.
+    We denote the transfer function of $\Sigma_\msc{lti}$ by $\zeta$, and compute the underlying Laurent series as defined in~\eqref{eq:laurent-series}.
+    Then we can write the transfer function as the sum
     \begin{equation}\label{eq:pr-lti-laurent-series}
-        \zeta(s) = \zeta_{\msc{p}}(s) + M_1 s.
+        \zeta(s) = \zeta_\msc{p}(s) + M_1 s,
     \end{equation}
+    where $\zeta_{\msc{p}}$ is a proper rational function fulfilling $\lim\limits_{s \to \infty} \zeta_\msc{p}(s) = M_0$, and $M_0$ and $M_1$ are the corresponding moment matrices from~\eqref{eq:laurent-series}.
 \end{lemma}
 
-We now construct a minimal realization $(A_\msc{p}, B_\msc{p}, C_\msc{p}, D_\msc{p}, E_\msc{p})$ with $D_\msc{p} = M_0$ of $\zeta_\msc{p}$ from Lemma~\ref{lem:lti-laurent-series}.
-This realization contains an invertible matrix $E_\msc{p}$ because by Lemma~\ref{lem:minimality-conditions} the realization satisfies the assumptions of~\cite[Theorem~6.3]{Freund2004}, and by extension from the positive realness of the complete system $(A, B, C, D, E)$ is also positive real.
-We can apply~\cite[Proposition~5.4]{CGH2022} because we have defined the proper realization in such a way that $D_\msc{p} + D_\msc{p}\herm \succcurlyeq M_0 + M_0\herm$ is always true, therefore there exists a matrix $Q_\msc{p} \in \bb{C}^{n \times n}$ that solves the \acp{KYP} for the proper system $(A, B, C, D, E) = (A_\msc{p}, B_\msc{p}, C_\msc{p}, M_0, E_\msc{p})$
+We now construct a minimal realization $(A_\msc{p}, B_\msc{p}, C_\msc{p}, D_\msc{p}, E_\msc{p})$ with $D_\msc{p} = M_0$ from Lemma~\ref{lem:lti-laurent-series}.
+This realization contains an invertible matrix $E_\msc{p}$ because, by Lemma~\ref{lem:minimality-conditions}, the realization satisfies the assumptions of~\cite[Theorem~6.3]{Freund2004}, and by extension from the positive realness of the complete system, $(A_\msc{p}, B_\msc{p}, C_\msc{p}, D_\msc{p}, E_\msc{p})$ is also positive real.
+We can apply~\cite[Proposition~5.4]{CGH2022} because we have defined the proper realization in such a way that $D_\msc{p} + D_\msc{p}\trans \succcurlyeq M_0 + M_0\trans$ is always true.
+Therefore there exists a matrix $Q_\msc{p} \in \bb{C}^{n \times n}$ that solves the following \acp{KYP}
 \begin{equation}\label{eq:kyp-lmi}
     \begin{pmatrix}
-        -A\herm Q - Q\herm A & C\herm - Q\herm B \\
-        C - B\herm Q & D + D\herm
-    \end{pmatrix} \succcurlyeq 0,\quad E\herm Q = Q\herm E \succcurlyeq 0.
+        -A_\msc{p}\trans Q - Q\trans A_\msc{p} & C_\msc{p}\trans - Q\trans B_\msc{p} \\
+        C_\msc{p} - B_\msc{p}\trans Q & D_\msc{p} + D_\msc{p}\trans
+    \end{pmatrix} \succcurlyeq 0,\quad E_\msc{p}\trans Q = Q\trans E_\msc{p} \succcurlyeq 0
 \end{equation}
+for the proper system $(A_\msc{p}, B_\msc{p}, C_\msc{p}, M_0, E_\msc{p})$.
 
-\begin{lemma}[{Cf.~\cite[Proposition~3.1]{CGH2022}}]\label{lem:kyp-invertible-solution}
-    If $\Sigma_\msc{lti}$ in the form~\eqref{eq:lti} has an invertible matrix $E$ and is behaviourally observable, meaning that it satisfies~\eqref{eq:behaviourally-observable}, and there exists a matrix $Q \in \bb{C}^{n \times n}$ solving the LMIs
+\begin{lemma}[{Adapted from~\cite[Proposition~3.1]{CGH2022}}]\label{lem:kyp-invertible-solution}
+    If the \ac{LTI} system $\Sigma_\msc{lti}$ in the form~\eqref{eq:lti} has an invertible matrix $E$, is behaviourally observable and there exists a matrix $Q \in \bb{C}^{n \times n}$ solving the \acp{KYP}
     \begin{equation*}
         \begin{pmatrix}
-            -A\herm Q - Q\herm A & C\herm - Q\herm B \\
-            C - B\herm Q & D + D\herm
-        \end{pmatrix} \succcurlyeq 0,\quad E\herm Q = Q\herm E,
+            -A\trans Q - Q\trans A & C\trans - Q\trans B \\
+            C - B\trans Q & D + D\trans
+        \end{pmatrix} \succcurlyeq 0,\quad E\trans Q = Q\trans E,
     \end{equation*}
     then $Q$ is invertible.
 \end{lemma}
 
-Thus, by means of Lemma~\ref{lem:kyp-invertible-solution}, the matrix $Q_\msc{p}$ is invertible and by solving~\eqref{eq:kyp-lmi} it also satisfies $Q_\msc{p}\herm E_\msc{p} \succcurlyeq 0$.
+Thus, by means of Lemma~\ref{lem:kyp-invertible-solution}, the matrix $Q_\msc{p}$ that solves~\eqref{eq:kyp-lmi} is invertible, and by solving~\eqref{eq:kyp-lmi} it also satisfies $Q_\msc{p}\trans E_\msc{p} \succcurlyeq 0$.
 This allows us to obtain the proper part of the final \ac{PH} system
 \begin{equation}\label{eq:pr-proper-ph-part}
-    \Sigma_1 \colon \left\lbrace
-    \begin{pmatrix}
-        J - R & G - P \\
-        {(G + P)}\herm & D
-    \end{pmatrix}
-    \right. \coloneqq \begin{pmatrix}
-        A_\msc{p} Q_\msc{p}\inv & B_\msc{p} \\
-        C_\msc{p} Q_\msc{p}\inv & D_\msc{p}
-    \end{pmatrix}.
+    J_\msc{p} - R_\msc{p} \coloneqq A_\msc{p} Q_\msc{p}\inv,\quad G_\msc{p} - P_\msc{p} \coloneqq B_\msc{p},\quad {(G_\msc{p} + P_\msc{p})}\trans \coloneqq C_\msc{p} Q_\msc{p}\inv,\quad D_\msc{p} \coloneqq D_\msc{p}.
 \end{equation}
-Additionally, we can form a minimal realization by creating the block matrices
+Additionally, we can form a minimal realization conforming to Definition~\ref{def:minimal-system} by creating the block matrices
 \begin{equation*}
     E_\infty = \begin{pmatrix}
         M_1 & 0 \\
@@ -134,78 +130,150 @@ Additionally, we can form a minimal realization by creating the block matrices
         \id[m]
     \end{pmatrix} = C_\infty\trans,\quad D_\infty = 0.
 \end{equation*}
-This indeed defines a realization when we compute $s M_1 = C_\infty {(s E_\infty - A_\infty)}\inv B_\infty = C_\infty \begin{pmatrix}
-    0 & \id[m] \\
-    -\id[m] & s M_1
-\end{pmatrix} B_\infty$.
-We apply the same arguments as for the proper rational part of the sum~\eqref{eq:pr-lti-laurent-series} to see that these matrices together with $Q_\infty = \id[2m]$ form a \ac{PH} realization
-\begin{equation}\label{eq:pr-improper-ph-part}
-    \Sigma_2 \colon \left\lbrace
-    \begin{pmatrix}
-        J - R & G - P \\
-        {(G + P)}\herm & D
-    \end{pmatrix}
-    \right. \coloneqq \begin{pmatrix}
-        A_\infty Q_\infty\inv & B_\infty \\
-        C_\infty Q_\infty\inv & D_\infty
-    \end{pmatrix}.
-\end{equation}
-Lastly, we combine the two \ac{PH} systems $\Sigma_1$ and $\Sigma_2$ from~\eqref{eq:pr-proper-ph-part} and~\eqref{eq:pr-improper-ph-part} by using~\cite[Lemma~5.6]{CGH2022}.
-This surmounts to the final system matrices
+These matrices indeed define a realization when we compute
 \begin{equation*}
-    E_\msc{ph} \coloneqq \begin{pmatrix}
-        E_\msc{p} & 0 & 0 \\
-        0 & M_1 & 0 \\
-        0 & 0 & 0
-    \end{pmatrix},\quad A_\msc{ph} \coloneqq \begin{pmatrix}
-        A_\msc{p} & 0 & 0 \\
-        0 & 0 & -\id[m] \\
-        0 & \id[m] & 0
-    \end{pmatrix},\quad B_\msc{ph} \coloneqq \begin{pmatrix}
-        B_\msc{p} \\
-        0 \\
-        \id[m]
-    \end{pmatrix},\quad C_\msc{ph} \coloneqq \begin{pmatrix}
-        C_\msc{p} & 0 & \id[m]
-    \end{pmatrix},\quad D_\msc{ph} \coloneqq M_0,\quad Q_\msc{ph} \coloneqq \begin{pmatrix}
-        Q_\msc{p} & 0 \\
-        0 & \id[2m]
-    \end{pmatrix}.
+    s M_1 = C_\infty {(s E_\infty - A_\infty)}\inv B_\infty = C_\infty \begin{pmatrix}
+        0 & \id[m] \\
+        -\id[m] & s M_1
+    \end{pmatrix} B_\infty.
 \end{equation*}
+We apply the same arguments as we have used with the proper rational part of the sum~\eqref{eq:pr-lti-laurent-series} to see that these matrices together with $Q_\infty = \id[2m]$ form a \ac{PH} realization
+\begin{equation}\label{eq:pr-improper-ph-part}
+    J_\infty - R_\infty \coloneqq A_\infty,\quad G_\infty - P_\infty \coloneqq B_\infty,\quad {(G_\infty + P_\infty)}\trans \coloneqq C_\infty,\quad D_\infty \coloneqq D_\infty.
+\end{equation}
+Lastly, we combine the both \ac{PH} systems from~\eqref{eq:pr-proper-ph-part} and~\eqref{eq:pr-improper-ph-part} by using the canonical interconnection
+\begin{equation}\label{eq:prbt-ph-system}
+    \begin{aligned}
+        E_\msc{ph} \coloneqq \begin{pmatrix}
+            E_\msc{p} & 0 \\
+            0 & E_\infty
+        \end{pmatrix},\quad A_\msc{ph} \coloneqq \begin{pmatrix}
+            A_\msc{p} & 0 \\
+            0 & A_\infty
+        \end{pmatrix},\quad B_\msc{ph} \coloneqq \begin{pmatrix}
+            B_\msc{p} \\
+            B_\infty
+        \end{pmatrix}, \\
+        C_\msc{ph} \coloneqq \begin{pmatrix}
+            C_\msc{p} & C_\infty
+        \end{pmatrix},\quad D_\msc{ph} \coloneqq M_0,\quad Q_\msc{ph} \coloneqq \begin{pmatrix}
+            Q_\msc{p} & 0 \\
+            0 & Q_\infty
+        \end{pmatrix}
+    \end{aligned}
+\end{equation}
+from~\cite[Lemma~5.6]{CGH2022}.
 
 \subsection{\acl{PHIRKA}}\label{subsec:ph-irka}
 
-In Subsection~\ref{subsec:interpolation-reduction} we introduced the \ac{IRKA}.
-In~\cite{Gugercin2012}, the authors propose an extended variant of the \ac{IRKA} algorithm that produces \ac{PH} reduced realizations of the transfer function $\zeta$.
-When considering Algorithm~\ref{alg:irka} it is not inherently clear that the constructed subspaces $V_r$ and $W_r$ induce a passive system, however choosing $W_r = Q V_r {(V_r\trans Q V_r)}\inv$ generates a subspace which satisfies this exact constraint, thus realizing a \ac{PH} system; cf.~\cite[Section~2.4]{Breiten2022}.
-The so-called \ac{PHIRKA} algorithm is shown in Algorithm~\ref{alg:ph-irka}.
+In Subsection~\ref{subsec:interpolation-reduction}, we introduced the \ac{IRKA} algorithm.
+In~\cite{Gugercin2012}, the authors propose \acf{PHIRKA}, an extended variant of \ac{IRKA} that produces reduced \ac{PH} realizations of the transfer function $\zeta$.
+A representation of \ac{PHIRKA} is shown in Algorithm~\ref{alg:ph-irka}.
+When considering Algorithm~\ref{alg:irka}, it is not inherently clear that the constructed subspaces $V_r$ and $W_r$ create a passive system.
+However choosing $W_r = Q V_r {(V_r\trans Q V_r)}\inv$ generates a subspace which produces a passive system, and thus realizing a \ac{PH} system as outlined in~\cite[Section~2.4]{Breiten2022}.
+
+In order to understand why the specific choice of $V_r^{(k)}$ and $W_r^{(k)}$ creates a \ac{PH} model, we need the following statements.
+
+\begin{lemma}[{Adapted from~\cite[Theorem~7]{Gugercin2012}}]\label{lem:ph-irka-subspace}
+    Let $\Sigma_\msc{ph}$ be an \ac{LTI} \ac{PH} system with the realization $(E, Q, J, R, G, P, N, S)$, and consider the following sets of sets of interpolation points and tangential directions closed under complex conjugation ${\sset{\sigma_i}}_{i = 1}^r \subseteq \bb{C}, {\sset{r_i}}_{i = 1}^r \subseteq \bb{C}^m$.
+    If we construct the reduced subspaces $V_r \coloneqq {\left( {(\sigma_i E - (J - R) Q)}\inv (G - P) r_i \right)}_{i = 1}^r$ and $W_r = Q V_r {(V_r\trans Q V_r)}\inv$, and define the reduced system matrices $E_r = W_r\trans E W_r, Q_r = V_r\trans Q V_r, J_r = W_r\trans J W_r, R_r = W_r\trans R W_r, G_r = W_r\trans G, P_r = W_r\trans P, N_r = N, S_r = S$, then $(E_r, Q_r, J_r, R_r, G_r, P_r, N_r, S_r)$ is the realization of a passive \ac{PH} system.
+    Additionally, the reduced transfer function $\zeta_r$ interpolates the \ac{FOM} transfer function $\zeta$ at all interpolation points $\sigma_i$ and all tangential directions $r_i$.
+\end{lemma}
+
+\begin{theorem}[{Adapted from~\cite[Theorem~11 and Remark~13]{Gugercin2012}}]\label{thm:ph-irka-subspace}
+    Let $\Sigma_\msc{ph}$ be an asymptotically stable \ac{PH} system with the transfer function $\zeta$.
+    If \ac{PHIRKA} converges to a reduced system $\hat{\Sigma}_\msc{ph}$ with the transfer function $\zeta_r$, and $\zeta_r$ admits the decomposition
+    \begin{equation*}
+        \zeta_r(s) \coloneqq \sum\limits_{i = 1}^r \frac{l_i r_i\trans}{s - \lambda_i}
+    \end{equation*}
+    with $r$ distinct poles ${\sset{\lambda_i}}_{i = 1}^r$, then $\zeta_r$ represents an asymptotically stable and passive \ac{PH} system and it interpolates the full order transfer function $\zeta$ at all interpolation points $\sigma_i$ and tangential directions $r_i$.
+
+    If in addition to the subspace construction in Lemma~\ref{lem:ph-irka-subspace} the ranges of the subspaces fulfill
+    \begin{equation*}
+        \range{{\left( {(\lambda_i E + (J - R) Q)}\inv (G - P) r_i \right)}_{i = 1}^r} = \range{{\left( {(\lambda_i E + {(J - R)}\trans Q)}\inv (G + P) l_i \right)}_{i = 1}^r},
+    \end{equation*}
+    then $\hat{\Sigma}_\msc{ph}$ fulfills all necessary conditions for the $\mcl{H}_2$ optimal approximation of $\Sigma_\msc{ph}$.
+\end{theorem}
+
+\begin{remark}
+    While we have so far only presented \ac{PRBT} and \ac{PHIRKA} in this section, other \ac{PH} reduction methods are available.
+    Among them are moment matching as detailed in~\cite{Polyuga2010}, or algorithms based on \ac{OI} such as~\cite{BGD2020} and~\cite{Lee2022}.
+    We discuss some more optimization-based \ac{OI} procedures in Chapter~\ref{chap:inferring-models}, however the focus for these will be on how we can adapt them to allow the application of quadratically embedded manifolds.
+\end{remark}
 
 \begin{algorithm}\label{alg:ph-irka}
-    \caption{\ac{PHIRKA}; cf.~\cite[Algorithm~1]{Gugercin2012}}
+    \caption{\ac{PHIRKA}, adapted from~\cite[Algorithm~1]{Gugercin2012}}
     \KwData{Initial interpolation points $\sigma$ closed and initial tangent directions $r_1^{(0)}, \dots, r_r^{(0)}$ under complex conjugation, full order model $\Sigma$}
-    $V_r^{(0)} \coloneqq \left( {(\sigma_1^{(0)} \id - (J - R) Q)}\inv B r_1^{(0)}, \dots, {(\sigma_r^{(0)} \id - (J - R) Q)}\inv B r_r^{(0)} \right)$\;
-    $W_r^{(0)} \coloneqq Q V_r^{(0)} \left( {V_r^{(0)}}\trans Q V_r^{(0)} \right)\inv$\;
-    \While{Not converged}{
-        $J_r^{(k + 1)} \coloneqq {W_r^{(k)}}\trans J W_r^{(k)}, R_r^{(k + 1)} \coloneqq {W_r^{(k)}}\trans R W_r^{(k)}, Q_r^{(k + 1)} \coloneqq {V_r^{(k)}}\trans Q V_r^{(k)}, B_r^{(k + 1)} \coloneqq {W_r^{(k)}}\trans B$\;
-        $A_r^{(k + 1)} \coloneqq (J_r^{(k + 1)} - R_r^{(k + 1)}) Q_r^{(k + 1)}$\;
-        Compute left and right eigenpairs $(\lambda_i, x_i)$ and $(\lambda_i, y_i)$, such that $A_r^{(k + 1)} x_i = \lambda_i x_i, y_i\herm A_r^{(k + 1)} = \lambda_i y_i\herm, y_i\herm x_i = \delta_{i, j}$\;
-        $\sigma_i^{(k + 1)} \coloneqq -\lambda_i, {r_i^{(k + 1)}}\trans \coloneqq y_i\herm B_r^{(k + 1)}$\;
-        $V_r^{(k + 1)} \coloneqq \left( {(\sigma_i^{(k + 1)} \id - (J - R) Q)}\inv B r_1^{(k + 1)}, \dots, {(\sigma_r^{(k + 1)} \id - (J - R) Q)}\inv B r_r^{(k + 1)} \right)$\;
+    \tcc{Initialize reduced subspaces}
+    $V_r^{(0)} \coloneqq {\left( {(\sigma_i^{(0)} E - (J - R) Q)}\inv (G - P) r_i^{(0)} \right)}_{i = 1}^r,\quad W_r^{(0)} \coloneqq Q V_r^{(0)} \left( {V_r^{(0)}}\trans Q V_r^{(0)} \right)\inv$\;
+    $k \coloneqq 0$\;
+    \While{not converged}{
+        $k \coloneqq k + 1$\;
+        \tcc{Update system matrices}
+        $J_r^{(k)} \coloneqq {W_r^{(k - 1)}}\trans J W_r^{(k - 1)},\quad R_r^{(k)} \coloneqq {W_r^{(k - 1)}}\trans R W_r^{(k - 1)},\quad Q_r^{(k)} \coloneqq {V_r^{(k - 1)}}\trans Q V_r^{(k - 1)}$\;
+        $G_r^{(k)} \coloneqq {W_r^{(k - 1)}}\trans G,\quad P_r^{(k)} \coloneqq {W_r^{(k - 1)}}\trans P,\quad A_r^{(k)} \coloneqq (J_r^{(k)} - R_r^{(k)}) Q_r^{(k)}$\;
+        \tcc{Compute left and right eigenpairs}
+        Find $(\lambda_i, x_i)$ and $(\lambda_i, y_i)$ satisfying $A_r^{(k)} x_i = \lambda_i x_i,\quad y_i\herm A_r^{(k)} = \lambda_i y_i\herm,\quad y_i\herm x_i = \delta_{i, j}$\;
+        \tcc{Update interpolation points and tangential directions}
+        $\sigma_i^{(k)} \coloneqq -\lambda_i,\quad {r_i^{(k)}}\trans \coloneqq y_i\herm B_r^{(k)}$\;
+        \tcc{Update reduced subspaces}
+        $V_r^{(k)} \coloneqq {\left( {(\sigma_i^{(k)} E - (J - R) Q)}\inv (G - P) r_i^{(k)} \right)}_{i = 1}^r,\quad W_r^{(k)} \coloneqq Q V_r^{(k)} {\left( {V_r^{(k)}}\trans Q V_r^{(k)} \right)}\inv$\;
+    }
+    \tcc{Compute final realization}
+    $J_r^{(k)} \coloneqq {W_r^{(k - 1)}}\trans J W_r^{(k - 1)},\quad R_r^{(k)} \coloneqq {W_r^{(k - 1)}}\trans R W_r^{(k - 1)},\quad Q_r^{(k)} \coloneqq {V_r^{(k - 1)}}\trans Q V_r^{(k - 1)}$\;
+    $G_r^{(k)} \coloneqq {W_r^{(k - 1)}}\trans G,\quad P_r^{(k)} \coloneqq {W_r^{(k - 1)}}\trans P$\;
+\end{algorithm}
+
+\subsection{\texorpdfstring{\ac{PH}}{PH} Discrete Empirical Interpolation Method}\label{subsec:ph-deim}
+
+Besides the \ac{LTI}-based \ac{MOR} algorithms we can also consider systems with state-dependent couplings akin to the following system under the usual conditions~\eqref{eq:ph-matrix-structure}
+\begin{equation}\label{eq:nonquadratic-ph-system}
+    \begin{aligned}
+        \dot{x} &= (J - R) Q(x) + (G - P) u, \\
+        y &= {(G + P)}\trans Q(x) + (S - N) u.
+    \end{aligned}
+\end{equation}
+In essence this can reflect e.g.\ non-quadratic Hamiltonians such as $\mcl{H}(x) = x^3$ in the scalar case, or even more general nonlinear storage functions.
+To reduce a system such as~\eqref{eq:nonquadratic-ph-system}, we apply the \acf{DEIM}.
+
+In~\cite{Chaturantabut2010}, the nonlinear hyper-reduction technique \ac{DEIM} was introduced.
+For generic nonlinear functions $f \colon \bb{R}^n \to \bb{R}^n$, \ac{DEIM} computes a projection matrix $\bb{P} \in \bb{R}^{n \times n}$ such that for all $x \in \bb{R}^n$ we can define $\hat{f}(x) = \bb{P} f(x)$ with $f(x), \hat{f}(x) \in \bb{R}^n$.
+The projection matrix $\bb{P}$ is computed explicitly from $m \in \bb{N}$ linearly independent vectors ${\sset{u_i}}_{i = 1}^m \subseteq \bb{R}^n$ and a set of unit vectors ${\sset{e_{\gamma_i}}}_{i = 1}^m \subseteq \bb{R}^n$ selected from indices ${\sset{\gamma_i}}_{i = 1}^m \subseteq \bb{N}$.
+In order to compute the indices $\gamma_i$, we apply Algorithm~\ref{alg:deim}.
+
+\begin{algorithm}\label{alg:deim}
+    \caption{\ac{DEIM}, adapted from~\cite[Algorithm~1]{Chaturantabut2010} and~\cite[Algorithm~4]{Chaturantabut2016}}
+    \KwData{${\sset{}}_{i = 1}^m \subseteq \bb{R}^n$ linearly independent}
+    \tcc{Compute initial index}
+    $\gamma_1 \coloneqq \min\limits_{\gamma \in \bb{N}}{\abs{u_1^{(\gamma)}}{}},\quad U \coloneqq (u_1),\quad E \coloneqq (e_{\gamma_1})\quad \gamma \coloneqq (\gamma_1)$\;
+    \For{$i = 2, \dots, m$}{
+        \tcc{Update vector}
+        Solve the \ac{LSQ} problem $(E\trans U) c = E\trans u_i$ for $c$\;
+        $r \coloneqq u_i - Uc$\;
+        \tcc{Compute next index}
+        $\gamma_i \coloneqq \min\limits_{\gamma \in \bb{N}}{\abs{r^{(\gamma)}}{}},\quad U \coloneqq \begin{pmatrix}
+            U & u_i
+        \end{pmatrix},\quad E \coloneqq \begin{pmatrix}
+            E & E_{\gamma_i}
+        \end{pmatrix},\quad \gamma = \begin{pmatrix}
+            \gamma \\
+            \gamma_i
+        \end{pmatrix}$\;
     }
 \end{algorithm}
 
-It is shown in~\cite[Theorem~11]{Gugercin2012} that any such reduced system is \ac{PH} and satisfies some of the necessary $\mcl{H}_2$ optimality conditions.
-The remaining conditions can be satisfied if we compute
-\begin{equation*}
-    \zeta_r(s) \coloneqq \sum\limits_{i = 1}^r \frac{c_i b_i\trans}{s - \lambda_i}
-\end{equation*}
-and verify that the following equality is satisfied
-\begin{equation*}
-    \range{{(\lambda_1 \id - (J - R) Q)}\inv B b_1, \dots, {(\lambda_r \id - (J - R) Q)}\inv B b_r} = \range{{(\lambda_1 \id - (J - R) Q)}\inv B b_1, \dots, {(\lambda \id - (J - R) Q)}\inv B c_r}
-\end{equation*}
+When it comes to applying \ac{DEIM} to the \ac{PH} system~\eqref{eq:nonquadratic-ph-system}, we want to consider the state coupling $Q(x)$ as the nonlinear function, see~\cite[Section~3]{Chaturantabut2016}.
+First, we identify the any linear components of $Q$ such that for a matrix $M \in \bb{R}^{n \times n}$ and a nonlinear function $q \colon \bb{R}^n \to \bb{R}^n$ it holds that
+\begin{equation}\label{eq:deim-decomposition}
+    Q(x) = M x + q(x).
+\end{equation}
+Thereafter we select a new modelling basis orthonormalized w.r.t.\ $M$ so that the nonlinear part $q$ satisfies $\nabla_x q(x(t)) \approx U g(t)$ and $U\trans M U = \id$ for some $g(t) \in \bb{R}^m$.
+We then apply Algorithm~\ref{alg:deim}, compute $\bb{P} \in \bb{R}^{n \times n}$, and apply the projection to the nonlinear part $Q(x) \approx M x + \bb{P} q\left( \bb{P}\trans x \right)$.
+The projection step on $q$ reduces the number of nonlinear evaluations to $m$ components of $q$ on $m$ entries of $x$ each, thus allowing for a reduction in overall computational effort.
 
-\itodo{figure out how to include an E term in phirka}
-
-\begin{remark}
-    Additional \ac{PH} reduction techniques for example are contained in~\cite{Polyuga2010, Chaturantabut2016, Cherifi2019, BGD2020}.
-\end{remark}
+Finally, state reduction takes place via \ac{POD}, a well known and researched \ac{MOR} technique, see e.g.~\cite{Pinnau2008}.
+We compute a projection matrix $V_\msc{r} \in \bb{R}^{n \times r}$ for a reduced dimension $r \in \bb{N}$, and calculate the reduced state coupling
+\begin{equation*}
+    Q_\msc{r}(x_\msc{r}) = V_\msc{r}\trans M V_\msc{r} x_\msc{r} + V_\msc{r}\trans  \bb{P} q\left( \bb{P}\trans V_\msc{r} x_\msc{r} \right).
+\end{equation*}
+Because the evaluation of $V_\msc{r}\trans U$ can be precomputed, we only need to evaluate the $m$ \ac{DEIM} indices, thus further reducing the online computational load.
