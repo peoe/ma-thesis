@@ -129,14 +129,6 @@ Finally, we highlight the approach to construct a \ac{PH} formulation with a cub
     \begin{equation*}
         f_m = -\dot{p},\quad f_s = -\dot{q},\quad e_m = \frac{\dif}{\dif p} \left( \frac{1}{2m} p^2 \right) - c \cdot e_s,\quad e_s = \frac{\dif}{\dif q} \left( \frac{1}{2} k q^2 \right).
     \end{equation*}
-    % w.r.t.\ its kinetic energy $\frac{1}{2m} p^2$ to calculate the effort and flow variables
-    % \begin{equation*}
-    %     f_m = -\dot{p},\quad e_m = \frac{\dif}{\dif p} \left( \frac{1}{2m} p^2 \right).
-    % \end{equation*}
-    % Similarly, we apply Hooke's law to compute the spring's potential energy $\frac{1}{2} k q^2$
-    % \begin{equation*}
-    %     \dot{q} = -f_s,\quad e_s = \frac{\dif}{\dif q} \left( \frac{1}{2} k q^2 \right).
-    % \end{equation*}
     All that is left now, is to formulate the interconnection between both systems.
     For this, we have to join the effort exerted at the end of the spring $e_s$ to the force applied to the point mass $-f_m$, and furthermore also tie the mass' velocity effort $e_m$ to the force of the spring end point $f_s$.
     This results in the interconnection
@@ -231,55 +223,3 @@ Finally, we highlight the approach to construct a \ac{PH} formulation with a cub
     \end{equation*}
     where we computed the last equality using integration by parts.
 \end{example}
-
-% \begin{example}[Maxwell's Equations]\label{ex:maxwell}
-%     For an electric field $E$, a magnetic field $B$, auxiliary fields $D$ and $H$, a free charge density $\rho$, and a free current density $j$ Maxwell's equations are given by
-%     \begin{equation*}
-%         \begin{aligned}
-%             \pd[t]{} D - \curl{H} &= -j, &\pd[t]{} B + \curl{E} &= 0, \\
-%             \dvg{D} &= \rho, &\dvg{B} &= 0.
-%         \end{aligned}
-%     \end{equation*}
-%     On the boundary a \ac{LTI} impedance bonudary condition
-%     \begin{equation*}
-%         \pi_t(E) = k * \left( \res{H}{\Gamma} \times n \right)
-%     \end{equation*}
-%     is imposed for the unit outer normal $n$, the time-domain convolution $*$, and a causal kernel $k$, meaning that its Laplace tranfsorm is a positive-real function.
-%     The derivation of the power balance is quite involved so we refer the reader to $\cdot$.
-%     Initially, we use the integral equality
-%     \begin{equation*}
-%         \inner{E}{\pd[t]{} D}{\Omega} + \inner{H}{\pd[t]{} B}{\Omega} = - \inner*{\res{H}{\Gamma} \times n}{\pi_t(E)}{\Gamma} - \inner{j}{E}{\Omega}.
-%     \end{equation*}
-%     Combined with the following three constitutive relations
-%     \begin{equation*}
-%         D(t, x) = \eps(x) E(t, x),\quad H(t, x) = \frac{1}{\mu(x)} B(t, x),\quad j(t, x) = \sigma(x) E(t, x)
-%     \end{equation*}
-%     for $\eps$ the dielectric permittivity, $\mu$ the magnetic permittivity, and $\sigma \geq 0$ the conductivity, this results in the Hamiltonian
-%     \begin{equation*}
-%         \mcl{H} = \frac{1}{2} \inner{E}{D}{\Omega} + \frac{1}{2} \inner{H}{B}{\Omega}.
-%     \end{equation*}
-%     With the energy variables $\alpha_D = D, \alpha_B = B, f_j = E$ and the coenergy varables $e_D = \delta_D \mcl{H} = E, e_B = \delta_B \mcl{H} = H, e_j = j$ we deduce
-%     \begin{equation*}
-%         \mcl{H} = \frac{1}{2} \inner*{\frac{1}{\eps} \alpha_D}{\alpha_D}{\Omega} + \frac{1}{2} \inner*{\frac{1}{\mu} \alpha_B}{\alpha_B}{\Omega}
-%     \end{equation*}
-%     as well as with the output $\inner{y}{u}{\Gamma} = - \inner{\res{H}{\Gamma} \times n}{\pi_t(E)}{\Gamma}$ the final \ac{PH} system is
-%     \begin{equation*}
-%         \begin{pmatrix}
-%             \pd[t]{} \alpha_D \\
-%             \pd[t]{} \alpha_B \\
-%             f_j
-%         \end{pmatrix} =
-%         \begin{pmatrix}
-%             0 & \curl & -\id \\
-%             -\curl & 0 & 0 \\
-%             \id & 0 & 0
-%         \end{pmatrix}
-%         \begin{pmatrix}
-%             e_D \\
-%             e_B \\
-%             e_j
-%         \end{pmatrix}.
-%     \end{equation*}
-
-%     \itodo{check for the definition of $\pi_t$ in Buffa, Costabel, Sheen; 2002: On traces for $H(curl, \Omega)$ in Lipschitz domains}
-% \end{example}

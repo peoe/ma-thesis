@@ -8,7 +8,7 @@ Lastly, there exist a number of optimization-based inference methods which we hi
 
 Realization-based \ac{OI} works as a two step procedure:
 \begin{enumerate}
-    \item Use the provided data $x_i, u_i, y_i, i = 1, \dots, k$ in state-based approaches, or $\zeta(s_i), u_i, y_i, i = 1, \dots, k$ in the case of frequency domain-based methods to infer an \ac{LTI} realization $\Sigma_\msc{lti} \colon (A, B, C, D, E)$.
+    \item Use the provided data $x_i, u_i, y_i, i = 1, \dots, k$ in state-based approaches, or $\tfunc(s_i), u_i, y_i, i = 1, \dots, k$ in the case of frequency domain-based methods to infer an \ac{LTI} realization $\Sigma_\msc{lti} \colon (A, B, C, D, E)$.
     \item Compute a \ac{PH} realization $\Sigma_\msc{ph}$ from $\Sigma_\msc{lti}$.
 \end{enumerate}
 There are quite a few downsides to this way of approximating a system.
@@ -17,9 +17,9 @@ We thus only consider this framework as a theoretical stepping stone to introduc
 
 Foremost, there exists the paradigm of the Loewner method.
 The Loewner method uses samples of the transfer function and the corresponding tangential directions to construct the system's matrices, however~\cite{Peherstorfer2017} demonstrates an implementation based on time domain data.
-We commence as described in~\cite{BGD2020} with the transfer function $\zeta$ of $\Sigma_\msc{lti}$ and the interpolation points
+We commence as described in~\cite{BGD2020} with the transfer function $\tfunc$ of $\Sigma_\msc{lti}$ and the interpolation points
 \begin{equation*}
-    v_i \coloneqq l_i\trans \zeta(\mu_i),\quad w_i \coloneqq \zeta(\lambda_i) r_i,\quad D\coloneqq \zeta(\infty) = \lim\limits_{\omega \to \infty} \zeta(\omega),
+    v_i \coloneqq l_i\trans \tfunc(\mu_i),\quad w_i \coloneqq \tfunc(\lambda_i) r_i,\quad D\coloneqq \tfunc(\infty) = \lim\limits_{\omega \to \infty} \tfunc(\omega),
 \end{equation*}
 where $l_i, r_i, v_i, w_i \in \bb{C}^m$ and $\lambda_i, \mu_i \in \bb{C}$.
 Then we can construct the Loewner and the shifted Loewner matrices defined by the following vector products
@@ -50,7 +50,7 @@ If the Loewner matrix $\bb{L}$ is invertible, then according to~\cite[Theorem~5.
     \end{pmatrix}.
 \end{equation}
 This basic procedure can be amended and extended in various ways.
-Choosing a specific set of interpolation points like the set of spectral zeros of the transfer function $\zeta$ can yield additional properties such as positive realness, which directly allows the construction of a \ac{PH} system similar to~\cite{BGD2020, Poussot2022}.
+Choosing a specific set of interpolation points like the set of spectral zeros of the transfer function $\tfunc$ can yield additional properties such as positive realness, which directly allows the construction of a \ac{PH} system similar to~\cite{BGD2020, Poussot2022}.
 Instead of directly sampling the transfer function, we can also apply transformations such as the Discrete Fourier Transform to time domain data, which in particular was proposed in~\cite{Peherstorfer2017, Cherifi2021}.
 Other authors have also directly incorporated higher order terms into the \ac{LTI} system structure, for example by making use of the fact that a system's Loewner matrices are generalized observability and controllability Gramians, see e.g.~\cite{Antoulas2019}, or by iteratively computing a separate higher order model which mitigates the error of the linear reduced \ac{LTI} system w.r.t.\ the \ac{FOM} by fitting the higher order terms to the error data similar to~\cite{GKA2021}.
 In a similar fashion to time domain data-based Loewner methods, \ac{LTI} systems can be inferred from the output produced when a unit step input is applied at time $t = 0$, for more details see~\cite{Miller2012}.
@@ -298,20 +298,20 @@ In Definition~\eqref{eq:sobmor-parametrization}, we have implicitly restricted t
 Note that the matrices $R, P$, and $S$ can also be amalgated into a single block matrix $W \in \bb{R}^{(n + m) \times (n + m)}$ as in~\cite{Schwerdtner2021}, however in our experiments we obtained better results in opting for individual parametrizations.
 \itodo{check if this is actually the case!}
 The \ac{SOBMOR}, as described in~\cite{SV2023}, does not use a data-based objective functional such as the objective functional~\eqref{eq:günther-calibration-objective} from~\cite{Günther2023}.
-Instead, they compute the error as a sum of singular values of an error matrix $\zeta(s_i) - \zeta_\theta(s_i) \in \bb{R}^{m \times m}$, where $s_i \in \bb{C}$ are sample points, and $\zeta$ and $\zeta_\theta$ denote the transfer functions of the \ac{FOM} $\Sigma_\msc{ph}$ as well as the reduced system $\hat{\Sigma}_\msc{ph}$.
+Instead, they compute the error as a sum of singular values of an error matrix $\tfunc(s_i) - \tfunc_\theta(s_i) \in \bb{R}^{m \times m}$, where $s_i \in \bb{C}$ are sample points, and $\tfunc$ and $\tfunc_\theta$ denote the transfer functions of the \ac{FOM} $\Sigma_\msc{ph}$ as well as the reduced system $\hat{\Sigma}_\msc{ph}$.
 This error term directly relates the optimized system to the $\mcl{H}\infty$ norm from truncation-based model reduction described in Section~\ref{subsec:balanced-truncation}.
 The computation of the $\mcl{H}\infty$ norm however is slow in repeated settings as well as for large scale systems, rendering it undesirable as an optimization objective.
 
 For this thesis, we only consider the levelled objective functional on a set of sample points $\mcl{S}$ which includes the $L$ largest singular values
 \begin{equation}\label{eq:sobmor-objective}
-    \mcl{L}(\gamma, \zeta, \zeta_\theta, \mcl{S}) \coloneqq \frac{1}{\gamma} \sum\limits_{s \in \mcl{S}} \sum\limits_{i = 1}^L {\left( {[\sigma_i(\zeta(s) - \zeta_\theta(s)) - \gamma]}_+ \right)}^2,
+    \mcl{L}(\gamma, \tfunc, \tfunc_\theta, \mcl{S}) \coloneqq \frac{1}{\gamma} \sum\limits_{s \in \mcl{S}} \sum\limits_{i = 1}^L {\left( {[\sigma_i(\tfunc(s) - \tfunc_\theta(s)) - \gamma]}_+ \right)}^2,
 \end{equation}
 where we define ${[x]}_+ \coloneqq \max \{ 0, x \}$.
 In~\cite{Schwerdtner2021, SV2021}, the authors only consider the $L$ largest singular value for every datum, however in the later publications~\cite{Schwerdtner2023, SV2023} they rely on a fixed number of the largest singular values instead.
 \itodo{mention selecting relevant singular values such that numerical errors do not cause problems\dots}
 In practice, the levelled \ac{LSQ} truncates the minimum error at every optimization step, which then allows us to update the bound via either specifying a fixed sequence of tolerances or by adaptively performing a bisection algorithm on the bound.
 
-In order to compute the gradient of the objective function~\eqref{eq:sobmor-objective} with respect to $\theta$, let $f_i(s; \theta) \coloneqq \sigma_i(\zeta(s) - \zeta_\theta(s))$ and $g(\theta) \coloneqq L(\gamma, \zeta, \zeta_\theta, \mcl{S})$ denote the inner and outer function respectively.
+In order to compute the gradient of the objective function~\eqref{eq:sobmor-objective} with respect to $\theta$, let $f_i(s; \theta) \coloneqq \sigma_i(\tfunc(s) - \tfunc_\theta(s))$ and $g(\theta) \coloneqq L(\gamma, \tfunc, \tfunc_\theta, \mcl{S})$ denote the inner and outer function respectively.
 We first calculate the derivative of the outer function $g$, and afterwards the inner derivatives $f$.
 For a parameter denoted $\theta \in \bb{R}^N$ we consider the gradientat the point $\xi \in \bb{R}^N$ given by $\nabla_\theta g(\xi) = {(\pd[\theta_1]{} g(\xi), \dots, \pd[\theta_N]{} g(\xi))}\trans$.
 We compute each of its left and right partial derivatives, $\pd[]{-}$ and $\pd[]{+}$ respectively, by evaluating
@@ -350,13 +350,13 @@ In order to compute the gradients of the inner functions $f_i$, we require the f
 \end{proof}
 
 \begin{theorem}[{Adapted from~\cite[Theorem~3.3]{SV2023},~\cite[Lemma~4]{Schwerdtner2021} and~\cite[Theorem~1]{Schwerdtner2023}}]\label{lem:inner-sobmor-gradient}
-    Let $\theta \in \bb{R}^{N}$ be a parameter for the parametrization of the \ac{PH} realization $(E(\theta), J(\theta), R(\theta), G(\theta), P(\theta), S(\theta), N(\theta))$ with $\zeta_\theta$ the corresponding parametrized transfer function, $\zeta$ be the transfer function of the original system, $s \in \overline{\bb{C}_+}$ be a sample point in the closed right complex halfplane, $\sigma_j \in \bb{C}$ be the $j$-th largest singular value of $\zeta(s) - \zeta_\theta(s)$, and $l, r \in \bb{C}^m$ be the left and right singular vectors corresponding to $\sigma_j$.
-    If the singular value $\sigma_i \neq 0$ is simple, then the function $\theta \mapsto \sigma_i(\zeta(s) - \zeta_\theta(s))$ is differentiable in an open neighbourhood of $\theta$.
+    Let $\theta \in \bb{R}^{N}$ be a parameter for the parametrization of the \ac{PH} realization $(E(\theta), J(\theta), R(\theta), G(\theta), P(\theta), S(\theta), N(\theta))$ with $\tfunc_\theta$ the corresponding parametrized transfer function, $\tfunc$ be the transfer function of the original system, $s \in \overline{\bb{C}_+}$ be a sample point in the closed right complex halfplane, $\sigma_j \in \bb{C}$ be the $j$-th largest singular value of $\tfunc(s) - \tfunc_\theta(s)$, and $l, r \in \bb{C}^m$ be the left and right singular vectors corresponding to $\sigma_j$.
+    If the singular value $\sigma_i \neq 0$ is simple, then the function $\theta \mapsto \sigma_i(\tfunc(s) - \tfunc_\theta(s))$ is differentiable in an open neighbourhood of $\theta$.
     In particular, using the shorthand $\Sigma_\msc{ph}(\theta) = (E, J, R, G, P, S, N)$ we can define the additional terms
     \begin{equation}\label{eq:inner-sobmor-gradient-helpers}
         F \coloneqq (s E - (J - R)),\quad a \coloneqq F\inv (G - P) r,\quad b\herm \coloneqq \ell\herm {(G + P)}\trans F\inv
     \end{equation}
-    such that the gradient $\nabla_\theta \sigma_i(\zeta(s) - \zeta_\theta(s)) = {({dE}\trans, {dJ}\trans, {dR}\trans, {dG}\trans, {dP}\trans, {dS}\trans, {dN}\trans)}\trans \in \bb{R}^N$ with respect to $\theta$ is made up of the consituent vectors
+    such that the gradient $\nabla_\theta \sigma_i(\tfunc(s) - \tfunc_\theta(s)) = {({dE}\trans, {dJ}\trans, {dR}\trans, {dG}\trans, {dP}\trans, {dS}\trans, {dN}\trans)}\trans \in \bb{R}^N$ with respect to $\theta$ is made up of the consituent vectors
     \begin{equation}\label{eq:inner-sobmor-gradient-components}
         \begin{aligned}
             dE &= \re{\uppervec\left( s \vecupper(\theta_\msc{E}) (a b\herm + {(a b\herm)}\trans) \right)}, \\
@@ -371,7 +371,7 @@ In order to compute the gradients of the inner functions $f_i$, we require the f
 \end{theorem}
 
 \begin{proof}
-    We commence by showing the statement for the $dE$ component of $\nabla_\theta \sigma_j(\zeta(s) - \zeta_\theta(s))$.
+    We commence by showing the statement for the $dE$ component of $\nabla_\theta \sigma_j(\tfunc(s) - \tfunc_\theta(s))$.
     Firstly, we make an important argument which directly carries over to the gradient components of $J$ and $R$.
     Let $\varepsilon > 0$ be given and consider the parameter update $\theta_E + \varepsilon e_i$ at the $i$-th relevant component of $\theta$.
     By abuse of notation, we directly carry this notation over to $\theta + \varepsilon e_i$ in that we pad $e_i$ with zeros such that the affected parameter component remains the same.
@@ -387,7 +387,7 @@ In order to compute the gradients of the inner functions $f_i$, we require the f
     For this, we define the intermediary matrix $\Delta_E \coloneqq {\vecupper(e_i)}\trans \vecupper(\theta_E) + {\vecupper(\theta_E)}\trans \vecupper(e_i)$ and compute the transfer function
     \begin{equation}\label{eq:sobmor-e-variation}
         \begin{aligned}
-            \zeta_{\theta + \varepsilon e_i}(s) &= {(G + P)}\trans Q {\left( s \left( E + \varepsilon \Delta_E + \varepsilon^2 {\vecupper(e_i)}\trans \vecupper(e_i) \right) - (J - R) Q \right)}\inv (G - P) + (S - N) \\
+            \tfunc_{\theta + \varepsilon e_i}(s) &= {(G + P)}\trans Q {\left( s \left( E + \varepsilon \Delta_E + \varepsilon^2 {\vecupper(e_i)}\trans \vecupper(e_i) \right) - (J - R) Q \right)}\inv (G - P) + (S - N) \\
              &= {(G + P)}\trans Q \underbrace{{\left( F + s \varepsilon \Delta_E + s \varepsilon^2 {\vecupper(e_i)}\trans \vecupper(e_i) \right)}\inv}_{(*)} (G - P) + (S - N)
         \end{aligned}
     \end{equation}
@@ -400,15 +400,15 @@ In order to compute the gradients of the inner functions $f_i$, we require the f
             & &= &\sum\limits_{m = 0}^\infty {\left( - s \varepsilon F\inv \Delta_E - s \varepsilon^2 F\inv {\vecupper(e_i)}\trans \vecupper(e_i) \right)}^m F\inv.
         \end{alignedat}
     \end{equation}
-    Moreover, we can express the Taylor series expansion of the parametrized transfer function $\zeta_\theta$ in terms of~\eqref{eq:sobmor-e-stencil-inversion}.
+    Moreover, we can express the Taylor series expansion of the parametrized transfer function $\tfunc_\theta$ in terms of~\eqref{eq:sobmor-e-stencil-inversion}.
     This results in the following expression of the updated transfer function
     \begin{equation}\label{eq:sobmor-e-taylor}
-        \zeta_{\theta + \varepsilon e_i}(s) = \zeta_\theta(s) - {(G + P)}\trans Q \sum\limits_{m = 1}^\infty {\left( s \varepsilon F\inv \Delta_E + s \varepsilon^2 F\inv {\vecupper(e_i)}\trans \vecupper(e_i) \right)}^m F\inv (G - P).
+        \tfunc_{\theta + \varepsilon e_i}(s) = \tfunc_\theta(s) - {(G + P)}\trans Q \sum\limits_{m = 1}^\infty {\left( s \varepsilon F\inv \Delta_E + s \varepsilon^2 F\inv {\vecupper(e_i)}\trans \vecupper(e_i) \right)}^m F\inv (G - P).
     \end{equation}
-    As argued in~\cite[Theorem~1]{Schwerdtner2023}, the map $\varepsilon \mapsto \sigma_i\left( \zeta(s) - \zeta_{\theta + \varepsilon e_i}(s) \right)$ is differentiable for $\varepsilon > 0$ small enough as a consequence of~\cite{Lancaster1964}, thusly admitting the following expression of the $dE$ gradient component
+    As argued in~\cite[Theorem~1]{Schwerdtner2023}, the map $\varepsilon \mapsto \sigma_i\left( \tfunc(s) - \tfunc_{\theta + \varepsilon e_i}(s) \right)$ is differentiable for $\varepsilon > 0$ small enough as a consequence of~\cite{Lancaster1964}, thusly admitting the following expression of the $dE$ gradient component
     \begin{equation}\label{eq:sobmor-e-trace-form}
         \begin{aligned}
-            \res{\frac{\dif}{\dif \varepsilon} \sigma_i(\zeta(s) - \zeta_{\theta + \varepsilon e_i}(s))}{\varepsilon = 0} &= \re{s \ell\herm {(G + P)}\trans Q F\inv \Delta_E F\inv (G - P) r} \\
+            \res{\frac{\dif}{\dif \varepsilon} \sigma_i(\tfunc(s) - \tfunc_{\theta + \varepsilon e_i}(s))}{\varepsilon = 0} &= \re{s \ell\herm {(G + P)}\trans Q F\inv \Delta_E F\inv (G - P) r} \\
              \overset{(\msc{a})}&{=} \re{s \trace{F\inv (G - P) r \ell\herm {(G + P)}\trans Q F\inv \Delta_E}} \\
              &= \re{s \trace{a b\herm \left( {\vecupper(e_i)}\trans \vecupper(\theta_E) + {\vecupper(\theta_E)}\trans \vecupper(e_i) \right)}} \\
              \overset{(\msc{b})}&{=} \re{s \trace{\left( {(a b\herm)}\trans {\vecupper(\theta_E)}\trans + a b\herm {\vecupper(\theta_E)}\trans \right) \vecupper(e_i)}} \\
@@ -425,7 +425,7 @@ In order to compute the gradients of the inner functions $f_i$, we require the f
     As an example, we compute the final steps of the equivalent of~\eqref{eq:sobmor-e-trace-form} for $J$ with $\Delta_J = {\vecstrict(e_i)}\trans - \vecstrict(e_i)$:
     \begin{equation*}
         \begin{aligned}
-            \res{\frac{\dif}{\dif \varepsilon} \sigma_i(\zeta(s) - \zeta_{\theta + \varepsilon e_i}(s))}{\varepsilon = 0} &= - \re{\trace{a b\herm \Delta_J}} = - \re{\trace{a b\herm \left({\vecstrict(e_i)}\trans - \vecstrict(e_i)\right)}} \\
+            \res{\frac{\dif}{\dif \varepsilon} \sigma_i(\tfunc(s) - \tfunc_{\theta + \varepsilon e_i}(s))}{\varepsilon = 0} &= - \re{\trace{a b\herm \Delta_J}} = - \re{\trace{a b\herm \left({\vecstrict(e_i)}\trans - \vecstrict(e_i)\right)}} \\
              \overset{(\msc{b})}&{=} - \re{\trace{\left( {(a b\herm)}\trans - a b\herm \right) \vecstrict(e_i)}} \overset{(\msc{c})}{=} - \re{\strictvec\left( a b\herm - {(a b\herm)}\trans \right)}.
         \end{aligned}
     \end{equation*}
@@ -435,14 +435,14 @@ In order to compute the gradients of the inner functions $f_i$, we require the f
     Similarly to~\eqref{eq:sobmor-e-variation}, we thereafter calculate the updated transfer function
     \begin{equation*}
         \begin{aligned}
-            \zeta_{\theta + \varepsilon e_i}(s) &= {(G + \varepsilon \Delta_G + P)}\trans Q F\inv (G + \varepsilon \Delta_G - P) + (S - N) \\
-             &= \zeta_\theta(s) + \varepsilon {\Delta_G}\trans Q F\inv (G - P) + \varepsilon {(G + P)}\trans Q F\inv \Delta_G + \varepsilon^2 {\Delta_G}\trans Q F\inv \Delta_G.
+            \tfunc_{\theta + \varepsilon e_i}(s) &= {(G + \varepsilon \Delta_G + P)}\trans Q F\inv (G + \varepsilon \Delta_G - P) + (S - N) \\
+             &= \tfunc_\theta(s) + \varepsilon {\Delta_G}\trans Q F\inv (G - P) + \varepsilon {(G + P)}\trans Q F\inv \Delta_G + \varepsilon^2 {\Delta_G}\trans Q F\inv \Delta_G.
         \end{aligned}
     \end{equation*}
-    By considering the Taylor expansion of $\zeta_{\theta + \varepsilon e_i}$ as in~\eqref{eq:sobmor-e-taylor}, we can observe that the derivative of the singular value $\sigma_i(\zeta(s) - \zeta_{\theta + \varepsilon e_i}(s))$ equals
+    By considering the Taylor expansion of $\tfunc_{\theta + \varepsilon e_i}$ as in~\eqref{eq:sobmor-e-taylor}, we can observe that the derivative of the singular value $\sigma_i(\tfunc(s) - \tfunc_{\theta + \varepsilon e_i}(s))$ equals
     \begin{equation*}
         \begin{aligned}
-            \res{\frac{\dif}{\dif \varepsilon} \sigma_i(\zeta(s) - \zeta_{\theta + \varepsilon e_i}(s))}{\varepsilon = 0} &= - \re{\ell\herm \left( {\Delta_G}\trans Q F\inv (G - P) + {(G + P)}\trans Q F\inv \Delta_G \right) r} \\
+            \res{\frac{\dif}{\dif \varepsilon} \sigma_i(\tfunc(s) - \tfunc_{\theta + \varepsilon e_i}(s))}{\varepsilon = 0} &= - \re{\ell\herm \left( {\Delta_G}\trans Q F\inv (G - P) + {(G + P)}\trans Q F\inv \Delta_G \right) r} \\
             \overset{(\msc{a})}&{=} - \re{\trace{Q F\inv (G - P) r \ell\herm {\Delta_G}\trans + r \ell\herm {(G + P)}\trans Q F\inv \Delta_G}} \\
             &= - \re{\trace{a \ell\herm {\Delta_G}\trans + r b\herm \Delta_G}} \overset{(\msc{b})}{=} - \re{\trace{\left( {\left( a \ell\herm \right)}\trans + r b\herm \right) \Delta_G}} \\
             &= -\re{\trace{\left( {\left( a \ell\herm \right)}\trans + r b\herm \right) \vecmat(e_i)}}\overset{(\msc{c})}{=} -\re{\matvec\left( a \ell\herm + {\left( r b\herm \right)}\trans \right)}.
@@ -454,7 +454,7 @@ In order to compute the gradients of the inner functions $f_i$, we require the f
     With $\Delta_S \coloneqq {\vecupper(e_i)}\trans \vecupper(\theta_S) + {\vecupper(\Delta_S)}\trans \vecupper(e_i)$, we can repeat~\eqref{eq:sobmor-e-trace-form} for $S$ and compute
     \begin{equation*}
         \begin{aligned}
-            \res{\frac{\dif}{\dif \varepsilon} \sigma_i(\zeta(s) - \zeta_{\theta + \varepsilon e_i}(s))}{\varepsilon = 0} &= - \re{\trace{r l\herm \Delta_S}} \\
+            \res{\frac{\dif}{\dif \varepsilon} \sigma_i(\tfunc(s) - \tfunc_{\theta + \varepsilon e_i}(s))}{\varepsilon = 0} &= - \re{\trace{r l\herm \Delta_S}} \\
             &= - \re{\trace{\left( {\left( r l\herm \right)}\trans + r l\herm \right) {\vecupper(\theta_S)}\trans \vecupper(e_i)}} \\
             &= - \re{\uppervec\left( \vecupper(\theta_S) \left( r l\herm + {\left( r l\herm \right)}\trans \right) \right)}.
         \end{aligned}

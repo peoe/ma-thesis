@@ -17,9 +17,9 @@ With this linear \ac{ROM} realization, we now apply the \ac{SOBMOR} algorithm to
 The ultimate goal of fitting a quadratic system $\Sigma_\msc{ph}^\msc{q}$ is to minimize the error in the output.
 This can be quantified by $\varepsilon(t) \coloneqq y_\msc{fom}(t) - y_\msc{rom}(t)$, the signed error of the \ac{ROM} output with respect to the \ac{FOM} output.
 If we can fit a quadratic model such that the quadratic output models the signed error $y_\msc{quad}(t) = \varepsilon(t)$, then we can couple $\hat{\Sigma}_\msc{ph}$ and $\Sigma_\msc{ph}^\msc{q}$ by adding the individual outputs $y_\msc{total} = y_\msc{rom} + y_\msc{quad}$.
-The objective of fitting $\Sigma_\msc{ph}^\msc{q}$ now consists of computing appropriate matrices $E^\msc{q}, J^\msc{q}, R^\msc{q}, G^\msc{q}, P^\msc{q}, N^\msc{q}, S^\msc{q}$ such that the quadratic transfer function $\mcl{H}^\msc{q}$ produces a good approximation of the signed linear transfer function measurement error.
+The objective of fitting $\Sigma_\msc{ph}^\msc{q}$ now consists of computing appropriate matrices $E^\msc{q}, J^\msc{q}, R^\msc{q}, G^\msc{q}, P^\msc{q}, N^\msc{q}, S^\msc{q}$ such that the quadratic transfer function $\tfunc^\msc{q}$ produces a good approximation of the signed linear transfer function measurement error.
 Notationally, we once again use $U$ and $Y$ to refer to the Laplace transforms of $u, y$ as in Section~\ref{sec:ltis}, as well as $\mcl{E}$ for the signed transfer function measurement error.
-Therefore, fitting $\Sigma^\msc{q}$ means choosing the system matrices in such a way that $\mcl{E}(\omega) = \mcl{H}^\msc{q}(\omega) U(\omega)$ is satisfied for a frequency input $\omega$.
+Therefore, fitting $\Sigma^\msc{q}$ means choosing the system matrices in such a way that $\mcl{E}(\omega) = \tfunc^\msc{q}(\omega) U(\omega)$ is satisfied for a frequency input $\omega$.
 In practice, this approximation does not have to hold for all possible frequency ranges but rather for a select set of frequency domains depending on the problem and its underlying dynamic response.
 This specifically influences the choice of how we come up with the system matrices.
 

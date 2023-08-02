@@ -106,12 +106,12 @@ For ease of notation, we assume that this initial time domain state value $x(t)$
 This restriction is a sensible assumption, because it corresponds to a system that initially contains no energy and can only be interacted with through the control.
 Equation~\eqref{eq:frequency-output} thus shows how we can directly compute the output of a system under the influence of a control without having to consider the internal state representation.
 More general definitions can also incorporate the initial state dependency in the transfer function, however this is not necessary in the context of this thesis, wherefore we refer the interested reader to the introductory chapter in~\cite{Benner2017} for a detailed explanation.
-From now on, we access the frequency domain control-output relation by defining the intermediate $\mcl{H}$ such that $Y(\omega) = \mcl{J}(\omega) U(\omega)$.
+From now on, we access the frequency domain control-output relation by defining the intermediate $\tfunc$ such that $Y(\omega) = \tfunc(\omega) U(\omega)$.
 
 \begin{definition}\label{def:transfer-function}
-    The transfer function $\mcl{H} \colon \bb{C} \to \bb{C}^{q \times q}$ of an \ac{LTI} system~\eqref{eq:lti} is defined by
+    The transfer function $\tfunc \colon \bb{C} \to \bb{C}^{q \times q}$ of an \ac{LTI} system~\eqref{eq:lti} is defined by
     \begin{equation}\label{eq:transfer-function}
-        \mcl{H}(\omega) = C (\omega E - A)\inv B + D
+        \tfunc(\omega) = C (\omega E - A)\inv B + D
     \end{equation}
     for the system matrices $A, E \in \bb{C}^{n \times n}, B \in \bb{C}^{n \times q}, C \in \bb{C}^{q \times n}$ and $D \in \bb{C}^{q \times q}$, and frequency domain control function $U \colon \bb{C} \to \bb{C}^{q}$.
 \end{definition}
@@ -121,8 +121,8 @@ From now on, we access the frequency domain control-output relation by defining 
     For any transfer function, multiple tuples of system matrices can exist which produce the same transfer function output for the same frequencies $\omega \in \bb{C}$.
     Any such tuple is called a realization of the transfer function.
     We can create an arbitrary amount of realizations by considering the coordinate transformation matrices $T \in \bb{C}^{n \times n}$.
-    If $T$ is regular, then we can obtain a different realization of the transfer function $\mcl{H}$ by substituting $\tilde{E} \coloneqq T E T\inv, \tilde{A} \coloneqq T A T\inv, \tilde{B} \coloneqq T B, \tilde{C} \coloneqq C T\inv, \tilde{D} \coloneqq D$.
-    The transformed matrices $(\tilde{A}, \tilde{B}, \tilde{C}, \tilde{D}, \tilde{E})$ are a different realization of the same transfer function $\mcl{H}$.
+    If $T$ is regular, then we can obtain a different realization of the transfer function $\tfunc$ by substituting $\tilde{E} \coloneqq T E T\inv, \tilde{A} \coloneqq T A T\inv, \tilde{B} \coloneqq T B, \tilde{C} \coloneqq C T\inv, \tilde{D} \coloneqq D$.
+    The transformed matrices $(\tilde{A}, \tilde{B}, \tilde{C}, \tilde{D}, \tilde{E})$ are a different realization of the same transfer function $\tfunc$.
     This is evident if we compute
     \begin{align*}
         &\tilde{C} {\left( \omega \tilde{E} - \tilde{A} \right)}\inv \tilde{B} + \tilde{D} \\
@@ -130,63 +130,28 @@ From now on, we access the frequency domain control-output relation by defining 
         = &C T\inv {\left( T (\omega E - A) T\inv \right)}\inv T B + D \\
         = &C T\inv T {\left( \omega E - A \right)}\inv T\inv T B + D \\
         = &C {(\omega E - A)}\inv B + D \\
-        = &\mcl{H}(\omega).
+        = &\tfunc(\omega).
     \end{align*}
 \end{remark}
-%
-% \begin{remark}
-%     Besides the matrices themselves, we can also come up with matrices of different dimensions to represent the same transfer function.
-%     Consider a realization $(A, B, C, D, E)$ of the transfer function $\mcl{H}$ and form the block matrices
-%     \begin{equation*}
-%         \tilde{A} \coloneqq \begin{pmatrix}
-%             A & 0 \\
-%             0 & 0
-%         \end{pmatrix},\quad \tilde{E} \coloneqq \begin{pmatrix}
-%             E & 0 \\
-%             0 & 0
-%         \end{pmatrix},\quad \tilde{C} \coloneqq \begin{pmatrix}
-%             C & 0
-%         \end{pmatrix},\quad \tilde{B} \coloneqq \begin{pmatrix}
-%             B \\
-%             0
-%         \end{pmatrix}.
-%     \end{equation*}
-%     When computing the transfer function, we calculate that
-%     \begin{align*}
-%         \tilde{C} {\left( \omega \tilde{E} - \tilde{A} \right)}\inv \tilde{B} + D = \begin{pmatrix}
-%             C & 0
-%         \end{pmatrix} {\left( \omega \begin{pmatrix}
-%             E & 0 \\
-%             0 & 0
-%         \end{pmatrix} - \begin{pmatrix}
-%             A & 0 \\
-%             0 & 0
-%         \end{pmatrix} \right)}\inv \begin{pmatrix}
-%             B \\
-%             0
-%         \end{pmatrix} + D \\
-%         = &() + D = \mcl{H}(\omega).
-%     \end{align*}
-% \end{remark}
 
 Next we consider what it means that a dynamical system is minimal.
 This directly leads us to structure-preserving \ac{MOR} algorithms, in order to discuss these algorithms, we yet require a notion of a transfer function's poles and their relation to the stability of the underlying dynamical system.
 Additionally, we connect the stability of a system to its poles.
 
 \begin{definition}[Cf.~\cite{CGH2022}]\label{def:minimal-system}
-    The realization $(E, A, B, C, D)$ of an \ac{LTI} system with its associated transfer function $\mcl{H}$ is said to be minimal if the state dimension $n \in \bb{N}$ in the realization is minimal.
+    The realization $(E, A, B, C, D)$ of an \ac{LTI} system with its associated transfer function $\tfunc$ is said to be minimal if the state dimension $n \in \bb{N}$ in the realization is minimal.
 \end{definition}
 
 \begin{definition}[{Cf.~\cite[Section~2]{Benner2017}}]\label{def:transfer-function-poles}
-    Given a transfer function $\mcl{H}(\omega)$, we decompose it as the rational function $\mcl{H}(\omega) = \frac{N(\omega)}{d(\omega)}$, where $N \colon \bb{C} \to \bb{C}^{q \times n}$ is a matrix-valued polynomial and $d \colon \bb{C} \to \bb{C}$ is a scalar polynomial representing the least common denominator of $\mcl{H}(\omega)$'s $q \cdot m$ entries.
+    Given a transfer function $\tfunc(\omega)$, we decompose it as the rational function $\tfunc(\omega) = \frac{N(\omega)}{d(\omega)}$, where $N \colon \bb{C} \to \bb{C}^{q \times n}$ is a matrix-valued polynomial and $d \colon \bb{C} \to \bb{C}$ is a scalar polynomial representing the least common denominator of $\tfunc(\omega)$'s $q \cdot m$ entries.
     We then define the transfer function's poles as the set of complex numbers
     \begin{equation*}
-        \mcl{P}(\mcl{H}) \coloneqq \iset{\sigma \in \bb{C}}{d(\sigma) = 0}.
+        \mcl{P}(\tfunc) \coloneqq \iset{\sigma \in \bb{C}}{d(\sigma) = 0}.
     \end{equation*}
 \end{definition}
 
 \begin{remark}
-    In general, the set of a transfer function's poles $\mcl{P}(\mcl{H})$ is a subset of the set of the generalized eigenvectors of the matrix pencil $\omega E - A$ defined by
+    In general, the set of a transfer function's poles $\mcl{P}(\tfunc)$ is a subset of the set of the generalized eigenvectors of the matrix pencil $\omega E - A$ defined by
     \begin{align*}
         {(\omega E - A)}^m x_m = 0,\quad {(\omega E - A)}^{m - 1} x_m \neq 0.
     \end{align*}

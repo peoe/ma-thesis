@@ -74,44 +74,42 @@ To finally truncate the system, that is to obtain a reduced order system, we spl
     \end{pmatrix}.
 \end{equation*}
 Thereafter, we define the balanced \ac{ROM} as $(A_1, B_1, C_1, D, \id)$.
-This reduction even yields the following estimate of the $\mcl{H}_\infty$ projection error $\norm{\zeta}{\mcl{H}_\infty} \coloneqq \sup\limits_{\omega \in \bb{R}} \sigma_{\max} \left( \zeta(\iu \omega) \right)$.
+This reduction even yields the following estimate of the $\mcl{H}_\infty$ projection error $\norm{\tfunc}{\mcl{H}_\infty} \coloneqq \sup\limits_{\omega \in \bb{R}} \sigma_{\max} \left( \tfunc(\iu \omega) \right)$.
 
 \begin{theorem}[{Adapted from~\cite[Theorem~6.4]{BB2017}}]\label{thm:h-inf-error}
     Let $(A_\msc{b}, B_\msc{b}, C_\msc{b}, D_\msc{b}, \id)$ be a balanced realization of an asymptotically stable and minimal system as defined in Definitions~\ref{def:minimal-system} and~\ref{def:lti-stability} with an ordered sequence of real numbers $\sigma_1 > \cdots > \sigma_k > 0$ such that the Gramians read $P = Q = \diag{\sigma_1 \id, \dots, \sigma_k \id}$.
     Then the reduced system $\hat{\Sigma}_\msc{lti}$ obtained by truncating $\Sigma_\msc{lti}$ is asymptotically stable, minimal, balanced, and fulfills
     \begin{equation*}
-        \norm{\zeta - \hat{\zeta}}{\mcl{H}_\infty} \leq 2 \sum\limits_{i = r + 1}^k \sigma_i
+        \norm{\tfunc - \hat{\tfunc}}{\mcl{H}_\infty} \leq 2 \sum\limits_{i = r + 1}^k \sigma_i
     \end{equation*}
-    for the transfer functions $\zeta$ and $\hat{\zeta}$ corresponding to $\Sigma_\msc{lti}$ and $\hat{\Sigma}_\msc{lti}$.
+    for the transfer functions $\tfunc$ and $\hat{\tfunc}$ corresponding to $\Sigma_\msc{lti}$ and $\hat{\Sigma}_\msc{lti}$.
 \end{theorem}
 
 \subsection{Interpolation-Based Reduction}\label{subsec:interpolation-reduction}
 
-Whereas balanced \acp{ROM} try to minimize the $\mcl{H}_\infty$-norm, interpolation-based reduced models aim to find bestapproximations with respect to the $\mcl{H}_2$-norm as defined in~\cite[Section~3]{Gugercin2008} by $\norm{\zeta}{\mcl{H}_2}^2 \coloneqq \frac{1}{2 \pi} \int\limits_{- \infty}^\infty \norm{\zeta(\iu \omega)}{}^2 \dif \omega$.
+Whereas balanced \acp{ROM} try to minimize the $\mcl{H}_\infty$-norm, interpolation-based reduced models aim to find bestapproximations with respect to the $\mcl{H}_2$-norm as defined in~\cite[Section~3]{Gugercin2008} by $\norm{\tfunc}{\mcl{H}_2}^2 \coloneqq \frac{1}{2 \pi} \int\limits_{- \infty}^\infty \norm{\tfunc(\iu \omega)}{}^2 \dif \omega$.
 The problem with this type of optimization problem, indicates~\cite[Section~3.1]{Gugercin2008}, is that the set of stable \acp{LTI} does not form a subspace of $\mcl{H}_2$, whence the $\mcl{H}_2$ optimal approximation is not easy to characterize.
 As a replacement for this optimization set, we instead consider the set of all proper rational transfer functions as defined in~\cite[Section~1.3.1]{Corless2003} with the simple poles $\mu \coloneqq {\sset{\mu_i}}_{i = 1}^r \subseteq \bb{C}^r$ in the open left half plane $\bb{C}_{-}$
 \begin{equation*}
-    \mcl{M}(\mu) \coloneqq \iset{\zeta \text{ proper rational transfer function}}{\zeta \text{ has simple poles at } \mu_i, i = 1, \dots, r}.
+    \mcl{M}(\mu) \coloneqq \iset{\tfunc \text{ proper rational transfer function}}{\tfunc \text{ has simple poles at } \mu_i, i = 1, \dots, r}.
 \end{equation*}
 Following~\cite[Theorem~3.1]{Gugercin2008}, this results in an subset of $\mcl{H}_2$ with the properties that
 \begin{enumerate}
     \item $H \in \mcl{M}(\mu)$ is the transfer function of a stable \ac{LTI} system with $\dim{(H)} = r$,
     \item $\mcl{M}(\mu)$ is an $(r - 1)$-dimensional subspace of $\mcl{H}_2$,
-    \item $\zeta_r \in \mcl{M}(\mu)$ is the unique bestapproximation of $\zeta \in \mcl{H}_2$ if and only if it holds that $\inner{\zeta - \zeta_r}{H}{\mcl{H}_2} = 0$ for all other transfer functions $H \in \mcl{M}(\mu)$.
+    \item $\tfunc_r \in \mcl{M}(\mu)$ is the unique bestapproximation of $\tfunc \in \mcl{H}_2$ if and only if it holds that $\inner{\tfunc - \tfunc_r}{H}{\mcl{H}_2} = 0$ for all other transfer functions $H \in \mcl{M}(\mu)$.
 \end{enumerate}
-As a consequence of~\cite[Theorem~3.1]{Gugercin2008}, if we interpolate the \ac{FOM} transfer function $\zeta$ at the mirror images $\hat{\sigma} = -a + \iu \cdot b$ of its poles $\sigma = a + \iu b$, then the subspace transfer function $\zeta_\msc{r} \in \mcl{M}(\mu)$ is $\mcl{H}_2$-optimal among all \acp{ROM} with the same reduced poles $\mu$.
-% While these minimizers may be unique, the set $\mcl{M}(\mu)$ is still not convex, hence multiple local minimizers may be characterized as in~\cite[Theorem~3.2]{Gugercin2008}.
-% Though this formulation may unify multiple optimization conditions, we continue with the interpolatory framework.
+As a consequence of~\cite[Theorem~3.1]{Gugercin2008}, if we interpolate the \ac{FOM} transfer function $\tfunc$ at the mirror images $\hat{\sigma} = -a + \iu \cdot b$ of its poles $\sigma = a + \iu b$, then the subspace transfer function $\tfunc_\msc{r} \in \mcl{M}(\mu)$ is $\mcl{H}_2$-optimal among all \acp{ROM} with the same reduced poles $\mu$.
 
 For any local minimizer, we can formulate the following necessary optimality conditions of the $\mcl{H}_2$ bestapproximation problem with the interpolation points $\sigma_i \in \bb{C}$ and the tangential directions $b_i, c_i \in \bb{C}^{m}$ for an \ac{LTI} system with $m \in \bb{N}$ inputs and outputs
 \begin{equation}\label{eq:h2-optimality-conditions}
-    \zeta_\msc{r}(- \sigma_i) b_i = \zeta(- \sigma_i) b_i,\quad c_i\trans \zeta_\msc{r}(- \sigma_i) = c_i\trans \zeta(- \sigma_i),\quad c_i\trans \zeta'_\msc{r}(- \sigma_i) b_i = c_i\trans \zeta(- \sigma_i) b_i.
+    \tfunc_\msc{r}(- \sigma_i) b_i = \tfunc(- \sigma_i) b_i,\quad c_i\trans \tfunc_\msc{r}(- \sigma_i) = c_i\trans \tfunc(- \sigma_i),\quad c_i\trans \tfunc'_\msc{r}(- \sigma_i) b_i = c_i\trans \tfunc(- \sigma_i) b_i.
 \end{equation}
 
 While these conditions are very useful, solving the optimal approximation problem remains hard.
 To combat this difficulty, the authors of~\cite{Gugercin2008} propose an algorithm derived from the standard Newton update formula.
 Let $\sigma \coloneqq {\sset{\sigma_i}}_{i = 1}^r \subset \bb{C}$ denote the set of interpolation points of the reduced model $\hat{\Sigma}_\msc{lti}$.
-From this model we compute its transfer function $\zeta_r$ and the poles $\lambda(\sigma) = {\sset{\lambda_i}}_{i = 1}^r$ thereof.
+From this model we compute its transfer function $\tfunc_r$ and the poles $\lambda(\sigma) = {\sset{\lambda_i}}_{i = 1}^r$ thereof.
 We now want to minimize the difference between the mirror images of the interpolation points and the poles $\lambda(\sigma)$.
 To this end, we define the objective function $g(\sigma) \coloneqq \lambda(\sigma) + \sigma$, aiming to ultimately obtain an optimal set of interpolation points $\sigma_i$ such that $g\left( {\sset{\sigma_i}}_{i = 1}^r \right) = 0$.
 This optimality condition directly corresponds to $\lambda(\sigma) = -\sigma$, thus resulting in the interpolation points matching the mirror images of the poles if we consider complex conjugate pairs of interpolation points.
@@ -139,7 +137,7 @@ It is further notable, that, thanks to the complex conjugates in the interpolati
     \While{not converged}{
         $k \coloneqq k + 1,\quad \tilde{A} \coloneqq W\trans A V,\quad \tilde{E} \coloneqq W\trans E V,\quad \tilde{B} \coloneqq W\trans B,\quad \tilde{C} = C V$\;
         \tcc{Compute pole-residue expansion}
-        $\zeta_r(s) = \tilde{C} {(s \tilde{E} - \tilde{A})}\inv \tilde{B} = \sum\limits_{i = 1}^r \frac{\tilde{\ell}_i \tilde{r}_i\trans}{s - {\lambda(\sigma^{(k)})}_i}$\;
+        $\tfunc_r(s) = \tilde{C} {(s \tilde{E} - \tilde{A})}\inv \tilde{B} = \sum\limits_{i = 1}^r \frac{\tilde{\ell}_i \tilde{r}_i\trans}{s - {\lambda(\sigma^{(k)})}_i}$\;
         \tcc{Update interpolation points and tangential directions}
         $\sigma_i^{(k)} \coloneqq - \lambda_i(\sigma^{(k - 1)}),\quad r_i^{(k)} \coloneqq \tilde{r}_i,\quad \ell_i^{(k)} \coloneqq \tilde{\ell}_i$\;
         \tcc{Update reduced subspaces}

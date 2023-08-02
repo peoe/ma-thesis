@@ -31,11 +31,11 @@ First of all, we require three additional definitions which relate to observabil
 \end{definition}
 
 \begin{definition}[{Adapted from~\cite[Definition~2.1]{Freund2004} and~\cite[Property~(PR)]{CGH2022}}]\label{def:positive-real}
-    An \ac{LTI} system $\Sigma_\msc{lti}$ is said to be positive real if its transfer function $\zeta$ has no poles in the right complex halfplane $\bb{C}_+$, for all complex numbers $\sigma \in \bb{C}$ it holds that $\conj{\zeta(\sigma)} = \zeta(\conj{\sigma})$, and the the matrix $\zeta(\sigma) + \zeta(\sigma)\herm$ is positive semidefinite for all complex numbers $\sigma \in \bb{C}, \re{\sigma} > 0$.
+    An \ac{LTI} system $\Sigma_\msc{lti}$ is said to be positive real if its transfer function $\tfunc$ has no poles in the right complex halfplane $\bb{C}_+$, for all complex numbers $\sigma \in \bb{C}$ it holds that $\conj{\tfunc(\sigma)} = \tfunc(\conj{\sigma})$, and the the matrix $\tfunc(\sigma) + \tfunc(\sigma)\herm$ is positive semidefinite for all complex numbers $\sigma \in \bb{C}, \re{\sigma} > 0$.
     Analogously, the transfer function is called strictly positive real if, in addition to the other two conditions, the matrix sum is positive definite.
 \end{definition}
 
-To extend the standard balancing procedure to result in positive real systems we relate the passivity of an \ac{LTI} system and its accompanying realization $(A, B, C, D, E)$ with its positive real transfer function $\zeta$ through the result of~\cite[Corollary~2.7]{CGH2022}.
+To extend the standard balancing procedure to result in positive real systems we relate the passivity of an \ac{LTI} system and its accompanying realization $(A, B, C, D, E)$ with its positive real transfer function $\tfunc$ through the result of~\cite[Corollary~2.7]{CGH2022}.
 In addition, we can also formulate the condition $D + D\trans \succcurlyeq 0$ on the system's feedthrough term following~\cite[Definition~5]{Gugercin2007}.
 Similarly to the Lyapunov equations~\eqref{eq:lyapunov-equations} it can be shown that an \ac{LTI} $(A, B, C, D, \id)$ is strictly positive real if and only if there exist symmetric positive definite matrices $K, L \in \bb{R}^{n \times n}$ such that the following \acp{ARE} are satisfied
 \begin{equation}\label{eq:riccati-equations}
@@ -74,19 +74,19 @@ For the rest of this subsection, we focus on considering the necessary condition
 For the next step, we need to compute a specific form of the transfer function's Laurent series.
 In the same manner as in~\cite[Section~5]{CGH2022} we construct the Laurent expansion
 \begin{equation}\label{eq:laurent-series}
-    \zeta(s) = \sum\limits_{i = -\infty}^{k - 1} M_i s^i.
+    \tfunc(s) = \sum\limits_{i = -\infty}^{k - 1} M_i s^i.
 \end{equation}
 The $M_i$ within the Laurent series are the moments of the \ac{LTI} system.
 These moments allow us to give the following Lemma which connects positive real systems' transfer functions to the terms of the Laurent expansion.
 
 \begin{lemma}[{Adapted from~\cite[Lemma~5.1]{CGH2022}}]\label{lem:lti-laurent-series}
     Let $(A, B, C, D, E)$ be a realization of a positive real \ac{LTI} system $\Sigma_\msc{lti}$.
-    We denote the transfer function of $\Sigma_\msc{lti}$ by $\zeta$, and compute the underlying Laurent series as defined in~\eqref{eq:laurent-series}.
+    We denote the transfer function of $\Sigma_\msc{lti}$ by $\tfunc$, and compute the underlying Laurent series as defined in~\eqref{eq:laurent-series}.
     Then we can write the transfer function as the sum
     \begin{equation}\label{eq:pr-lti-laurent-series}
-        \zeta(s) = \zeta_\msc{p}(s) + M_1 s,
+        \tfunc(s) = \tfunc_\msc{p}(s) + M_1 s,
     \end{equation}
-    where $\zeta_{\msc{p}}$ is a proper rational function fulfilling $\lim\limits_{s \to \infty} \zeta_\msc{p}(s) = M_0$, and $M_0$ and $M_1$ are the corresponding moment matrices from~\eqref{eq:laurent-series}.
+    where $\tfunc_{\msc{p}}$ is a proper rational function fulfilling $\lim\limits_{s \to \infty} \tfunc_\msc{p}(s) = M_0$, and $M_0$ and $M_1$ are the corresponding moment matrices from~\eqref{eq:laurent-series}.
 \end{lemma}
 
 We now construct a minimal realization $(A_\msc{p}, B_\msc{p}, C_\msc{p}, D_\msc{p}, E_\msc{p})$ with $D_\msc{p} = M_0$ from Lemma~\ref{lem:lti-laurent-series}.
@@ -167,7 +167,7 @@ from~\cite[Lemma~5.6]{CGH2022}.
 \subsection{\acl{PHIRKA}}\label{subsec:ph-irka}
 
 In Subsection~\ref{subsec:interpolation-reduction}, we introduced the \ac{IRKA} algorithm.
-In~\cite{Gugercin2012}, the authors propose \acf{PHIRKA}, an extended variant of \ac{IRKA} that produces reduced \ac{PH} realizations of the transfer function $\zeta$.
+In~\cite{Gugercin2012}, the authors propose \acf{PHIRKA}, an extended variant of \ac{IRKA} that produces reduced \ac{PH} realizations of the transfer function $\tfunc$.
 A representation of \ac{PHIRKA} is shown in Algorithm~\ref{alg:ph-irka}.
 When considering Algorithm~\ref{alg:irka}, it is not inherently clear that the constructed subspaces $V_r$ and $W_r$ create a passive system.
 However choosing $W_r = Q V_r {(V_r\trans Q V_r)}\inv$ generates a subspace which produces a passive system, and thus realizing a \ac{PH} system as outlined in~\cite[Section~2.4]{Breiten2022}.
@@ -177,16 +177,16 @@ In order to understand why the specific choice of $V_r^{(k)}$ and $W_r^{(k)}$ cr
 \begin{lemma}[{Adapted from~\cite[Theorem~7]{Gugercin2012}}]\label{lem:ph-irka-subspace}
     Let $\Sigma_\msc{ph}$ be an \ac{LTI} \ac{PH} system with the realization $(E, Q, J, R, G, P, N, S)$, and consider the following sets of sets of interpolation points and tangential directions closed under complex conjugation ${\sset{\sigma_i}}_{i = 1}^r \subseteq \bb{C}, {\sset{r_i}}_{i = 1}^r \subseteq \bb{C}^m$.
     If we construct the reduced subspaces $V_r \coloneqq {\left( {(\sigma_i E - (J - R) Q)}\inv (G - P) r_i \right)}_{i = 1}^r$ and $W_r = Q V_r {(V_r\trans Q V_r)}\inv$, and define the reduced system matrices $E_r = W_r\trans E W_r, Q_r = V_r\trans Q V_r, J_r = W_r\trans J W_r, R_r = W_r\trans R W_r, G_r = W_r\trans G, P_r = W_r\trans P, N_r = N, S_r = S$, then $(E_r, Q_r, J_r, R_r, G_r, P_r, N_r, S_r)$ is the realization of a passive \ac{PH} system.
-    Additionally, the reduced transfer function $\zeta_r$ interpolates the \ac{FOM} transfer function $\zeta$ at all interpolation points $\sigma_i$ and all tangential directions $r_i$.
+    Additionally, the reduced transfer function $\tfunc_r$ interpolates the \ac{FOM} transfer function $\tfunc$ at all interpolation points $\sigma_i$ and all tangential directions $r_i$.
 \end{lemma}
 
 \begin{theorem}[{Adapted from~\cite[Theorem~11 and Remark~13]{Gugercin2012}}]\label{thm:ph-irka-subspace}
-    Let $\Sigma_\msc{ph}$ be an asymptotically stable \ac{PH} system with the transfer function $\zeta$.
-    If \ac{PHIRKA} converges to a reduced system $\hat{\Sigma}_\msc{ph}$ with the transfer function $\zeta_r$, and $\zeta_r$ admits the decomposition
+    Let $\Sigma_\msc{ph}$ be an asymptotically stable \ac{PH} system with the transfer function $\tfunc$.
+    If \ac{PHIRKA} converges to a reduced system $\hat{\Sigma}_\msc{ph}$ with the transfer function $\tfunc_r$, and $\tfunc_r$ admits the decomposition
     \begin{equation*}
-        \zeta_r(s) \coloneqq \sum\limits_{i = 1}^r \frac{l_i r_i\trans}{s - \lambda_i}
+        \tfunc_r(s) \coloneqq \sum\limits_{i = 1}^r \frac{l_i r_i\trans}{s - \lambda_i}
     \end{equation*}
-    with $r$ distinct poles ${\sset{\lambda_i}}_{i = 1}^r$, then $\zeta_r$ represents an asymptotically stable and passive \ac{PH} system and it interpolates the full order transfer function $\zeta$ at all interpolation points $\sigma_i$ and tangential directions $r_i$.
+    with $r$ distinct poles ${\sset{\lambda_i}}_{i = 1}^r$, then $\tfunc_r$ represents an asymptotically stable and passive \ac{PH} system and it interpolates the full order transfer function $\tfunc$ at all interpolation points $\sigma_i$ and tangential directions $r_i$.
 
     If in addition to the subspace construction in Lemma~\ref{lem:ph-irka-subspace} the ranges of the subspaces fulfill
     \begin{equation*}
