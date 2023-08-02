@@ -14,7 +14,7 @@ In the physics equivalent of this abstract thought, Hamiltonian Mechanics, energ
 Thus, to add energy to a system or remove it from the very same, additional outside forces have to interact with the relevant dynamical system.
 The removal of energy by state-state, or state-control effects is codified as dissipation, while only the action of an outside force on a system through some control may increase the energy stored within, thus a conservative system cannot create energy on its own, but only dissipate energy to its surroundings.
 In particular, when we think of this energy exchange process schematically, we can describe the relation of the system with respect to the environment through ports, entities that facilitate the storage, dissipation, and the external forces.
-This in turn gives rise to the name of \ac{PH} systems, a rigorous energy preserving mathematical description of dynamical systems with a port-based interaction model; cf.~\cite{Duindam2009, Jacob2012, VanDerSchaft2014, Mehrmann2022}.
+This in turn gives rise to the name of \ac{PH} systems, a rigorous energy preserving mathematical description of dynamical systems with a port-based interaction model; cf.~\cite{Duindam2009, Jacob2012, VanDerSchaft2014, Mehrmann2023}.
 
 \ac{MOR} as a framework provides many different approaches to creating reduced order models.
 One of the most intuitive are greedy algorithms, where we iteratively select elements such that after every iteration the projection error of the \ac{ROM} decreases by the largest amount possible.
@@ -36,7 +36,7 @@ For \ac{PH} systems, there exists a variety of reduction methods, cf.~\cite{Poly
     \item The second method is to interpolate the \ac{PH} system in the frequency domain using its transfer function to obtain a realization of the transfer function that satisfies the structural requirements of a \ac{PH} system; cf.~\cite{BGD2020, Schwerdtner2021, Poussot2022}.
     \item The third idea is closely linked to the second, however it tries to omit evaluations in the frequency domain by sampling the time domain, and then transform the gathered data into frequency space measurements by means of discrete Fourier and Z-transforms; cf.~\cite{Najnudel2021, Cherifi2022, Günther2023}.
     \item There additionally is the thought of fitting a \ac{PH} system with optimization algorithms based around some select parts of the dynamical system's data.
-        Among these are the \ac{PHDMD} algorithm, cf.~\cite{Morandin2022}, and the SOBMOR algorithm, cf.~\cite{Schwerdtner2023}, which aim to approximate the system matrices using control-output data, and transfer function measurements respectively.
+        Among these are the \ac{PHDMD} algorithm, cf.~\cite{Morandin2023}, and the SOBMOR algorithm, cf.~\cite{SV2023}, which aim to approximate the system matrices using control-output data, and transfer function measurements respectively.
 \end{itemize}
 
 The problem with all these methods is that most linear MOR algorithms struggle to efficiently reduce nonlinear \acp{FOM} to small \acp{ROM} under specific initial conditions.
@@ -59,9 +59,9 @@ Additionally, hyper-reduction can be applied to non-polynomial nonlinear systems
 Our goal therefore is to derive a method to incorporate \ac{MOR} methods with quadratically embedded manifolds into the \ac{PH} system setting.
 While other ideas for polynomial terms can solely rely on solving least squares problems, the inherent structure of \ac{PH} systems makes this a lot harder because the solutions no longer have a closed form solution.
 Therefore we use optimization-based \ac{OI} techniques to identify \ac{PH} systems.
-The principal algorithm we consider is \ac{SOBMOR} proposed by~\cite{Schwerdtner2023}.
+The principal algorithm we consider is \ac{SOBMOR} proposed by~\cite{SV2023}.
 This algorithm infers a \ac{PH} realization from parametrized matrices by fitting transfer function measurements.
-On the other hand, we compare \ac{SOBMOR} with the \ac{PHDMD} algorithm as detailed in~\cite{Morandin2022}, because \ac{PHDMD} directly uses a time domain-based \ac{LSQ} objective function instead of the frequency domain.
+On the other hand, we compare \ac{SOBMOR} with the \ac{PHDMD} algorithm as detailed in~\cite{Morandin2023}, because \ac{PHDMD} directly uses a time domain-based \ac{LSQ} objective function instead of the frequency domain.
 This comparison stands in analogy to the comparison of frequency-based \ac{MOR} methods with state-based reduction as mentioned earlier.
 
 This thesis is structured in three parts.
