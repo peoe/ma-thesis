@@ -51,9 +51,9 @@
 
 %        Matrix Commands        %
 \usepackage{xparse}
-\newcommand{\trans}{^{\mkern1mu \mathsf{T}}}
+\newcommand{\trans}{^{\top}}
 \newcommand{\herm}{^{\mkern1mu \mathsf{H}}}
-\newcommand{\inv}[1][]{\IfValueTF{#1}{^{-\mkern1mu \mathsf{H}}}{^{-1}}}
+\NewDocumentCommand{\inv}{O{1}}{^{-#1}}
 \newcommand{\id}[1][]{\text{id}_{#1}}
 \newcommand{\diag}[1]{\mathop{}\!\mathrm{diag}\left(#1\right)}
 
