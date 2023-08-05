@@ -1,7 +1,7 @@
 \section{MOR on Quadratically Embedded Manifolds}\label{sec:mor-quadratically-embedded-manifolds}
 
 In recent years, advances have been made in computing nonlinear models without the aid of \acp{NN}.
-These methods take many different forms: From explicitly substituting polynomial terms in~\cite{Gu2011}, to modal derivatives such as in~\cite{Wu2016, Weeger2016, Jain2017, Rutzmoser2017}, or by fitting polynomial system components in various different forms such as through lifting transformations, see e.g.~\cite{Kramer2019, Qian2022}, or by bestapproximating from polynomially embedded data terms, e.g.~\cite{Peherstorfer2016, BGK2020, Gosea2021, Barnett2022, Geelen2023}.
+These methods take many different forms: from explicitly substituting polynomial terms in~\cite{Gu2011} to modal derivatives such as in~\cite{Wu2016, Weeger2016, Jain2017, Rutzmoser2017}, or from fitting polynomial system components in various different forms such as through lifting transformations as described in~\cite{Kramer2019, Qian2022} to bestapproximating from polynomially embedded data terms as detailed in~\cite{Peherstorfer2016, BGK2020, Gosea2021, Barnett2022, Geelen2023}.
 Most importantly, the inference approaches described in these publications allow for simple \ac{LSQ} solutions of the inference problems, resolving the explainability constraint of the \ac{NN} methods mentioned in Section~\ref{sec:nn-mor}.
 For this section, we focus on the formulation introduced in~\cite{Geelen2023} as a foundational device to derive \ac{PH} applications later on.
 
@@ -10,35 +10,33 @@ In the linear MOR framework, the full state variables $x \in \bb{R}^n$ are reduc
     x \approx x_\msc{ref} + V x_r,\quad V \in \bb{R}^{n \times r},
 \end{equation}
 where $x_\msc{ref} \in \bb{R}^n$ serves as a reference state to allow for normalization of the state data, the choice of which is dependent on the problem under consideration.
-There exist multiple options to construct the projection matrix $V \in \bb{R}^{n \times r}$, however these methods are outside the scope of this thesis, wherefore we refer the interested reader to~\cite{BOP2017, BCO2017} and the references contained therein.
+There exist multiple options to construct the projection matrix $V \in \bb{R}^{n \times r}$; however, these methods are outside the scope of this thesis, which is why we refer the interested reader to~\cite{BOP2017, BCO2017} and the references contained therein.
 We measure the reduction error for the state snapshot matrices $X \coloneqq (x_1, \dots, x_k), X_\msc{ref} \coloneqq {(x_\msc{ref})}_{i = 1}^k \in \bb{R}^{n \times k},k \in \bb{N}$, by computing the projection error of the reduced states
 \begin{equation}
     \mcl{E} \coloneqq (\id - V V\trans) (X - X_\msc{ref}) \in \bb{R}^{n \times k}.
 \end{equation}
-For constructing the polynomially embedded manifold model, we compare the full order and the reduced states at every sample point point in time $t_i \in I \subseteq \bb{R}_{\geq 0}, i = 1, \dots, k$ through the signed error
+In order to construct the polynomially embedded manifold model, we compare the full order and the reduced states at every sample point in time $t_i \in I \subseteq \bb{R}_{\geq 0}$ through the signed error
 \begin{equation}\label{eq:linear-signed-error}
     \varepsilon(t_i) \coloneqq x(t_i) - x_\msc{ref} - V x_\msc{r}(t_i),\quad i = 1, \dots, k.
 \end{equation}
 Crucially, we now get to choose how we want to approximate the signed error $\varepsilon$.
-Theoretically we could choose an arbitrary linear combination of nonlinear transformations of the reduced state $x_\msc{r}$, but for simplicity we constrain ourselves to the quadratic terms $x_\msc{r} \odot x_\msc{r}$.
-Here, the operator $\odot$ denotes the Khatri-Rao product also known as the column-wise Kronecker product as described in~\cite{Slyusar1999, Shuangzhe2008, Favier2021} and acting on a state variable $x_\msc{r} = {\left( \hat{x}_{(1)}, \dots, \hat{x}_{(r)} \right)}\trans$ in the following manner
+Theoretically, we could choose an arbitrary linear combination of nonlinear transformations of the reduced state $x_\msc{r}$, but for simplicity we constrain ourselves to the quadratic terms $x_\msc{r} \odot x_\msc{r}$.
+Here, the operator $\odot$ denotes the Khatri-Rao product, also known as the column-wise Kronecker product as described in~\cite{Slyusar1999, Shuangzhe2008, Favier2021}, which acts on a state variable $x_\msc{r} = {\left( \hat{x}_{(1)}, \dots, \hat{x}_{(r)} \right)}\trans$ in the following manner
 \begin{equation}\label{eq:redundant-khatri-rao}
     x_\msc{r} \odot x_\msc{r} \coloneqq {\left( \hat{x}_{(1)}^2, \hat{x}_{(1)}^{\phantom{1}} \hat{x}_{(2)}^{\phantom{1}}, \dots, \hat{x}_{(1)}^{\phantom{1}} \hat{x}_{(r)}^{\phantom{1}}, \hat{x}_{(2)}^{\phantom{1}} \hat{x}_{(1)}^{\phantom{1}}, \hat{x}_{(2)}^2, \dots, \hat{x}_{(r)}^2 \right)}\trans \in \bb{R}^{r^2}.
 \end{equation}
 In practice, this formulation contains many duplicate entries such as $x_{(1)}^{\phantom{1}} x_{(2)}^{\phantom{1}}$ and $x_{(2)}^{\phantom{1}} x_{(1)}^{\phantom{1}}$, thus we can omit these terms without losing any information in the quadratic state.
-This surmounts in the reformulation of the Khatri-Rao product as the non-redundant version
+This results in the reformulation of the Khatri-Rao product as the non-redundant version
 \begin{equation}\label{eq:khatri-rao}
     x_\msc{r} \odot x_\msc{r} \coloneqq {\left( \hat{x}_{(1)}^2, \hat{x}_{(1)}^{\phantom{1}} \hat{x}_{(2)}^{\phantom{1}}, \dots, \hat{x}_{(1)}^{\phantom{1}} \hat{x}_{(r)}^{\phantom{1}}, \hat{x}_{(2)}^2, \hat{x}_{(2)} \hat{x}_{(3)}, \dots, \hat{x}_{(r)}^2 \right)}\trans \in \bb{R}^{\frac{r (r + 1)}{2}}.
 \end{equation}
-By abuse of notation, we will henceforth consider the ordinary Khatri-Rao product~\eqref{eq:redundant-khatri-rao} in theoretic discussions while using the non-redundant version~\eqref{eq:khatri-rao} in numerical applications unless otherwise mentioned.
-This replacement results in no changes for the product's properties we would need to exploit later on.
-To ease the handling of the different dimensions invoked by both~\eqref{eq:redundant-khatri-rao} and~\eqref{eq:khatri-rao}, we denote the quadratic data dimension as $q \in \bb{N}$ such that $x_\msc{r} \odot x_\msc{r} \in \bb{R}^q$ no matter which version we use.
-
-\itodo{prove that distributivity for product holds true for non-redundant khatri-rao}
+By abuse of notation, we will henceforth consider the ordinary Khatri-Rao product~\eqref{eq:redundant-khatri-rao} in theoretic discussions while using the non-redundant version~\eqref{eq:khatri-rao} in numerical applications unless otherwise specified.
+This replacement results in no changes to those of the product's properties we would need to use later on.
+To ease the handling of the different dimensions invoked by both~\eqref{eq:redundant-khatri-rao} and~\eqref{eq:khatri-rao}, we denote the quadratic data dimension as $q \in \bb{N}$ such that $x_\msc{r} \odot x_\msc{r} \in \bb{R}^q$ no matter which version of the product we use.
 
 Next, we must compute the quadratic projection operator $W \in \bb{R}^{n \times q}$.
 In view of the fact that most methods emplying polynomially embedded manifolds use non-intrusive modelling approaches, it is necessary to come up with a data-driven solution to finding $W$ without accessing the underlying system matrices of the \ac{FOM} or linear \ac{ROM}.
-We take a cue from \ac{LSQ} data fits, and similarly to the signed error $\varepsilon$ from~\eqref{eq:linear-signed-error} minimize the cost functional
+We take a cue from \ac{LSQ} data fits and similarly to the signed error $\varepsilon$ from~\eqref{eq:linear-signed-error} minimize the cost functional
 \begin{equation}\label{eq:quadratic-least-squares-sum}
     \sum\limits_{i = 1}^k \norm{x(t_k) - x_\msc{ref} - V x_\msc{r}(t_k) - W (x_\msc{r}(t_k) \odot x_\msc{r}(t_k))}{2}^2.
 \end{equation}
@@ -46,11 +44,11 @@ If we transpose all summands within the norm in~\eqref{eq:quadratic-least-square
 \begin{equation}\label{eq:quadratic-least-squares}
     W = \argmin\limits_{W \in \bb{R}^{n \times q}} \frac{1}{2} \norm{Q\trans W\trans - \mcl{E}\trans}{F}^2.
 \end{equation}
-This problem is overdetermined if $Q$ has full row rank $\rank{Q} = q$, which means that as a necessary condition the quadratic data has to satisfy $k \geq q$.
+This problem is overdetermined if $Q$ has full row rank, meaning $\rank{Q} = q$, which means that as a necessary condition the quadratic data has to satisfy $k \geq q$.
 Practically, we can separate problem~\eqref{eq:quadratic-least-squares} into $n$ vector-valued problems through~\eqref{eq:quadratic-least-squares-sum}, allowing for a parallel solution algorithm of each individual \ac{LSQ} problem.
-In order to numerically stabilize the problem~\eqref{eq:quadratic-least-squares}, we can introduce additional regularization terms as demonstrated in~\cite[Equation~15]{Geelen2023}.
-Some of the terms they discuss use Frobenius norms, whereas others like the $2$-norm serve to induce sparsity by groups in the quadratic projection matrix, effectively creating column sparsity in $W$.
+In order to numerically stabilize problem~\eqref{eq:quadratic-least-squares}, we can introduce additional regularization terms as demonstrated in~\cite[Equation~15]{Geelen2023}.
+Some of the terms the authors discuss in~\cite{Geelen2023} use Frobenius norms, whereas others like the $2$-norm serve to induce sparsity by groups in the quadratic projection matrix, effectively creating column sparsity in $W$.
 
-Similar proposals have been made in~\cite{Peherstorfer2016}, covering \ac{LTI} systems that additionally to the formulation in Definition~\ref{def:lti} depend on the quadratically embedded system states.
-Additionally, they prove in~\cite[Theorem~1, Corollary~1]{Peherstorfer2016} that the inferred operators converge to intrusively reduced operators for vanishing time steps, implying that data from stable systems eventually allows to infer stable systems.
+Similar proposals have been made in~\cite{Peherstorfer2016}, covering \ac{LTI} systems that, additionally to the formulation in Definition~\ref{def:lti}, depend on the quadratically embedded system states.
+Furthermore, the authors prove in~\cite[Theorem~1, Corollary~1]{Peherstorfer2016} that the inferred operators converge to intrusively reduced operators for vanishing time steps, implying that data from stable systems eventually allows to infer stable systems.
 Unfortunately, this direct approach cannot be applied to the inference of \ac{PH} systems because the structural constraints~\eqref{eq:ph-matrix-structure} on the system matrices do not allow for a straightforward solution of the \ac{LSQ} problem via the Moore-Penrose pseudo-inverse of the data matrix.

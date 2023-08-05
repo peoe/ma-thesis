@@ -4,9 +4,9 @@ As detailed in~\cite{Kunkel2006}, a \acf{DAE} can be expressed as
 \begin{equation}\label{eq:general-dae}
     F(t, x, \dot{x}) = 0,
 \end{equation}
-where for natural numbers $n, m$ the function $F \colon I \times \Omega_x \times \Omega_{\dot{x}} \to \bb{C}^m$ operates on an interval $I \sse \bb{R}_{\ge 0}$, and two open spatial domains $\Omega_x, \Omega_{\dot{X}} \sse \bb{C}^n$.
-The meaning of $\dot{x}$ in~\cite{Kunkel2006} is purposefully ambiguous, referring to either the derivative with respect to time of a function $x$, or as an independent variable in the formulation.
-For the purposes of this thesis however, we only consider $\dot{x}$ to be the time derivative $\frac{\dif}{\dif t} x$.
+where for natural numbers $n, m$ the function $F \colon I \times \Omega_x \times \Omega_{\dot{x}} \to \bb{C}^m$ operates on an interval $I \sse \bb{R}_{\ge 0}$ and two open spatial domains $\Omega_x, \Omega_{\dot{X}} \sse \bb{C}^n$.
+The meaning of $\dot{x}$ in~\cite{Kunkel2006} is purposefully ambiguous, allowing $\dot{x}$ to refer to either the derivative of a function with respect to time $x$ or as an independent variable in the formulation.
+For the purposes of this thesis, however, we only consider $\dot{x}$ to be the time derivative $\frac{\dif}{\dif t} x$.
 
 In the case of linear \acp{DAE} with constant coefficients, we can express the implicit formulation of Equation~\eqref{eq:general-dae} as the explicit formula
 \begin{equation}\label{eq:lin-const-coeff-dae}
@@ -14,14 +14,14 @@ In the case of linear \acp{DAE} with constant coefficients, we can express the i
 \end{equation}
 in terms of matrices $A, E \in \bb{C}^{n \times n}$ and a time dependent function $f \colon I \to \bb{C}^n$.
 We further assume that the function $f$ serves as an influence on the solution of the \ac{DAE}.
-In recollection of the \ac{PH} framework which we want to define, this influence reflects the external control variable acting on the system over time.
+In recollection of the \ac{PH} framework we want to define, this influence reflects the external control variable acting on the system over time.
 We explicitly formulate the control in terms of yet another linear matrix product
 \begin{equation}\label{eq:control-substitution}
     f(t) = B u(t)
 \end{equation}
 for some natural number $q$, a matrix $B \in \bb{C}^{n \times q}$, and a control variable $u \colon I \to \bb{C}^q$.
 Lastly, we introduce an output component $y$ to our modelled system.
-This output again takes the shape of a time dependent function $y \colon I \to \bb{C}^q$, and, keeping in line with Equations~\eqref{eq:lin-const-coeff-dae} and~\eqref{eq:control-substitution}, we write it as the linear combination of the state $x$ and the control $u$ with the matrices $C \in \bb{C}^{q \times n}, D \in \bb{C}^{q \times q}$
+This output too takes the shape of a time dependent function $y \colon I \to \bb{C}^q$ and, keeping in line with Equations~\eqref{eq:lin-const-coeff-dae} and~\eqref{eq:control-substitution}, we write it as the linear combination of the state $x$ and the control $u$ with the matrices $C \in \bb{C}^{q \times n}, D \in \bb{C}^{q \times q}$
 \begin{equation}\label{eq:output-definition}
     y(t) = C x(t) + D u(t).
 \end{equation}
@@ -36,22 +36,22 @@ This output again takes the shape of a time dependent function $y \colon I \to \
         \end{aligned}
         \right.
     \end{equation}
-    with the constant in time matrices $A, E \in \bb{C}^{n \times n}, B \in \bb{C}^{n \times q}, C \in \bb{C}^{q \times n}, D \in \bb{C}^{q \times q}$, and state functions $x, \dot{x} \colon I \to \bb{C}^n$ and interaction variables $u, y \colon I \to \bb{C}^q$ which vary over time.
+    with the matrices $A, E \in \bb{C}^{n \times n}, B \in \bb{C}^{n \times q}, C \in \bb{C}^{q \times n}, D \in \bb{C}^{q \times q}$ constant in time as well as state functions $x, \dot{x} \colon I \to \bb{C}^n$ and interaction variables $u, y \colon I \to \bb{C}^q$ which vary over time.
 \end{definition}
 
 \begin{remark}
     Definition~\ref{def:lti} constitutes a continuous dynamical system.
-    If we instead sample the trajectory $x$ at fixed sample points $0 \leq t_1 \dots \leq t_k = T < \infty$, then we can rephrase $\Sigma_\msc{lti}$ in discrete form
+    If we instead sample the trajectory of $x$ at fixed sample points $0 \leq t_1 \dots \leq t_k = T < \infty$, then we can rephrase $\Sigma_\msc{lti}$ in discrete form
     \begin{equation*}
         \Sigma_\msc{lti}^\msc{d} \colon \left\lbrace
         \begin{aligned}
             E^\msc{d} x_{i + 1} &= A^\msc{d} x_i + B^\msc{d} u_i, \\
-            y_i &= C^\msc{d} x_i + D^\msc{d} u_i
+            y_i &= C^\msc{d} x_i + D^\msc{d} u_i,
         \end{aligned}
         \right.
     \end{equation*}
     where $x_i \coloneqq x(t_i)$ and $u_i \coloneqq u(t_i), y_i \coloneqq y(t_i)$ are the state, control and output variables sampled at the time points $t_i, i = 1, \dots, k$, and $E^\msc{D}, A^\msc{D}, B^\msc{D}, C^\msc{D}$ and $D^\msc{D}$ are the discrete time equivalents of $E, A, B, C$ and $D$.
-    These systems mostly come up when either the derivative data $\dot{x}$ is not available to us, or when we discretize a continuous system using a time stepping procedure.
+    These systems mostly come up when either the derivative data $\dot{x}$ is not available to us or when we discretize a continuous system using a time stepping procedure.
 \end{remark}
 
 \begin{remark}
@@ -61,23 +61,23 @@ This output again takes the shape of a time dependent function $y \colon I \to \
         \dot{x} &= A x + B u, \label{eq:dae-ode-difference-state}\\
         \dot{y} &= C x + D u\label{eq:dae-ode-difference-ode-io}
     \end{align}
-    classifies as both a system of \acp{ODE}, as well as a \ac{DAE}.
+    classifies as both a system of \acp{ODE} as well as a \ac{DAE}.
     In contrast, if Equation~\eqref{eq:dae-ode-difference-ode-io} read
     \begin{equation}\label{eq:dae-ode-difference-dae-io}
         y = C x + D u
     \end{equation}
-    instead, then the system consisting of Equations~\eqref{eq:dae-ode-difference-state} and~\eqref{eq:dae-ode-difference-dae-io} no longer is a system of \acp{ODE}, but only a \ac{DAE}.
+    instead, then the system consisting of Equations~\eqref{eq:dae-ode-difference-state} and~\eqref{eq:dae-ode-difference-dae-io} no longer is a system of \acp{ODE} but only a \ac{DAE}.
 \end{remark}
 
 Any \ac{LTI} system in the form~\eqref{eq:lti} is said to act in the time domain, meaning that the inputs of both the states $x, \dot{x}$, the control $u$, and output variable $y$ are functions of time.
-From a Systems Theory point of view however, it is necessary to also consider the system from within the frequency domain.
-In the frequency domain we no longer consider how the system along with the control and the output change over time, but rather how their time behaviour can be represented by oscillations depending on frequency.
+From a Systems Theory point of view, however, it is necessary to consider the system also from within the frequency domain.
+There, we no longer consider how the system's state along with the control and the output change over time, but rather how their behaviour over time can be represented by oscillations depending on frequency.
 We compute this frequency formulation by applying the Laplace transform
-\begin{equation*}\label{eq:laplace-trafo}
+\begin{equation*}
     \mcl{L}[f](\omega) = \int\limits_0^\infty \exp{(- \omega t)} f(t) \dif t,\quad \omega \in \bb{C},
 \end{equation*}
-to the states, the control and the output in the \ac{LTI} system~\eqref{eq:lti}; cf.~\cite{Arendt2011}.
-We then define the following functions as variables of the complex frequency $\omega$ in the following manner
+to the states, the control, and the output in the \ac{LTI} system~\eqref{eq:lti}; cf.~\cite{Arendt2011}.
+We then define the following functions as variables of the complex frequency $\omega$ such that
 \begin{equation}
     X(\omega) \coloneqq \mcl{L}[x](\omega),\quad \dot{X}(\omega) \coloneqq \mcl{L}[\dot{x}](\omega),\quad U(\omega) \coloneqq \mcl{L}[u](\omega),\quad Y(\omega) \coloneqq \mcl{L}[y](\omega).
 \end{equation}
@@ -101,11 +101,11 @@ We apply this result to the second equation of the \ac{LTI} system~\eqref{eq:lti
         &= C (\omega E - A)\inv B U(\omega) + D U(\omega) + C (\omega E - A)\inv E x(0).
     \end{aligned}
 \end{equation}
-Notably, the last equality of~\eqref{eq:frequency-output} contains a summand which only depends on the initial state $x_0 = x(0)$ of the system.
-For ease of notation, we assume that this initial time domain state value $x(t)$ is zero $x(0) = x_0 = 0$.
-This restriction is a sensible assumption, because it corresponds to a system that initially contains no energy and can only be interacted with through the control.
+Notably, the last equality of~\eqref{eq:frequency-output} contains a summand that only depends on the initial state $x_0 = x(0)$ of the system.
+For ease of notation, we assume that this time domain state value $x(t)$ initially is zero: $x(0) = x_0 = 0$.
+This restriction is a sensible assumption because it corresponds to a system that initially contains no energy and can only be interacted with through the control.
 Equation~\eqref{eq:frequency-output} thus shows how we can directly compute the output of a system under the influence of a control without having to consider the internal state representation.
-More general definitions can also incorporate the initial state dependency in the transfer function, however this is not necessary in the context of this thesis, wherefore we refer the interested reader to the introductory chapter in~\cite{Benner2017} for a detailed explanation.
+More general definitions can also incorporate the initial state dependency in the transfer function; however, this is not necessary in the context of this thesis, thus we refer the interested reader to the introductory chapter in~\cite{Benner2017} for a detailed explanation.
 From now on, we access the frequency domain control-output relation by defining the intermediate $\tfunc$ such that $Y(\omega) = \tfunc(\omega) U(\omega)$.
 
 \begin{definition}\label{def:transfer-function}
@@ -117,12 +117,11 @@ From now on, we access the frequency domain control-output relation by defining 
 \end{definition}
 
 \begin{remark}
-    The matrices $(A, B, C, D, E)$ used in the definition of the transfer function are not unique.
-    For any transfer function, multiple tuples of system matrices can exist which produce the same transfer function output for the same frequencies $\omega \in \bb{C}$.
+    The matrices $(A, B, C, D, E)$ used in Definition~\ref{def:transfer-function} are not unique.
+    For any transfer function $\tfunc$, multiple tuples of system matrices can exist that produce the same output $\tfunc(\omega)$ for identical frequencies $\omega \in \bb{C}$.
     Any such tuple is called a realization of the transfer function.
     We can create an arbitrary amount of realizations by considering the coordinate transformation matrices $T \in \bb{C}^{n \times n}$.
-    If $T$ is regular, then we can obtain a different realization of the transfer function $\tfunc$ by substituting $\tilde{E} \coloneqq T E T\inv, \tilde{A} \coloneqq T A T\inv, \tilde{B} \coloneqq T B, \tilde{C} \coloneqq C T\inv, \tilde{D} \coloneqq D$.
-    The transformed matrices $(\tilde{A}, \tilde{B}, \tilde{C}, \tilde{D}, \tilde{E})$ are a different realization of the same transfer function $\tfunc$.
+    If $T$ is regular, then we can obtain a different realization of $\tfunc$ by substituting $\tilde{E} \coloneqq T E T\inv, \tilde{A} \coloneqq T A T\inv, \tilde{B} \coloneqq T B, \tilde{C} \coloneqq C T\inv, \tilde{D} \coloneqq D$.
     This is evident if we compute
     \begin{align*}
         &\tilde{C} {\left( \omega \tilde{E} - \tilde{A} \right)}\inv \tilde{B} + \tilde{D} \\
@@ -134,12 +133,12 @@ From now on, we access the frequency domain control-output relation by defining 
     \end{align*}
 \end{remark}
 
-Next we consider what it means that a dynamical system is minimal.
-This directly leads us to structure-preserving \ac{MOR} algorithms, in order to discuss these algorithms, we yet require a notion of a transfer function's poles and their relation to the stability of the underlying dynamical system.
-Additionally, we connect the stability of a system to its poles.
+Next, we consider what it means that a dynamical system is minimal.
+This directly leads us to structure-preserving \ac{MOR} algorithms.
+In order to discuss these algorithms, we yet require a notion of a transfer function's poles and their relation to the stability of the underlying dynamical system.
 
 \begin{definition}[Cf.~\cite{CGH2022}]\label{def:minimal-system}
-    The realization $(E, A, B, C, D)$ of an \ac{LTI} system with its associated transfer function $\tfunc$ is said to be minimal if the state dimension $n \in \bb{N}$ in the realization is minimal.
+    The realization $(A, B, C, D, E)$ of an \ac{LTI} system with its associated transfer function $\tfunc$ is said to be minimal if the state dimension $n \in \bb{N}$ in the realization is minimal.
 \end{definition}
 
 \begin{definition}[{Cf.~\cite[Section~2]{Benner2017}}]\label{def:transfer-function-poles}
@@ -155,11 +154,11 @@ Additionally, we connect the stability of a system to its poles.
     \begin{align*}
         {(\omega E - A)}^m x_m = 0,\quad {(\omega E - A)}^{m - 1} x_m \neq 0.
     \end{align*}
-    However, if the realization $(A, B, C, D, E)$ is minimal as defined in Definition~\ref{def:minimal-system}, both sets are equal, cf.~\cite[Section~2]{Benner2017}.
+    However, if the realization $(A, B, C, D, E)$ is minimal as defined in Definition~\ref{def:minimal-system}, then both sets are equal, cf.~\cite[Section~2]{Benner2017}.
 \end{remark}
 
 \begin{definition}[{Cf.~\cite[Section~2]{Benner2017}}]\label{def:lti-stability}
-    Let $(E, A, B, C, D)$ be a realization of the \ac{LTI} system $\Sigma_\msc{lti}$.
+    Let $(A, B, C, D, E)$ be a realization of the \ac{LTI} system $\Sigma_\msc{lti}$.
     Then, $\Sigma_\msc{lti}$ is stable if all finite eigenvalues of the matrix pencil $\omega E - A$ lie within the open left complex half-plane $\bb{C}_{-} \coloneqq \iset{\sigma \in \bb{C}}{\fk{Re}(\sigma) < 0}$.
-    Any stable system under the control $u(t) \equiv 0$ tends to the zero state for $t \to \infty$, and is henceforth asymptotically stable.
+    Any stable system under the control $u(t) \equiv 0$ tends to the zero state for $t \to \infty$ and is henceforth asymptotically stable.
 \end{definition}

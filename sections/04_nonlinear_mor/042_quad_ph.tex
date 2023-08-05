@@ -1,9 +1,9 @@
 \section{Quadratically Embedded Manifolds for \texorpdfstring{\ac{PH}}{PH} Systems}\label{sec:quadratically-embedded-manifolds-ph-systems}
 
 In this section, we discuss how we can construct reduced \ac{PH} systems with quadratically embedded manifolds.
-In essence, we combine the theory of quadratically embedded state variables from Section~\ref{sec:mor-quadratically-embedded-manifolds} with the \ac{SOBMOR} method from Section~\ref{sec:inferring-ph-systems} by creating a linear and a quadratically embedded \ac{ROM}, and then interconnecting both systems' outputs.
+In essence, we combine the theory of quadratically embedded state variables from Section~\ref{sec:mor-quadratically-embedded-manifolds} with the \ac{SOBMOR} method from Section~\ref{sec:inferring-ph-systems} by creating a linear and a quadratically embedded \ac{ROM} and then interconnecting both systems' outputs.
 
-We commence the construction with the usual description of a full order linear \ac{PH} system $\Sigma_\msc{ph}$ given by the realization $(E, \id, J, R, G, P, N, S)$ in the form
+We begin the construction with the usual description of a full order linear \ac{PH} system $\Sigma_\msc{ph}$ given by the realization $(E, \id, J, R, G, P, N, S)$ in the form
 \begin{equation*}
     \Sigma_{\msc{ph}} \colon \left\lbrace
     \begin{aligned}
@@ -12,23 +12,22 @@ We commence the construction with the usual description of a full order linear \
     \end{aligned}
     \right.
 \end{equation*}
-Next, we follow one of the methods proposed in Section~\ref{sec:structure-preserving-mor} to construct a linear \ac{ROM} $\Sigma_\msc{ph}^\msc{l}$ with the realization $(E_\msc{l}, \id, J_\msc{l}, R_\msc{l}, G_\msc{l}, P_\msc{l}, N_\msc{l}, S_\msc{l})$.
-With this linear \ac{ROM} realization, we now apply the \ac{SOBMOR} algorithm to fit a quadratically embedded \ac{PH} realization $(E_\msc{q}, \id, J_\msc{q}, R_\msc{q}, G_\msc{q}, P_\msc{q}, N_\msc{q}, S_\msc{q})$.
+Next, we follow one of the methods proposed in Section~\ref{sec:structure-preserving-mor} to construct a linear \ac{ROM} $\Sigma_\msc{ph}^\msc{l}$ with the realization $(E_\msc{l}, \id, J_\msc{l}, R_\msc{l}, G_\msc{l}, P_\msc{l}, N_\msc{l}, S_\msc{l})$ to which we apply the \ac{SOBMOR} algorithm to fit a quadratically embedded \ac{PH} realization $(E_\msc{q}, \id, J_\msc{q}, R_\msc{q}, G_\msc{q}, P_\msc{q}, N_\msc{q}, S_\msc{q})$.
 The ultimate goal of fitting a quadratic system $\Sigma_\msc{ph}^\msc{q}$ is to minimize the error in the output.
-This can be quantified by $\varepsilon(t) \coloneqq y_\msc{fom}(t) - y_\msc{rom}(t)$, the signed error of the \ac{ROM} output with respect to the \ac{FOM} output.
-If we can fit a quadratic model such that the quadratic output models the signed error $y_\msc{quad}(t) = \varepsilon(t)$, then we can couple $\hat{\Sigma}_\msc{ph}$ and $\Sigma_\msc{ph}^\msc{q}$ by adding the individual outputs $y_\msc{total} = y_\msc{rom} + y_\msc{quad}$.
-The objective of fitting $\Sigma_\msc{ph}^\msc{q}$ now consists of computing appropriate matrices $E^\msc{q}, J^\msc{q}, R^\msc{q}, G^\msc{q}, P^\msc{q}, N^\msc{q}, S^\msc{q}$ such that the quadratic transfer function $\tfunc^\msc{q}$ produces a good approximation of the signed linear transfer function measurement error.
-Notationally, we once again use $U$ and $Y$ to refer to the Laplace transforms of $u, y$ as in Section~\ref{sec:ltis}, as well as $\mcl{E}$ for the signed transfer function measurement error.
+This can be quantified by $\varepsilon(t) \coloneqq y_\msc{fom}(t) - y_\msc{rom}(t)$, the signed error of the \ac{ROM} output with respect to the \ac{FOM}.
+If we can fit a quadratic model such that the quadratic output mimics the signed error $y_\msc{quad}(t) = \varepsilon(t)$, then we can couple $\hat{\Sigma}_\msc{ph}$ and $\Sigma_\msc{ph}^\msc{q}$ by adding the individual outputs $y_\msc{total} = y_\msc{rom} + y_\msc{quad}$.
+The prbolem of fitting $\Sigma_\msc{ph}^\msc{q}$ now reduces to computing appropriate matrices $E^\msc{q}, J^\msc{q}, R^\msc{q}, G^\msc{q}, P^\msc{q}, N^\msc{q}, S^\msc{q}$ such that the quadratic transfer function $\tfunc^\msc{q}$ produces a good approximation of the signed error transfer function $\tfunc^\msc{fom} - \tfunc^\msc{l}$.
+Notationally, we once again use $U$ and $Y$ to refer to the Laplace transforms of $u, y$ as in Section~\ref{sec:ltis} as well as $\mcl{E}$ for the signed transfer function measurement error.
 Therefore, fitting $\Sigma^\msc{q}$ means choosing the system matrices in such a way that $\mcl{E}(\omega) = \tfunc^\msc{q}(\omega) U(\omega)$ is satisfied for a frequency input $\omega$.
 In practice, this approximation does not have to hold for all possible frequency ranges but rather for a select set of frequency domains depending on the problem and its underlying dynamic response.
-This specifically influences the choice of how we come up with the system matrices.
+This specifically influences the choice of how we construct the system matrices.
 
-Besides the choice of procedure, using quadratic state variables also implies that we have to choose how to consider the $E^\msc{q}$ matrix in the quadratic system.
-If $E^\msc{q}$ is chosen by computation from the linear system variables we get two options:
-\itodo{the $E$ matrix is still open\dots}
+% Besides the choice of procedure, using quadratic state variables also implies that we have to choose how to consider the $E^\msc{q}$ matrix in the quadratic system.
+% If $E^\msc{q}$ is chosen by computation from the linear system variables we get two options:
+% \itodo{the $E$ matrix is still open\dots}
 
 Additionally, the quadratic state does not directly affect the feedthrough term.
-Instead of inferring the feedthrough in part from the exisiting system components, the procedure can compensate potential discrepancies in the state variables by adjusting the feedthrough appropriately.
+Instead of inferring it in part from the existing system components, the procedure can compensate potential discrepancies in the state variables by adjusting the feedthrough appropriately.
 Finally, this results in the combined system
 \begin{equation}\label{eq:combined-quadratic-system}
     \Sigma_\msc{comb} \colon \left\lbrace
@@ -54,18 +53,18 @@ The entire algorithm can thus be expressed in four different steps:
     \item Use the quadratic data to compute a realization of the quadratic system $\Sigma_\msc{ph}^\msc{q}$.
     \item Add both \acp{ROM}' outputs to approximate the \ac{FOM}'s behaviour.
 \end{enumerate}
-The crucial step for this thesis lies in the third step, because many different methods are available, and we have to choose among them according to the requirements of the model as well as the accessibility of system data.
+The crucial step for this thesis lies in the third step, because many different methods are available and we have to choose among them according to the requirements of the model as well as the accessibility of system data.
 
 \itodo{update necessary data and equations in step 2 of the enumeration}
 
-For our approach, we use the \ac{SOBMOR} framework as highlighted at the end of Subsection~\ref{subsec:optimization-based-inference}.
+For our approach, we use the \ac{SOBMOR} framework highlighted at the end of Subsection~\ref{subsec:optimization-based-inference}.
 To apply this procedure, we have to generate a sequence of $\gamma$ values for the levelling of the \ac{LSQ} objective function~\eqref{eq:sobmor-objective}.
-As hinted at in the description of the \ac{SOBMOR} method, choosing appropriate values of $\gamma$ is essential in obtaining a lower bound for the error term of the approximation, but it also influences the performance of the \ac{SOBMOR} algorithm by stopping the optimization loop early if the $\gamma$ value is large.
-For the sake of the upcoming numerical experiments, we use two different approaches: first a fixed sequence of $\gamma$ values, and then an adaptive bisection algorithm like the one in~\cite{SV2021} as a comparison.
-With respect to the initialization of the parametrized matrices $E^\msc{q}(\theta), J^\msc{q}(\theta), R^\msc{q}(\theta), G^\msc{q}(\theta), P^\msc{q}(\theta), N^\msc{q}(\theta), S^\msc{q}(\theta)$ we discuss several different methods, ranging between the weighted \ac{PHDMD} \ac{LSQ} problem, randomized initial values, preparatory \ac{BFGS} optimizations, and fixed initial matrices.
+As hinted at in the description of the \ac{SOBMOR} method, choosing appropriate values of $\gamma$ is essential in obtaining a lower bound for the error term of the approximation, but it also influences the performance of the \ac{SOBMOR} algorithm by stopping the optimization loop early if the value of $\gamma$ is large.
+For the following numerical experiments, we use two different approaches: first, a fixed sequence of $\gamma$ values, and then an adaptive bisection algorithm like the one in~\cite{SV2021} as a comparison.
+With respect to the initialization of the parametrized matrices $E^\msc{q}(\theta), J^\msc{q}(\theta), R^\msc{q}(\theta), G^\msc{q}(\theta), P^\msc{q}(\theta), N^\msc{q}(\theta)$, and $S^\msc{q}(\theta)$ we discuss several different methods ranging between the weighted \ac{PHDMD} \ac{LSQ} problem, randomized initial values, preparatory \ac{BFGS} optimizations, and fixed initial matrices.
 
-It is important to note, that the quadratic system matrices cannot just be computed from the linear system matrices.
-If we imagine a quadratic system $\Sigma_\msc{ph}^\msc{q}$ obtained from the linear \ac{ROM} by means of Kronecker and Khatri-Rao product, then this system could not contain any more information than just the linear system on its own because the terms of the linear system have merely been multiplied with each other without respecting changing dynamics and structural constraints.
+It is important to note that the quadratic system matrices cannot be computed from the linear system matrices.
+If we imagine a quadratic system $\Sigma_\msc{ph}^\msc{q}$ obtained from the linear \ac{ROM} by means of the Kronecker and Khatri-Rao products, then this could not contain any more information than the linear system on its own because the terms of the latter have been multiplied with each other without respecting changing dynamics and structural constraints.
 
-As a further idea, we may choose to incorporate quadratic input and output terms alongside the original linear ones into our model.
-In this case, we have to make sure that we only select the linear terms when coupling both \acp{ROM}' outputs.
+As a further option, we may choose to incorporate quadratic input and output terms alongside the original linear ones in our model.
+In this case, we have to make sure that we only select the linear terms when coupling both of the \acp{ROM}' outputs.

@@ -1,22 +1,22 @@
 \section{Inferring \texorpdfstring{\ac{PH}}{PH} Systems}\label{sec:inferring-ph-systems}
 
 We introduce several methods to infer \ac{PH} systems in a nonintrusive data-driven manner throughout this section.
-First, we commence with a realization-based approach in Subsection~\ref{subsec:realization-based-inference}: We apply a nonintrusive method to obtain an \ac{LTI} system $\Sigma_\msc{lti}$, and afterwards compute a \ac{PH} realization from $\Sigma_\msc{lti}$.
-Lastly, there exist a number of optimization-based inference methods which we highlight in Subsection~\ref{subsec:optimization-based-inference}, and afterwards use in Section~\ref{sec:quadratically-embedded-manifolds-ph-systems} to construct the final quadratic \ac{PH} system.
+We commence with a realization-based approach in Subsection~\ref{subsec:realization-based-inference}: we apply a nonintrusive method to obtain an \ac{LTI} system $\Sigma_\msc{lti}$ and afterwards compute a \ac{PH} realization from this system.
+Lastly, there exist a number of optimization-based inference methods which we highlight in Subsection~\ref{subsec:optimization-based-inference} and afterwards use in Section~\ref{sec:quadratically-embedded-manifolds-ph-systems} to construct the final quadratic \ac{PH} system.
 
 \subsection{Realization-Based Inference}\label{subsec:realization-based-inference}
 
 Realization-based \ac{OI} works as a two step procedure:
 \begin{enumerate}
-    \item Use the provided data $x_i, u_i, y_i, i = 1, \dots, k$ in state-based approaches, or $\tfunc(s_i), u_i, y_i, i = 1, \dots, k$ in the case of frequency domain-based methods to infer an \ac{LTI} realization $\Sigma_\msc{lti} \colon (A, B, C, D, E)$.
+    \item Use the provided data $x_i, u_i, y_i, i = 1, \dots, k$, in state-based approaches or $\tfunc(s_i), u_i, y_i, i = 1, \dots, k$, in the case of frequency domain-based methods to infer an \ac{LTI} realization $(A, B, C, D, E)$.
     \item Compute a \ac{PH} realization $\Sigma_\msc{ph}$ from $\Sigma_\msc{lti}$.
 \end{enumerate}
 There are quite a few downsides to this way of approximating a system.
 If either of the two steps is not robust with respect to the input data, then even small numerical errors or noise in the measurements can cause the result to be nonsensical.
-We thus only consider this framework as a theoretical stepping stone to introduce later more direct ideas.
+We thus only consider this framework as a theoretical stepping stone to later on introduce more direct ideas.
 
 Foremost, there exists the paradigm of the Loewner method.
-The Loewner method uses samples of the transfer function and the corresponding tangential directions to construct the system's matrices, however~\cite{Peherstorfer2017} demonstrates an implementation based on time domain data.
+This method uses samples of the transfer function and the corresponding tangential directions to construct the system's matrices; however,~\cite{Peherstorfer2017} demonstrates an implementation based on time domain data.
 We commence as described in~\cite{BGD2020} with the transfer function $\tfunc$ of $\Sigma_\msc{lti}$ and the interpolation points
 \begin{equation*}
     v_i \coloneqq l_i\trans \tfunc(\mu_i),\quad w_i \coloneqq \tfunc(\lambda_i) r_i,\quad D\coloneqq \tfunc(\infty) = \lim\limits_{\omega \to \infty} \tfunc(\omega),
@@ -34,7 +34,7 @@ Then we can construct the Loewner and the shifted Loewner matrices defined by th
         \frac{\lambda_1 l_n\trans w_1 - \mu_n v_n\trans r_1}{\lambda_1 - \mu_n} & \cdots & \frac{\lambda_n l_n\trans w_n - \mu_n v_n\trans r_n}{\lambda_n - \mu_n}
     \end{pmatrix}.
 \end{equation}
-If the Loewner matrix $\bb{L}$ is invertible, then according to~\cite[Theorem~5.1]{BGD2020} we can use $\bb{L}$ and $\bb{L}_\sigma$, as well as the matrices $L \coloneqq {(l_1, \dots, l_n)}\trans, R \coloneqq (r_1, \dots, r_n), M \coloneqq \diag{\mu_1, \dots, \mu_n}, N \coloneqq \diag{\lambda_1, \dots, \lambda_n}$, $V = {(v_1, \dots, v_n)}\trans, W \coloneqq (w_1, \dots, w_n)$ to create a realization of $\Sigma_\msc{lti}$ with the following block structure
+If the Loewner matrix $\bb{L}$ is invertible, then, according to~\cite[Theorem~5.1]{BGD2020}, we can use $\bb{L}$ and $\bb{L}_\sigma$ as well as the matrices $L \coloneqq {(l_1, \dots, l_n)}\trans, R \coloneqq (r_1, \dots, r_n), M \coloneqq \diag{\mu_1, \dots, \mu_n}, N \coloneqq \diag{\lambda_1, \dots, \lambda_n}$, $V = {(v_1, \dots, v_n)}\trans, W \coloneqq (w_1, \dots, w_n)$ to create a realization of $\Sigma_\msc{lti}$ with the following block structure
 \begin{equation}\label{eq:loewner-realization}
     \begin{pmatrix}
         A - sE & B \\
@@ -50,13 +50,13 @@ If the Loewner matrix $\bb{L}$ is invertible, then according to~\cite[Theorem~5.
     \end{pmatrix}.
 \end{equation}
 This basic procedure can be amended and extended in various ways.
-Choosing a specific set of interpolation points like the set of spectral zeros of the transfer function $\tfunc$ can yield additional properties such as positive realness, which directly allows the construction of a \ac{PH} system similar to~\cite{BGD2020, Poussot2022}.
-Instead of directly sampling the transfer function, we can also apply transformations such as the Discrete Fourier Transform to time domain data, which in particular was proposed in~\cite{Peherstorfer2017, Cherifi2021}.
-Other authors have also directly incorporated higher order terms into the \ac{LTI} system structure, for example by making use of the fact that a system's Loewner matrices are generalized observability and controllability Gramians, see e.g.~\cite{Antoulas2019}, or by iteratively computing a separate higher order model which mitigates the error of the linear reduced \ac{LTI} system w.r.t.\ the \ac{FOM} by fitting the higher order terms to the error data similar to~\cite{GKA2021}.
+Choosing a specific set of interpolation points, like the set of spectral zeros of the transfer function $\tfunc$, can yield additional properties such as positive realness, which directly allows the construction of a \ac{PH} system similar to~\cite{BGD2020, Poussot2022}.
+Instead of directly sampling the transfer function, we can also apply transformations such as the Discrete Fourier Transform to time domain data, which, in particular, was proposed in~\cite{Peherstorfer2017, Cherifi2021}.
+Other authors have also directly incorporated higher order terms into the \ac{LTI} system structure, for example, by making use of the fact that a system's Loewner matrices are generalized observability and controllability Gramians, see~\cite{Antoulas2019}, or by iteratively computing a separate higher order model which mitigates the error of the linear reduced \ac{LTI} system with respect to the \ac{FOM} by fitting the higher order terms to the error data similarly to~\cite{GKA2021}.
 In a similar fashion to time domain data-based Loewner methods, \ac{LTI} systems can be inferred from the output produced when a unit step input is applied at time $t = 0$, for more details see~\cite{Miller2012}.
 
-In a similar fashion to the \ac{LSQ} problem in Section~\ref{sec:mor-quadratically-embedded-manifolds}, we can formulate an approach to fit operators in \ac{LTI} systems.
-This idea relies on \ac{DMD}, as well as its extension \ac{IODMD} as introduced in~\cite{Annoni2016}.
+In a corresponding fashion to the \ac{LSQ} problem in Section~\ref{sec:mor-quadratically-embedded-manifolds}, we can formulate an approach to fit operators in \ac{LTI} systems.
+This idea relies on \ac{DMD} as well as its extension \ac{IODMD} as introduced in~\cite{Annoni2016}.
 For an \ac{LTI} system $\Sigma_\msc{lti}$ with a known matrix $E \in \bb{R}^{n \times n}$, we concatenate the individual data snapshots for the discrete time points $t_i, i = 1, \dots, k$, into the matrices
 \begin{equation}\label{eq:iodmd-data-matrices}
     \Omega \coloneqq \begin{pmatrix}
@@ -67,7 +67,7 @@ For an \ac{LTI} system $\Sigma_\msc{lti}$ with a known matrix $E \in \bb{R}^{n \
         y_1 & \cdots & y_k
     \end{pmatrix}.
 \end{equation}
-With these matrices, we can write the \ac{LTI} system's discrete response as $\Gamma = \Lambda \Omega$, where $\Lambda$ corresponds to the block matrix containing the remaining system matrices of $\Sigma_\msc{lti}$, cf.~\cite{Heiland2022}.
+With these matrices we can write the \ac{LTI} system's discrete response as $\Gamma = \Lambda \Omega$, where $\Lambda$ corresponds to the block matrix containing the remaining system matrices of $\Sigma_\msc{lti}$, cf.~\cite{Heiland2022}.
 The usual \ac{LSQ} problem
 \begin{equation*}
     \min\limits_{\Lambda \in \bb{R}^{n + m \times n + m}} \norm{\Gamma - \Lambda \Omega}{F}^2
@@ -81,7 +81,7 @@ The principle formulation of \ac{SINDY} as given in~\cite{Brunton2016} acts on d
 \begin{equation}\label{eq:sindy-explicit-dynamical-system}
     \frac{\dif}{\dif t} x = f(x).
 \end{equation}
-Next, we construct the state and state derivative data matrices $X \coloneqq (x_1, \dots, x_k), \dot{X} \coloneqq (\dot{x}_1, \dots, \dot{x}_k) \in \bb{R}^{n \times k}$, to which we apply nonlinear transformations in forming the function library
+Next, we construct the state and state derivative data matrices $X \coloneqq (x_1, \dots, x_k), \dot{X} \coloneqq (\dot{x}_1, \dots, \dot{x}_k) \in \bb{R}^{n \times k}$ to which we apply nonlinear transformations when forming the function library
 \begin{equation}\label{eq:sindy-explicit-library}
     \Theta(X) = (\theta_1(X), \dots, \theta_\ell(X)),\quad \theta_i \colon \bb{R}^n \to \bb{R}^n,\quad i = 1, \dots, n.
 \end{equation}
@@ -91,17 +91,8 @@ Similarly to \ac{DMD}, we fit the transformed data such that the following equal
 \end{equation}
 Here, $P \in \bb{R}^{n \times n}$ is a sparse matrix of coefficients reflecting which library components have been selected to form the final nonlinear representation of the model.
 The solution $P$ has to be computed with a sparsity promoting solver such as \ac{STLSQ} in~\cite{Zhang2019}, the LASSO framework as detailed by~\cite{Tibshirani1996}, or other similar methods as mentioned in~\cite{Kaiser2018, Kaheman2020}.
-% To use \ac{SINDY} for fitting \ac{LTI} systems, we have to convert the explicit system~\eqref{eq:sindy-explicit-dynamical-system} as well as the corresponding fitting equation~\eqref{eq:sindy-explicit-fit} into implicit formulations to allow for a separate $E \dot{x}$ term, thus resulting in
-% \begin{equation*}
-%     \begin{aligned}
-%         f(x, \dot{x}) &= 0, \\
-%         P \Theta(X, \dot{X}) &= 0.
-%     \end{aligned}
-% \end{equation*}
-% This transformation is the foundation of both the implicit-\ac{SINDY}~\cite{Mangan2016}, and the \ac{SINDY-PI}~\cite{Kaheman2020} methods, with the latter showing better performance results.
-% This slightly changes the conditions on the sparse coefficient matrix $P$, requiring that $\diag{P} = 0$ because otherwise $P = \id$ would be a trivial solution, which has been shown in~\cite[Section~3~(b)]{Kaheman2020}.
 Incorporating control variables into the \ac{SINDY} framework has been accomplished by including appropriate control and mixed state-control terms into the function library~\eqref{eq:sindy-explicit-library}, see e.g.~\cite{Kaiser2018}, yielding the so-called \ac{SINDYC} procedure, which is closely related to \ac{DMDC}.
-We propose to proceed with \ac{SINDYC} but instead of extending the \ac{SINDYC} library to act on both state and control variables, only consider library functions that only act on the state variables.
+We propose to proceed with \ac{SINDYC}, but instead of extending the \ac{SINDYC} library to act on both state and control variables, only consider library functions that exclusively act on the state variables.
 This results in the explicit system
 \begin{equation}\label{eq:sindy-io}
     f(x, u) = P \Theta \begin{pmatrix}
@@ -115,13 +106,14 @@ This results in the explicit system
     \end{pmatrix}.
 \end{equation}
 Thereafter, we can extract the matrix blocks from the coefficient matrix $P$ as the system matrices $A, B, C, D$ by selecting appropriate row and column indices.
-As an extension to the linear library we would use if we were to fit a simple \ac{LTI} system, we could also directly choose quadratic, other higher order polynomial, or even nonpolynomial nonlinear transformations
-Thus, \ac{SINDY} can in theory be directly applied to resolve the objective of this thesis, however we prefer to use methods more directly designed to result in \ac{PH} systems, because computing \ac{PH} realizations is much more difficult as a cause of the structural matrix constraints~\eqref{eq:ph-matrix-structure}.
-Some authors like~\cite{Lee2022} have proposed remedies to this problem, however their methods involve \acp{NN}, therefore once again ending up with the explainability issue.
+As an extension to the linear library we would use if we were to fit a simple \ac{LTI} system, we could also directly choose quadratic, other higher order polynomial, or even nonpolynomial nonlinear transformations.
+Thus, \ac{SINDY} can in theory be directly applied to solve the main problem of this thesis; however, we prefer to use methods more directly designed to result in \ac{PH} systems because computing \ac{PH} realizations is much more difficult than an \ac{LTI} one as a cause of the structural matrix constraints~\eqref{eq:ph-matrix-structure}.
+Some authors like~\cite{Lee2022} have proposed remedies to this problem; however, their methods involve \acp{NN}, therefore once again culminating in the explainability issue.
 
 As soon as we have constructed an \ac{LTI} system $\Sigma_\msc{lti}$, we can transform it until we are left with a \ac{PH} system.
-To this end, there are again various methods available in the literature, and we only discuss a few that are closely related to the concepts we brought up so far.
-It is imperative that we again mention the similarities between stable, positive real, and \ac{PH} systems as already mentioned in Subsection~\ref{subsec:prbt} and~\cite{Cherifi2022}, because most of the ideas to convert \acp{LTI} to \ac{PH} systems directly rely on the connection of positive real systems and \ac{PH} systems by means of Lemma~\ref{lem:kyp-invertible-solution} and Equation~\eqref{eq:prbt-ph-system}.
+To this end, there are various methods available in the literature, which is why we only discuss those that are closely related to the concepts we have brought up so far.
+It is imperative that we once more mention the similarities between stable, positive real, and \ac{PH} systems as explained in Subsection~\ref{subsec:prbt} and~\cite{Cherifi2022}.
+This is due to the fact that most of the ideas to convert \acp{LTI} to \ac{PH} systems directly rely on this connection of positive real systems and \ac{PH} systems by means of Lemma~\ref{lem:kyp-invertible-solution} and Equation~\eqref{eq:prbt-ph-system}.
 
 First off, we discuss the results from~\cite{Beattie2022}.
 In this publication, the authors explicitly derive properties that an \ac{LTI} system needs to fulfill such that one can compute a \ac{PH} realization from $\Sigma_\msc{lti}$ with the \ac{LTI} realization $(A, B, C, D, \id)$.
@@ -132,7 +124,7 @@ They use the \ac{KYP}~\eqref{eq:kyp-lmi}
         C - B\trans Q & D + D\trans
     \end{pmatrix} \succcurlyeq 0.
 \end{equation*}
-Afterwards, using the symmetric positive definite solution $Q$ we derive a regular transformation matrix $T \in \bb{R}^{n \times n}$ from the Cholesky decomposition $Q = T\trans T$, and derive the transformed system
+Afterwards, using the symmetric positive definite solution $Q$, we derive a regular transformation matrix $T \in \bb{R}^{n \times n}$ from the Cholesky decomposition $Q = T\trans T$ and derive the transformed system
 \begin{equation}\label{eq:ph-transformation-from-passive-system}
     \begin{alignedat}{8}
         Q &\coloneqq \id, &J &\coloneqq \frac{1}{2} \left( T A T\inv - {\left( T A T\inv \right)}\trans \right), &R &\coloneqq -\frac{1}{2} \left( T A T\inv + {\left( T A T\trans \right)}\trans \right), \\
@@ -141,21 +133,22 @@ Afterwards, using the symmetric positive definite solution $Q$ we derive a regul
     \end{alignedat}
 \end{equation}
 According to~\cite{Beattie2011}, the system~\eqref{eq:ph-transformation-from-passive-system} is indeed a \ac{PH} realization.
-This method is feasible only for small to medium scale problems, as explained in~\cite{Cherifi2019}, leading the authors to propose two other methods.
+This method is feasible only for small to medium scale problems as explained in~\cite{Cherifi2019}, leading the authors to suggest two other methods.
 The first of these proposes to use a procedure like \ac{PRBT} to balance the \ac{LTI} system, resulting in much better scaling with respect to large model orders.
 The second method takes a completely different angle.
-Instead of manipulating \ac{LTI} systems' matrices, the authors propose an optimization over the system matrices to obtain a best fit of a \ac{PH} system to the original \ac{LTI} system $\Sigma_\msc{lti}$, in a sense resulting in a nearest \ac{PH} system.
-This change of perspective opens up a set of optimization-based methods, which we discuss in Subsection~\ref{subsec:optimization-based-inference}.
+Instead of manipulating \ac{LTI} systems' matrices, the authors present an optimization over the system matrices to obtain a \ac{PH} best approximation of the original \ac{LTI} system $\Sigma_\msc{lti}$, in a sense resulting in a nearest \ac{PH} system.
+This change of perspective opens up a set of optimization-based methodsx7U9b3-y
+ which we discuss in Subsection~\ref{subsec:optimization-based-inference}.
 
 \subsection{Optimization-Based Inference}\label{subsec:optimization-based-inference}
 
 This subsections deals with optimization-based \ac{PH} \ac{OI} methods.
-In essence, all of these methods choose some parametrization of the underlying system matrices, and then run an optimization algorithm to minimize cost functional that enforces \ac{PH} structure.
+In essence, all of these methods choose some parametrization of the underlying system matrices and then run an optimization algorithm to minimize the cost functional that enforces \ac{PH} structure.
 The choice of algorithm, the construction of the individual optimization objectives, and the inclusion of structural constraints reflecting~\eqref{eq:ph-matrix-structure} heavily varies between publications.
-Finally, we have to consider the initialization of the matrices.
-Most of the algorithms are very succeptible to initial value changes because the optimization problems are generally hard not convex.
+Importantly, we have to consider the initialization of the matrices.
+Most of the algorithms are very succeptible to initial value changes because the respective optimization problems are generally hard to solve.
 
-The first method we mention is the nearest \ac{PH} system as mentioned at the end of the previous subsection, described in~\cite{Gillis2018} and~\cite{Cherifi2019}.
+The first method we consider is the nearest \ac{PH} system mentioned at the end of the previous subsection as described in~\cite{Gillis2018} and~\cite{Cherifi2019}.
 The main minimization problem is given by the relation to the inferred \ac{LTI} system $\Sigma_\msc{lti}$ with the realization $(A, B, C, D, E)$
 \begin{equation}\label{eq:nearest-ph-system-minimization-problem}
     \begin{alignedat}{4}
@@ -167,13 +160,13 @@ The main minimization problem is given by the relation to the inferred \ac{LTI} 
         \end{pmatrix} \succcurlyeq 0.
     \end{alignedat}
 \end{equation}
-In~\cite{Gillis2018}, this problem is solved with the \ac{FGM} in combination with a restarting mechanism to stabilize convergence of the algorithm.
+In~\cite{Gillis2018}, this problem is solved with the \ac{FGM} in combination with a restarting mechanism to stabilize the convergence of the algorithm.
 Along with these features, the objective function~\eqref{eq:nearest-ph-system-minimization-problem} allows for weights on each individual summand prioritizing certain system terms during the optimization.
-Besides this advantage, we computate the cost function's gradient in the Frobenius norm by
+Besides this advantage, we can computate the cost function's gradient in the Frobenius norm by
 \begin{equation*}
     \nabla_X \norm{A X - B}{F}^2 = 2 A\trans (A X - B).
 \end{equation*}
-As far as initialization is concerned, the authors of~\cite{Gillis2018} propose two methods: Initialize with the additional assumption $P = 0$ such that the optimal solution can be given analytically, or solve an \ac{LMI} to compute an initial \ac{PH} realization along the same lines of arguments as previous links between \acp{LMI} and positive real systems have done.
+As far as initialization is concerned, the authors of~\cite{Gillis2018} propose two methods: initialize with the additional assumption $P = 0$ such that the optimal solution can be given analytically, or solve a \ac{LMI} to compute an initial \ac{PH} realization along the same line of arguments as previous links between \acp{LMI} and positive real systems have done.
 
 Another \ac{FGM} related method is the \ac{PHDMD} algorithm given in~\cite{Morandin2023}.
 As the name implies, this is closely linked to the \ac{DMD} method in that we want to minimize
@@ -187,12 +180,12 @@ As the name implies, this is closely linked to the \ac{DMD} method in that we wa
     \end{pmatrix}}{F}^2
 \end{equation}
 under the constraints that the system block matrices fulfill $-\mcl{J} = \mcl{J}\trans$ and $\mcl{R} = \mcl{R}\trans \succcurlyeq 0$, where $X, \dot{X} \in \bb{R}^{n \times k}$ and $U, Y \in \bb{R}^{m \times k}$ are data matrices.
-Their method differentiates itself from the previous \ac{FGM} by the fact that \ac{PHDMD} does not allow restarting within iterations.
-The \ac{PHDMD} algorithm also does not offer the ability of optimizing the $E$ matrix because in this setting it would lead to the trivial minimizer $0$, as shown in~\cite[Remark~3.3]{Morandin2023}.
-However, if either $\mcl{J}$ or $\mcl{R}$ are given, then the other matrix can be explicitly computed from a constrained \ac{LSQ} problem.
+This method distinguishes itself from the previous \ac{FGM} by the fact that \ac{PHDMD} does not allow restarting within iterations.
+Furthermore, the \ac{PHDMD} algorithm does not offer the ability of optimizing the $E$ matrix because in this setting it would lead to the trivial minimizer $0$ as shown in~\cite[Remark~3.3]{Morandin2023}.
+However, if either $\mcl{J}$ is given, then the $\mcl{R}$ can be explicitly computed from a constrained \ac{LSQ} problem, and vice versa.
 This allows for an iterative update of both matrices within the \ac{FGM} algorithm.
 Additionally, \ac{PHDMD} offers a directly related mode of initialization by considering the weighted \ac{LSQ} problem
-\begin{equation*}
+\begin{equation}\label{eq:weighted-ph-dmd}
     \min \norm*{\begin{pmatrix}
         X & U
     \end{pmatrix} \left( \begin{pmatrix}
@@ -202,25 +195,25 @@ Additionally, \ac{PHDMD} offers a directly related mode of initialization by con
         X \\
         U
     \end{pmatrix} \right)}{F}^2,\quad \suchthat \mcl{J} = - \mcl{J}\trans, \mcl{R} = \mcl{R}\trans \succcurlyeq 0.
-\end{equation*}
-This problem provides an initial approximate solution to the unweighted problem with an explicit solution.
-Furthermore, the authors show an estimate bounding the error of the unweighted problem by the error of the weighted problem in~\cite[Lemma~3.11]{Morandin2023}.
-One downside of this method is the inherent formulation using a fixed time stepping scheme: \ac{PHDMD} is based on implicit midpoint stepping, and choosing other time stepping schemes such as multistep methods like RK45 may decrease performance of the algorithm despite the higher convergence order of the time stepping scheme.
+\end{equation}
+Problem~\ref{eq:weighted-ph-dmd} provides an close form solution.
+Furthermore, the authors show that there exists an estimate bounding the error of the unweighted problem by the error of the weighted problem in~\cite[Lemma~3.11]{Morandin2023}.
+One downside of this method is that the formulation uses a fixed time stepping scheme: \ac{PHDMD} is based on implicit midpoint stepping, and choosing other time stepping schemes such as multistep methods like RK45 may decrease the performance of the algorithm despite the higher convergence order of the time stepping scheme.
 
 Instead of choosing an \ac{LSQ} approach which fits both the output data and the state data, we can also consider a calibration problem
 \begin{equation}\label{eq:günther-calibration-objective}
-    \mcl{J}(y, \omega) \coloneqq \underbrace{\frac{1}{2} \int\limits_0^T \abs{y(t) - y_\msc{data}(t)}{}^2 \dif t}_{(A)} + \underbrace{\vphantom{\int\limits_0^T}\frac{\lambda}{2} \abs{\omega - \omega_\msc{ref}}{}^2}_{(B)}, \quad \lambda \geq 0
+    \mcl{J}(y, \omega) \coloneqq \underbrace{\frac{1}{2} \int\limits_0^T \abs{y(t) - y_\msc{data}(t)}{}^2 \dif t}_{(A)} + \underbrace{\vphantom{\int\limits_0^T}\frac{\lambda}{2} \abs{\omega - \omega_\msc{ref}}{}^2}_{(B)}, \quad \lambda \geq 0,
 \end{equation}
 where $\omega = (J, R, Q, G, P, x_0)$ is a vectorized representation of the system matrices and the initial data as described in~\cite{Günther2023}.
-The authors compute the gradient of the objective functional by considering the error in the optimization functional's two parts $(A)$ and $(B)$, and constructing the corresponding first order optimality conditions with Fréchet derivatives.
-Along the way, they also derive an adjoint equation, and from therederive a gradient descent algorithm.
-The downside of this approach is that we have to solve the \ac{FOM} at every step of the algorithm.
-While this may be feasible on small scale or reduced order models, it does not pose well for models of larger scales such as the quadratic models we want to consider as the main problem of this thesis.
+The authors compute the gradient of the objective functional by considering the error in the optimization functional's two parts $(A)$ and $(B)$ and constructing the corresponding first order optimality conditions with Fréchet derivatives.
+Along the way, they derive an adjoint equation from which they obtain a gradient descent algorithm.
+The disadvantage of this approach is that we have to solve the \ac{FOM} at every step of the algorithm.
+While this may be feasible on small scale or reduced order models, it appears impractical for models of larger scales such as the quadratic models we consider the main problem of this thesis.
 
-Instead of optimizing over e.g.\ entire symmetric positive (semi-) definite matrices simultaneously, it would also be reasonable to decompose all matrices into distinctive basis elements such that we can simply adjust the coefficients through a parameter optimization for the individual basis elements with simpler constraints.
-To this end, we discuss a couple publications that use this idea in multiple, slightly different, but very similar ways.
+Instead of optimizing over, for example, entire symmetric positive (semi-) definite matrices simultaneously, it would also be reasonable to decompose all matrices into distinctive basis elements such that we can adjust the coefficients through a parameter optimization for the individual basis elements, thus allowing for simpler constraints.
+To this end, we discuss a few publications that use this idea in multiple, but very similar, ways.
 
-Firstly, we deconstruct the matrix blocks $\mcl{J}$ and $\mcl{R}$ of a \ac{PH} system in the form
+We deconstruct the matrix blocks $\mcl{J}$ and $\mcl{R}$ of a \ac{PH} system in the form
 \begin{equation*}
     \begin{pmatrix}
         \dot{x} \\
@@ -246,21 +239,21 @@ For such an exemplary skew-symmetric matrix $J \in \bb{R}^{3 \times 3}$ we decom
         0 & -1 & 0
     \end{pmatrix}.
 \end{equation}
-Instead of considering the gradient over the entire matrix, we can now consider the gradient through the set of parameters $\omega = {(\omega_1, \dots, \omega_p)}\trans \in \bb{R}^{n_J}$ as the vector $\nabla_\omega J(\omega) \in \bb{R}^{n_J}$.
-Analogously, we consider an exemplary positive definite matrix $R \in \bb{R}^{3 \times 3}$ in a similar fashion to~\eqref{eq:skew-symmetric-basis-decomposition} with the basis
+Instead of considering the gradient over the entire matrix, we can now analyze the gradient through the set of parameters $\omega = {(\omega_1, \dots, \omega_p)}\trans \in \bb{R}^{n_J}$ as the vector $\nabla_\omega J(\omega) \in \bb{R}^{n_J}$.
+Analogously, in a similar fashion to~\eqref{eq:skew-symmetric-basis-decomposition}, we consider an exemplary positive definite matrix $R \in \bb{R}^{3 \times 3}$ with the basis
 \begin{equation}\label{eq:spsd-basis-decomposition}
-    R(\omega) = T(\omega) T(\omega)\trans,\quad T(\omega) = \omega_1 \begin{pmatrix}
+    R(\omega) = T(\omega) T(\omega)\trans,\quad T(\omega) = \begin{pmatrix}
         \omega_1 & 0 & 0 \\
         \omega_2 & \omega_3 & 0 \\
-        \omega_4 & \omega_5 & \omega_6.
-    \end{pmatrix}
+        \omega_4 & \omega_5 & \omega_6
+    \end{pmatrix}.
 \end{equation}
-Following along with~\cite{Najnudel2021}, we can also parametrize the Hamiltonian $H$, represented solely by $E$ in our case, using a parametrized kernel estimation and compute the gradient of the error $\norm{\Sigma_\msc{ph}(\theta) - \Sigma_\msc{ph}}{F}^2$ by analytical computations.
-The authors then use an Interior Points Method with an additional logarithmic barrier term in the objective function, where the barrier penalizes the matrix coefficients if they do not form a positive definite matrix, hence this method relies on a weakly enforced constraint similar to the weak symplectic \ac{DCAE} from Section~\ref{sec:nn-mor}.
-The biggest downside of this approach is the fact that the error measure requires an explicit reference system $\Sigma_\msc{ph}$, wherefore it is not suitable for our use case.
+Following~\cite{Najnudel2021} we can also parametrize the Hamiltonian $H$, represented solely by $E$ in our case, using a parametrized kernel estimation and calculate the gradient of the error $\norm{\Sigma_\msc{ph}(\theta) - \Sigma_\msc{ph}}{F}^2$ by analytical computations.
+The authors then use an Interior Points Method with an additional logarithmic barrier term in the objective function, where the barrier penalizes the matrix coefficients if they do not form a positive definite matrix; hence, this method relies on a weakly enforced constraint similar to the weak symplectic \ac{DCAE} from Section~\ref{sec:nn-mor}.
+The biggest downside of this approach is the fact that the error measure requires an explicit reference system $\Sigma_\msc{ph}$, which is why it is not suitable for our problem.
 
 Unlike the approach from~\cite{Najnudel2021}, the authors of~\cite{Schwerdtner2021, SV2021, Schwerdtner2023, SV2023} parametrize the matrices analogously to~\eqref{eq:skew-symmetric-basis-decomposition} and~\eqref{eq:spsd-basis-decomposition}.
-To this end we introduce the following vector-to-matrix functions
+To this end, we introduce the following vector-to-matrix functions
 \begin{alignat}{4}
     &\vecmat \colon \bb{C}^{n \cdot m} \to \bb{C}^{m \times n},\quad &&\theta \mapsto \begin{pmatrix}
         v_1 & \cdots & v_n \\
@@ -279,9 +272,9 @@ To this end we introduce the following vector-to-matrix functions
         0 & 0 & 0 & \ddots & \vdots \\
         0 & 0 & 0 & 0 & v_{\frac{n (n - 1)}{2}} \\
         0 & 0 & 0 & 0 & 0
-    \end{pmatrix}, \label{eq:v2s}
+    \end{pmatrix} \label{eq:v2s}
 \end{alignat}
-and their respective inverse matrix-to-vector functions, operating on general rectangular or quadratic matrices under the assumption that unnecessary matrix entries are simply ignored
+and their respective inverse matrix-to-vector functions, operating on general rectangular or quadratic matrices under the assumption that unnecessary matrix entries are simply ignored, given by
 \begin{equation}\label{eq:m2v-functions}
     \matvec \colon \bb{C}^{n \times m} \to \bb{C}^{n \cdot m},\quad \uppervec \colon \bb{C}^{n \times n} \to \bb{C}^{\frac{n (n + 1)}{2}}, \text{ and } \strictvec \colon \bb{C}^{n \times n} \to \bb{C}^{\frac{n (n - 1)}{2}}.
 \end{equation}
@@ -294,65 +287,65 @@ With the definitions~(\ref{eq:v2m}--\ref{eq:m2v-functions}) we can then parametr
         G(\theta) &\coloneqq \vecmat(\theta_\msc{G}),\quad &P(\theta) &\coloneqq \vecmat(\theta_\msc{P}).
     \end{alignedat}
 \end{equation}
-In Definition~\eqref{eq:sobmor-parametrization}, we have implicitly restricted the overall parameter $\theta \in \bb{R}^N$ to the partial parameters such as $\theta_J \in \bb{R}^{n_J}$ corresponding to the individual entries of the system matrices.
-Note that the matrices $R, P$, and $S$ can also be amalgated into a single block matrix $W \in \bb{R}^{(n + m) \times (n + m)}$ as in~\cite{Schwerdtner2021}, however in our experiments we obtained better results in opting for individual parametrizations.
-\itodo{check if this is actually the case!}
-The \ac{SOBMOR}, as described in~\cite{SV2023}, does not use a data-based objective functional such as the objective functional~\eqref{eq:günther-calibration-objective} from~\cite{Günther2023}.
-Instead, they compute the error as a sum of singular values of an error matrix $\tfunc(s_i) - \tfunc_\theta(s_i) \in \bb{R}^{m \times m}$, where $s_i \in \bb{C}$ are sample points, and $\tfunc$ and $\tfunc_\theta$ denote the transfer functions of the \ac{FOM} $\Sigma_\msc{ph}$ as well as the reduced system $\hat{\Sigma}_\msc{ph}$.
-This error term directly relates the optimized system to the $\mcl{H}\infty$ norm from truncation-based model reduction described in Section~\ref{subsec:balanced-truncation}.
-The computation of the $\mcl{H}\infty$ norm however is slow in repeated settings as well as for large scale systems, rendering it undesirable as an optimization objective.
+In Definition~\eqref{eq:sobmor-parametrization} we have implicitly restricted the overall parameter $\theta \in \bb{R}^N$ to partial parameters such as $\theta_J \in \bb{R}^{n_J}$ corresponding to the individual entries of the system matrices.
+Note that the matrices $R, P$, and $S$ can also be amalgated into a single block matrix $W \in \bb{R}^{(n + m) \times (n + m)}$ as in~\cite{Schwerdtner2021}.
+The \ac{SOBMOR} algorithm as described in~\cite{SV2023} too uses a data-based objective functional such as the one in Equation~\eqref{eq:günther-calibration-objective} from~\cite{Günther2023}.
+In contrast to Equation~\eqref{eq:günther-calibration-objective}, the authors compute the error as a sum of singular values of an error matrix $\tfunc(s_i) - \tfunc_\theta(s_i) \in \bb{R}^{m \times m}$, where $s_i \in \bb{C}$ are sample points, and $\tfunc$ and $\tfunc_\theta$ denote the transfer functions of the \ac{FOM} $\Sigma_\msc{ph}$ as well as the reduced system $\hat{\Sigma}_\msc{ph}$.
+This error term directly relates the optimized system to the $\mcl{H}_\infty$ norm from truncation-based model reduction described in Section~\ref{subsec:balanced-truncation}.
+The computation of the $\mcl{H}_\infty$ norm; however, is slow in repeated settings as well as for large scale systems, rendering it undesirable as an optimization objective.
 
-For this thesis, we only consider the levelled objective functional on a set of sample points $\mcl{S}$ which includes the $L$ largest singular values
+For this thesis, we only consider the levelled objective functional on a set of sample points $\mcl{S}$, which includes the $L$ largest singular values
 \begin{equation}\label{eq:sobmor-objective}
     \mcl{L}(\gamma, \tfunc, \tfunc_\theta, \mcl{S}) \coloneqq \frac{1}{\gamma} \sum\limits_{s \in \mcl{S}} \sum\limits_{i = 1}^L {\left( {[\sigma_i(\tfunc(s) - \tfunc_\theta(s)) - \gamma]}_+ \right)}^2,
 \end{equation}
 where we define ${[x]}_+ \coloneqq \max \{ 0, x \}$.
-In~\cite{Schwerdtner2021, SV2021}, the authors only consider the $L$ largest singular value for every datum, however in the later publications~\cite{Schwerdtner2023, SV2023} they rely on a fixed number of the largest singular values instead.
-\itodo{mention selecting relevant singular values such that numerical errors do not cause problems\dots}
+In~\cite{Schwerdtner2021, SV2021}, the authors consider only the $L$ largest singular value for every datum; however, in the later publications~\cite{Schwerdtner2023, SV2023} they rely on a fixed number of the largest singular values instead.
+\itodo{mention selecting relevant singular values (not necessary, because num svals depends on I/O dim\dots)}
 In practice, the levelled \ac{LSQ} truncates the minimum error at every optimization step, which then allows us to update the bound via either specifying a fixed sequence of tolerances or by adaptively performing a bisection algorithm on the bound.
 
-In order to compute the gradient of the objective function~\eqref{eq:sobmor-objective} with respect to $\theta$, let $f_i(s; \theta) \coloneqq \sigma_i(\tfunc(s) - \tfunc_\theta(s))$ and $g(\theta) \coloneqq L(\gamma, \tfunc, \tfunc_\theta, \mcl{S})$ denote the inner and outer function respectively.
-We first calculate the derivative of the outer function $g$, and afterwards the inner derivatives $f$.
-For a parameter denoted $\theta \in \bb{R}^N$ we consider the gradientat the point $\xi \in \bb{R}^N$ given by $\nabla_\theta g(\xi) = {(\pd[\theta_1]{} g(\xi), \dots, \pd[\theta_N]{} g(\xi))}\trans$.
-We compute each of its left and right partial derivatives, $\pd[]{-}$ and $\pd[]{+}$ respectively, by evaluating
+In order to compute the gradient of the objective function~\eqref{eq:sobmor-objective} with respect to $\theta$, let $f_i(s; \theta) \coloneqq \sigma_i(\tfunc(s) - \tfunc_\theta(s))$ and $g(\theta) \coloneqq L(\gamma, \tfunc, \tfunc_\theta, \mcl{S})$ denote the inner and outer function, respectively.
+We first calculate the derivative of the outer function $g$ and afterwards the inner derivative of $f$.
+For a parameter $\theta \in \bb{R}^N$ we consider the gradient at the point $\xi \in \bb{R}^N$ given by $\nabla_\theta g(\xi) = {(\pd[\theta_1]{} g(\xi), \dots, \pd[\theta_N]{} g(\xi))}\trans$.
+We compute each of its left and right partial derivatives $\pd[]{-}$ and $\pd[]{+}$, respectively, by evaluating
 \begin{equation}\label{eq:outer-sobmor-objective-gradient}
     \begin{alignedat}{1}
         \pd[\theta_l]{} g(\xi) &= \frac{2}{\gamma} \sum\limits_{f_i(s; \xi) > \gamma} (f_i(s; \xi) - \gamma) \pd[\theta_l]{+} f_i(s; \xi) \\
         &= \frac{2}{\gamma} \sum\limits_{f_i(s; \xi) > \gamma} (f_i(s; \xi) - \gamma) \pd[\theta_l]{-} f_i(s; \xi),\quad l = 1, \dots, N.
     \end{alignedat}
 \end{equation}
-As noted in~\cite[Remark~3.8]{SV2023}, the inner function $f$ in general is not differentiable at $\xi$, however the sum of the $L$ singular values still is differentiable.
-Furthermore, if all singular values represented in $f_i(s; \xi)$ greater than $\gamma$ are simple, then the left and right partial derivatives coincide and can be computed explicitly.
-Henceforth, we assume that this simplicity condition on the singular values holds true for all relevant singular values.
+As noted in~\cite[Remark~3.8]{SV2023}, the inner function $f$ is not differentiable at $\xi \in \bb{C}$ in general; however, the sum of the $L$ singular values still is.
+Furthermore, if all singular values represented in $f_i(s; \xi)$ that are greater than $\gamma$ are simple, then the left and right partial derivatives coincide and can be computed explicitly.
+Henceforth, we assume that this simplicity condition on the singular values holds true for all the relevant ones.
 In order to compute the gradients of the inner functions $f_i$, we require the following Lemma.
 
 \begin{lemma}[{Adapted from~\cite[Lemma~3.4]{SV2023} and~\cite[Lemma~3]{Schwerdtner2023}}]\label{lem:v2m-function-trace}
-    Let $A \in \bb{C}^{n \times m}$ be a matrix, and $e_i \in \bb{R}^{n \cdot m}$ be the $i$-th standard basis vector.
+    Let $A \in \bb{C}^{n \times m}$ be a matrix and $e_i \in \bb{R}^{n \cdot m}$ be the $i$-th standard basis vector.
     Then it holds that
     \begin{equation}\label{eq:v2m-trace-equation}
         \trace{A \vecmat(e_i)} = e_i\trans \matvec(A\trans).
     \end{equation}
-    Analogous versions of~\eqref{eq:v2m-trace-equation} hold for the case that we substitute $\vecupper$ or $\vecstrict$ in place of $\vecmat$, and $e_i$ is the $i$-th standard basis vector of appropriate dimension.
-    In these cases, $\vecmat$ and $\matvec$ are replaced by $\vecupper$ and $\uppervec$, and $\vecstrict$ and $\strictvec$ respectively.
+    Analogous versions of~\eqref{eq:v2m-trace-equation} hold for the case that we substitute $\vecupper$ or $\vecstrict$ in place of $\vecmat$ and $e_i$ is the $i$-th standard basis vector of appropriate dimension.
+    In these cases, $\vecmat$ and $\matvec$ are replaced by $\vecupper$ and $\uppervec$, and $\vecstrict$ and $\strictvec$, respectively.
 \end{lemma}
 
 \begin{proof}
     We adapt the proof of a very similar statement from~\cite[Lemma~3.4]{SV2023}.
     We only demonstrate why the statement holds for the functions $\vecmat$ and $\matvec$.
-    Let $A \in \bb{R}^{m, n}$ be a matrix, and consider $e_i$ to be the $i$-th standard basis vector of $\bb{R}^{n \cdot m}$, and suppose that $i$ corresponds to some index pair $(k, l) \in \bb{N}^2$ such that $\vecmat(e_i) = {(\delta_{i, k} \cdot \delta_{j, l})}_{i, j = 1}^{n, m} \eqqcolon E$.
+    Let $A \in \bb{C}^{m \times n}$ be a matrix and consider $e_i$ to be the $i$-th standard basis vector of $\bb{R}^{n \cdot m}$.
+    Suppose that $i$ corresponds to some index pair $(k, l) \in \bb{N}^2$ such that $\vecmat(e_i) = {(\delta_{i, k} \cdot \delta_{j, l})}_{i, j = 1}^{n, m} \eqqcolon E$.
     By consulting the definition of $\matvec$, we see that $\matvec(A\trans) = {(a_{1, 1}, \dots, a_{m, 1}, a_{1, 2}, \dots, a_{m, n})}\trans$.
     Thus, by multiplication we calculate $e_i\trans \matvec(A\trans) = a_{l, k}$, where $a_{l, k}$ is the entry of $A$ at index $(l, k)$.
     On the other hand, we compute $A E = (0, \dots, a^{(k)}, \dots, 0) \eqqcolon \bb{A}$, with $a^{(k)}$ signifying the $k$-th column of $A$ located at the $l$-th column of $\bb{A}$.
-    Therefore, by applying the trace operator to $A E$, we only select the $l$-th row element from the $l$-th column, which thus implies that $\trace{A E} = a_{l, k}$.
+    Therefore, by applying the trace operator to $A E$, we only select the $l$-th element from the $l$-th column of $\bb{A}$, corresponding to the $l$-th element of the $k$-th column of $A$, which thus implies that $\trace{A E} = a_{l, k}$.
 
-    Lastly, if we substitute $\vecmat$ by $\vecupper$ or $\vecstrict$, and $\matvec$ by $\uppervec$ or $\strictvec$ respectively, only the total dimension of the matrices $A$ and $E$, and the indexing from $e_i$ to the tuple $(k, l)$ change slightly.
+    Lastly, if we substitute $\vecmat$ by $\vecupper$ or $\vecstrict$, and $\matvec$ by $\uppervec$ or $\strictvec$, respectively, only the total dimension of the matrices $A$ and $E$ and the indexing from $e_i$ to the tuple $(k, l)$ change slightly.
     Hence, both of the remaining cases follow analogously.
 \end{proof}
 
 \begin{theorem}[{Adapted from~\cite[Theorem~3.3]{SV2023},~\cite[Lemma~4]{Schwerdtner2021} and~\cite[Theorem~1]{Schwerdtner2023}}]\label{lem:inner-sobmor-gradient}
     Let $\theta \in \bb{R}^{N}$ be a parameter for the parametrization of the \ac{PH} realization $(E(\theta), J(\theta), R(\theta), G(\theta), P(\theta), S(\theta), N(\theta))$ with $\tfunc_\theta$ the corresponding parametrized transfer function, $\tfunc$ be the transfer function of the original system, $s \in \overline{\bb{C}_+}$ be a sample point in the closed right complex halfplane, $\sigma_j \in \bb{C}$ be the $j$-th largest singular value of $\tfunc(s) - \tfunc_\theta(s)$, and $l, r \in \bb{C}^m$ be the left and right singular vectors corresponding to $\sigma_j$.
     If the singular value $\sigma_i \neq 0$ is simple, then the function $\theta \mapsto \sigma_i(\tfunc(s) - \tfunc_\theta(s))$ is differentiable in an open neighbourhood of $\theta$.
-    In particular, using the shorthand $\Sigma_\msc{ph}(\theta) = (E, J, R, G, P, S, N)$ we can define the additional terms
+    In particular, using the shorthand $\Sigma_\msc{ph}(\theta) = (E, J, R, G, P, S, N)$, we can define the additional terms
     \begin{equation}\label{eq:inner-sobmor-gradient-helpers}
         F \coloneqq (s E - (J - R)),\quad a \coloneqq F\inv (G - P) r,\quad b\herm \coloneqq \ell\herm {(G + P)}\trans F\inv
     \end{equation}
@@ -363,7 +356,7 @@ In order to compute the gradients of the inner functions $f_i$, we require the f
             dR &= \re{\uppervec\left( \vecupper(\theta_\msc{R}) (a b\herm + {(a b\herm)}\trans) \right)}, \\
             dS &= - \re{\uppervec\left( \vecupper(\theta_S) (r \ell\herm + {(r \ell\herm)}\trans) \right)}, \\
             dJ &= - \re{\strictvec(a b\herm - {(a b\herm)}\trans)}, \\
-            dN &= - \re{\strictvec({(r \ell\herm)}\trans - r \ell\herm)} \\
+            dN &= - \re{\strictvec({(r \ell\herm)}\trans - r \ell\herm)}, \\
             dG &= - \re{\matvec(a \ell\herm + {(r b\herm)}\trans)}, \text{ and} \\
             dP &= - \re{\matvec(a \ell\herm - {(r b\herm)}\trans)}.
         \end{aligned}
@@ -372,10 +365,10 @@ In order to compute the gradients of the inner functions $f_i$, we require the f
 
 \begin{proof}
     We commence by showing the statement for the $dE$ component of $\nabla_\theta \sigma_j(\tfunc(s) - \tfunc_\theta(s))$.
-    Firstly, we make an important argument which directly carries over to the gradient components of $J$ and $R$.
+    To begin, we give an important argument which analogously be applied to the gradient components of $J$ and $R$.
     Let $\varepsilon > 0$ be given and consider the parameter update $\theta_E + \varepsilon e_i$ at the $i$-th relevant component of $\theta$.
-    By abuse of notation, we directly carry this notation over to $\theta + \varepsilon e_i$ in that we pad $e_i$ with zeros such that the affected parameter component remains the same.
-    Next, we apply the updated parameter to the \ac{PH} system $\Sigma_\msc{ph}(\theta + \varepsilon e_i)$, whereafter we compute update of the $E$ matrix as
+    By abuse of notation, we additionally use this notation to mean $\theta + \varepsilon e_i$ by padding $e_i$ with zeros such that the affected parameter component remains the same.
+    Next, we apply the updated parameter to the \ac{PH} system $\Sigma_\msc{ph}(\theta + \varepsilon e_i)$, whereafter we compute the updated $E$ matrix as
     \begin{equation}\label{eq:sobmor-e-matrix-update}
         \begin{aligned}
             E(\theta + \varepsilon e_i) &= {\vecupper(\theta_E + \varepsilon e_i)}\trans \vecupper(\theta_E + \varepsilon e_i) \\
@@ -383,12 +376,12 @@ In order to compute the gradients of the inner functions $f_i$, we require the f
              &= E(\theta) + \varepsilon \left( {\vecupper(e_i)}\trans \vecupper(\theta_E) + {\vecupper(\theta_E)}\trans \vecupper(e_i) \right) + \varepsilon^2 {\vecupper(e_i)}\trans \vecupper(e_i).
         \end{aligned}
     \end{equation}
-    We now want to take the first derivative of~\eqref{eq:sobmor-e-matrix-update} w.r.t.\ $\varepsilon$.
+    We now want to take the first derivative of~\eqref{eq:sobmor-e-matrix-update} with re $\varepsilon$.
     For this, we define the intermediary matrix $\Delta_E \coloneqq {\vecupper(e_i)}\trans \vecupper(\theta_E) + {\vecupper(\theta_E)}\trans \vecupper(e_i)$ and compute the transfer function
     \begin{equation}\label{eq:sobmor-e-variation}
         \begin{aligned}
             \tfunc_{\theta + \varepsilon e_i}(s) &= {(G + P)}\trans Q {\left( s \left( E + \varepsilon \Delta_E + \varepsilon^2 {\vecupper(e_i)}\trans \vecupper(e_i) \right) - (J - R) Q \right)}\inv (G - P) + (S - N) \\
-             &= {(G + P)}\trans Q \underbrace{{\left( F + s \varepsilon \Delta_E + s \varepsilon^2 {\vecupper(e_i)}\trans \vecupper(e_i) \right)}\inv}_{(*)} (G - P) + (S - N)
+             &= {(G + P)}\trans Q \underbrace{{\left( F + s \varepsilon \Delta_E + s \varepsilon^2 {\vecupper(e_i)}\trans \vecupper(e_i) \right)}\inv}_{(*)} (G - P) + (S - N).
         \end{aligned}
     \end{equation}
     To compute $(*)$ in Equation~\eqref{eq:sobmor-e-variation}, we use the fact that if a matrix $M \in \bb{R}^{n \times n}$ satisfies $\norm{M}{} < 1$, then $(\id + M)$ has the inverse ${(\id + M)}\inv = \sum\limits_{m = 0}^\infty {(-M)}^m$.
@@ -405,7 +398,7 @@ In order to compute the gradients of the inner functions $f_i$, we require the f
     \begin{equation}\label{eq:sobmor-e-taylor}
         \tfunc_{\theta + \varepsilon e_i}(s) = \tfunc_\theta(s) - {(G + P)}\trans Q \sum\limits_{m = 1}^\infty {\left( s \varepsilon F\inv \Delta_E + s \varepsilon^2 F\inv {\vecupper(e_i)}\trans \vecupper(e_i) \right)}^m F\inv (G - P).
     \end{equation}
-    As argued in~\cite[Theorem~1]{Schwerdtner2023}, the map $\varepsilon \mapsto \sigma_i\left( \tfunc(s) - \tfunc_{\theta + \varepsilon e_i}(s) \right)$ is differentiable for $\varepsilon > 0$ small enough as a consequence of~\cite{Lancaster1964}, thusly admitting the following expression of the $dE$ gradient component
+    As argued in~\cite[Theorem~1]{Schwerdtner2023}, the map $\varepsilon \mapsto \sigma_i\left( \tfunc(s) - \tfunc_{\theta + \varepsilon e_i}(s) \right)$ is differentiable for $\varepsilon > 0$ small enough as a consequence of~\cite{Lancaster1964}, thereby admitting the following expression of the $dE$ gradient component
     \begin{equation}\label{eq:sobmor-e-trace-form}
         \begin{aligned}
             \res{\frac{\dif}{\dif \varepsilon} \sigma_i(\tfunc(s) - \tfunc_{\theta + \varepsilon e_i}(s))}{\varepsilon = 0} &= \re{s \ell\herm {(G + P)}\trans Q F\inv \Delta_E F\inv (G - P) r} \\
@@ -418,11 +411,11 @@ In order to compute the gradients of the inner functions $f_i$, we require the f
     In this transformation, we have applied the following arguments:
     \begin{enumerate}[label= (\scshape{\alph*}):]
         \item For a vector product $u\herm v$ we can equivalently compute the trace $\trace{v u\herm}$.
-        \item For the first summand of $\Delta_E$, we exploit that the trace operator is cyclic and invariant under transpositions. Thus we calculate $\trace{A B C\trans D} = \trace{D\trans C B\trans A\trans} = \trace{{(A B)}\trans D\trans C}$.
+        \item For the first summand of $\Delta_E$ we exploit that the trace operator is cyclic and invariant under transpositions. Thus we calculate $\trace{A B C\trans D} = \trace{D\trans C B\trans A\trans} = \trace{{(A B)}\trans D\trans C}$.
         \item Lemma~\ref{lem:v2m-function-trace}.
     \end{enumerate}
-    We can compute the component updates for the matrices $J$ and $R$ in a similar way, requiring only with slight changes in the variational terms $dJ$ and $dR$ corresponding to $\Delta_E$.
-    As an example, we compute the final steps of the equivalent of~\eqref{eq:sobmor-e-trace-form} for $J$ with $\Delta_J = {\vecstrict(e_i)}\trans - \vecstrict(e_i)$:
+    We can compute the component updates for the matrices $J$ and $R$ in a similar way, requiring only slight changes in the variational terms $dJ$ and $dR$ corresponding to $\Delta_E$.
+    As an example, we calculate the final steps of the equivalent of~\eqref{eq:sobmor-e-trace-form} for $J$ with $\Delta_J = {\vecstrict(e_i)}\trans - \vecstrict(e_i)$:
     \begin{equation*}
         \begin{aligned}
             \res{\frac{\dif}{\dif \varepsilon} \sigma_i(\tfunc(s) - \tfunc_{\theta + \varepsilon e_i}(s))}{\varepsilon = 0} &= - \re{\trace{a b\herm \Delta_J}} = - \re{\trace{a b\herm \left({\vecstrict(e_i)}\trans - \vecstrict(e_i)\right)}} \\
@@ -431,7 +424,7 @@ In order to compute the gradients of the inner functions $f_i$, we require the f
     \end{equation*}
 
     For the two matrices $G$ and $P$ we can follow an easier procedure.
-    Like before, we compute the matrix $G$ for the updated parameter $\theta_G + \varepsilon e_i$, and define the intermediary $\Delta_G \coloneqq \vecmat(e_i)$.
+    As before, we compute the matrix $G$ for the updated parameter $\theta_G + \varepsilon e_i$ and define the intermediary $\Delta_G \coloneqq \vecmat(e_i)$.
     Similarly to~\eqref{eq:sobmor-e-variation}, we thereafter calculate the updated transfer function
     \begin{equation*}
         \begin{aligned}
@@ -448,10 +441,10 @@ In order to compute the gradients of the inner functions $f_i$, we require the f
             &= -\re{\trace{\left( {\left( a \ell\herm \right)}\trans + r b\herm \right) \vecmat(e_i)}}\overset{(\msc{c})}{=} -\re{\matvec\left( a \ell\herm + {\left( r b\herm \right)}\trans \right)}.
         \end{aligned}
     \end{equation*}
-    The result for $P$ follows analogously with a change of signs.
+    The result follows analogously for $P$ with a change of signs.
 
     Finally, the computation for the matrices $S$ and $N$ is a combination of the two previously described procedures.
-    With $\Delta_S \coloneqq {\vecupper(e_i)}\trans \vecupper(\theta_S) + {\vecupper(\Delta_S)}\trans \vecupper(e_i)$, we can repeat~\eqref{eq:sobmor-e-trace-form} for $S$ and compute
+    With $\Delta_S \coloneqq {\vecupper(e_i)}\trans \vecupper(\theta_S) + {\vecupper(\Delta_S)}\trans \vecupper(e_i)$ we can repeat~\eqref{eq:sobmor-e-trace-form} for $S$ and calculate
     \begin{equation*}
         \begin{aligned}
             \res{\frac{\dif}{\dif \varepsilon} \sigma_i(\tfunc(s) - \tfunc_{\theta + \varepsilon e_i}(s))}{\varepsilon = 0} &= - \re{\trace{r l\herm \Delta_S}} \\
@@ -459,15 +452,15 @@ In order to compute the gradients of the inner functions $f_i$, we require the f
             &= - \re{\uppervec\left( \vecupper(\theta_S) \left( r l\herm + {\left( r l\herm \right)}\trans \right) \right)}.
         \end{aligned}
     \end{equation*}
-    Again, these equalities can be applied to $N$ in an analogous manner to prove the theorem.
+    These equalities can be applied to $N$ in an analogous manner to prove the theorem.
 \end{proof}
 
-With the computation of the objective functional's gradient, we now follow the procedure in~\cite{SV2023} and use an inner \ac{BFGS} iteration for each value of $\gamma$.
-The authors of~\cite{SV2023} terminate the outer iteration as soon as the objective $\mcl{L}$ returns a value greater than zero, because at that point the $\mcl{H}_\infty$ norm has to be larger than or equal to $\gamma$, see e.g.~\cite[Section~3.2.2]{SV2023}.
+For the computation of the objective functional's gradient, we now follow the procedure in~\cite{SV2023} and use an inner \ac{BFGS} iteration for each value of $\gamma$.
+The authors terminate the outer iteration as soon as the objective $\mcl{L}$ returns a value greater than zero because at that point the $\mcl{H}_\infty$ norm has to be larger than or equal to $\gamma$, see~\cite[Section~3.2.2]{SV2023}.
 
 The selection processes of both the sample points $\mcl{S}$ and the thresholds $\gamma$ can be varied.
-Among some of the options for the sample points are $\iu \omega \in \iu \bb{R}$, where $\omega$ are logarithmically spaced points on the real axis, or an adaptive sampling method adjusted for the value of the objective function between two sample points as proposed in~\cite{SV2021}.
-While the former is much simpler in concept, it suffers from the fact that the sample set cannot adapt to the problem specific sampling ranges.
+Among the options for the sample points are $\iu \omega \in \iu \bb{R}$, where $\omega$ are logarithmically spaced points on the real axis, and an adaptive sampling method adjusted for the value of the objective function between two sample points as proposed in~\cite{SV2021}.
+While the former is much simpler in concept, it suffers from the fact that the sample set cannot adapt to the problem-specific sampling ranges.
 In turn, the weighting in the outer gradient~\eqref{eq:outer-sobmor-objective-gradient} cannot adequately adjust to the underlying problem.
 Adaptive sampling like it was described in~\cite{SV2021} is a proposed solution to this drawback, increasing the number of samples in areas of the sampling range where large errors are introduced.
 In this case, the outer gradient~\eqref{eq:outer-sobmor-objective-gradient} includes more error terms the more samples are added in the badly approximated ranges, resulting in an additional weighting of the gradient at these sample points.

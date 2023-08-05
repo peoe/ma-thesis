@@ -2,12 +2,12 @@
 
 To begin this section, we showcase a few \ac{LTI} models.
 Firstly, Example~\ref{ex:heating} models a simple controlled heat equation.
-Thereafter we discuss a more complex advection-reaction-diffusion equation in the context of air quality simulations.
+Thereafter, we discuss a more complex advection-reaction-diffusion equation in the context of air quality simulations.
 Lastly, we demonstrate how higher order systems can be transformed to first order \ac{LTI} systems in Example~\ref{ex:casting-second-order}.
 
 \begin{example}[Controlled Heating]\label{ex:heating}
     Let $\Omega \subseteq \bb{R}^n$ be a closed domain with sufficiently smooth boundary $\Gamma \in \subseteq \bb{R}^{n - 1}$.
-    We consider a linear heat equation, and apply a control $u$ on the boundary $\Gamma$ ressembling an exterior heating element to get
+    We consider a linear heat equation and apply a control $u$ ressembling an exterior heating element on the boundary $\Gamma$ to get
     \begin{equation*}
         \pd[t]{} x = \lapl{x} + b \cdot \res{u}{\Gamma}.
     \end{equation*}
@@ -28,12 +28,12 @@ Lastly, we demonstrate how higher order systems can be transformed to first orde
 
             \node[ghost] (alignmenthelper) at (-3, 0) {};
 
-            \node[ghost] (boundarynode) at (11, 4.75) {};
+            \node[ghost] (boundarynode) at (11.15, 4.75) {};
             \node[barlabel] (boundarylabel) at (14, 6) {$\Gamma$};
             \path[labelline] (boundarylabel) -- (boundarynode);
 
             \foreach \pos / \name in {%
-                {(0, 3.25)/$s_1$}, {(11, 3.25)/$s_2$},%
+                {(0.6, 3.25)/$s_1$}, {(10.2, 3.25)/$s_2$},%
                 {(5.5, 1.5)/$s_3$}, {(8, 5)/$s_4$}%
             }%
                 \node[sensor, label=below right:\name] (\name) at \pos {};
@@ -51,11 +51,11 @@ Lastly, we demonstrate how higher order systems can be transformed to first orde
     \begin{equation}\label{eq:air-quality-state-equation}
         \pd[t]{} c_i(x, t) + \dvg \left( v(x, t) c_i(x, t) \right) - \dvg \left( K(x, t) \nabla c_i(x, t) \right) - R_i(c, x, t) = u_i(x, t),\quad i = 1, \dots, S.
     \end{equation}
-    In contrast to the controlled heating model from Example~\ref{ex:heating}, we do not use a control variable on the boundary of the domain, but rather at specific places of interest such as factories, roads, residential zones, or forests.
-    This control $u_i \colon \Omega \times I \to \bb{R}$ acts in $M_i \in \bb{N}$ individual points for each chemical, and models both chemical emissions as well as localized air purification measures.
+    In contrast to the controlled heating model from Example~\ref{ex:heating}, we do not use a control variable on the boundary of the domain but rather at specific places of interest such as factories, roads, residential zones, or forests.
+    This control $u_i \colon \Omega \times I \to \bb{R}$ acts in $M_i \in \bb{N}$ individual points for each chemical and models both chemical emissions as well as localized air purification measures.
     Discretizing~\eqref{eq:air-quality-state-equation} yields the state equation of an \ac{LTI} system $\Sigma_{\msc{lti}}$.
-    For the output of the system $\Sigma_{\msc{lti}}$, we consider a set of sensors $\mcl{S} \subseteq \Omega$ placed at locations that may differ from the positions of the control points.
-    This can then be codified in the usual manner a linear combination of the internal states $c_i$ and the controls $u_i$ in the equation
+    For the output of the system $\Sigma_{\msc{lti}}$ we consider a set of sensors $\mcl{S} \subseteq \Omega$ placed at locations that may differ from the positions of the control points.
+    This can then be codified in the usual manner as a linear combination of the internal states $c_i$ and the controls $u_i$ in the equation
     \begin{equation*}
         y_i(t) = C c_i(x, t) + D u_i(x, t).
     \end{equation*}
@@ -96,7 +96,7 @@ Lastly, we demonstrate how higher order systems can be transformed to first orde
         \dot{q}
     \end{pmatrix}$
     and compute the transformation relations $\dot{x_1} = x_2, M \dot{x}_2 = A x_1 - E x_2 + Bu$.
-    These in term can be put into \ac{LTI} form
+    These in turn can be put into \ac{LTI} form
     \begin{equation*}
         \Sigma_{\msc{lti}} \colon \left\lbrace
         \begin{aligned}
@@ -118,19 +118,19 @@ Lastly, we demonstrate how higher order systems can be transformed to first orde
     \end{equation*}
 \end{example}
 
-To illustrate the abstract port-based modelling discussed at the end of Section~\ref{sec:phltis}, we showcase a few examples of problems in the \ac{PH} framework.
+To illustrate the abstract port-based modelling discussed at the end of Section~\ref{sec:phltis}, we display a few examples of problems in the \ac{PH} framework.
 In Example~\ref{ex:ms-system}, we give a direct application of classical mechanical physics adapted from~\cite[Example~2.1]{VanDerSchaft2014}.
 Finally, we highlight the approach to construct a \ac{PH} formulation with a cubic storage function for the inviscid Burgers' equation adapted from~\cite[Example~2.1]{Maschke2005} in Example~\ref{ex:inviscid-burgers}.
 
 \begin{example}[Mass-Spring-Damper System]\label{ex:ms-system}
     We consider a \ac{MSD} that consists of three components: a mass $m$, a linear damper with damping coefficient $c$, and a linear spring with spring constant $k$ as depicted in Figure~\ref{fig:single-msd}.
-    Under the assumption that the mass moves in only one direction and without any friction, we can express the movement of the mass in terms of its kinetic energy $\frac{1}{2m} p^2$ and its potential energy $\frac{1}{2} k q^2$ with the system's states $p \in \bb{R}$ and $q \in \bb{R}$.
-    To this end, we apply Hooke's law and calculate the following effort and flow variables $e_m, e_s$ and $f_m, f_s$ respectively
+    Under the assumption that the mass moves in only one direction and without any friction, we can express the movement of the mass in terms of its kinetic energy $\frac{1}{2m} p^2$ and its potential energy $\frac{1}{2} k q^2$, where $p \in \bb{R}$ and $q \in \bb{R}$ are system's states.
+    To this end, we apply Hooke's law and calculate the following effort and flow variables $e_m, e_s$ and $f_m, f_s$, respectively
     \begin{equation*}
         f_m = -\dot{p},\quad f_s = -\dot{q},\quad e_m = \frac{\dif}{\dif p} \left( \frac{1}{2m} p^2 \right) - c \cdot e_s,\quad e_s = \frac{\dif}{\dif q} \left( \frac{1}{2} k q^2 \right).
     \end{equation*}
-    All that is left now, is to formulate the interconnection between both systems.
-    For this, we have to join the effort exerted at the end of the spring $e_s$ to the force applied to the point mass $-f_m$, and furthermore also tie the mass' velocity effort $e_m$ to the force of the spring end point $f_s$.
+    All that is left now is to formulate the interconnection between both systems.
+    For this, we have to connect the effort exerted at the end of the spring $e_s$ to the force applied to the point mass $-f_m$ and furthermore, to tie the mass' velocity effort $e_m$ to the force of the spring end point $f_s$.
     This results in the interconnection
     \begin{equation*}
         -f_s = e_m,\quad f_m = e_s.
@@ -213,7 +213,7 @@ Finally, we highlight the approach to construct a \ac{PH} formulation with a cub
     \begin{equation}\label{eq:burgers-hamiltonian}
         \mcl{H}(u) = \int\limits_a^b \frac{u^3}{6} \dif x.
     \end{equation}
-    Applying the variational derivative $\delta_u H(u) = \frac{u^2}{2}$, we compute the reformulation of Equation~\eqref{eq:inviscid-burgers} in terms of the Hamiltonian~\eqref{eq:burgers-hamiltonian} as the following equation
+    Applying the variational derivative $\delta_u H(u) = \frac{u^2}{2}$, we compute the reformulation of Equation~\eqref{eq:inviscid-burgers} in terms of the Hamiltonian~\eqref{eq:burgers-hamiltonian} in the following equation
     \begin{equation*}
         \pd[t]{} u = - \pd{} \left( \delta_u \mcl{H}(u) \right) = -\pd{} \frac{u^2}{2}.
     \end{equation*}
@@ -221,5 +221,5 @@ Finally, we highlight the approach to construct a \ac{PH} formulation with a cub
     \begin{equation*}
         \frac{\dif}{\dif t} \mcl{H}(u) = - \int\limits_a^b \delta_u \mcl{H}(u) \cdot \pd{} \left( \delta_u \mcl{H}(u) \right) \dif x = \frac{1}{2} \left( {u(b)}^4 - {u(a)}^4 \right),
     \end{equation*}
-    where we computed the last equality using integration by parts.
+    where we conclude the last equality using integration by parts.
 \end{example}
