@@ -1,7 +1,10 @@
-\section{Quadratically Embedded Manifolds for \texorpdfstring{\ac{PH}}{PH} Systems}\label{sec:quadratically-embedded-manifolds-ph-systems}
+\chapter[Quadratically Embedded Manifolds for \texorpdfstring{\acl{PH}}{PH} Systems]{%
+    Quadratically Embedded Manifolds for \\
+    \texorpdfstring{\acl{PH}}{PH} Systems%
+}\label{chap:quadratically-embedded-manifolds-ph-systems}
 
-In this section, we discuss how we can construct reduced \ac{PH} systems with quadratically embedded manifolds.
-In essence, we combine the theory of quadratically embedded state variables from Section~\ref{sec:mor-quadratically-embedded-manifolds} with the \ac{SOBMOR} method from Section~\ref{sec:inferring-ph-systems} by creating a linear and a quadratically embedded \ac{ROM} and then interconnecting both systems' outputs.
+In this chapter, we discuss how we can construct reduced \ac{PH} systems with quadratically embedded manifolds.
+In essence, we combine the theory of quadratically embedded state variables from Section~\ref{sec:mor-quadratically-embedded-manifolds} with the \ac{SOBMOR} method from Section~\ref{sec:optimization-based-inference} by creating a linear and a quadratically embedded \ac{ROM} and then interconnecting both systems' outputs.
 
 We begin the construction with the usual description of a full order linear \ac{PH} system $\Sigma_\msc{ph}$ given by the realization $(E, \id, J, R, G, P, N, S)$ in the form
 \begin{equation*}
@@ -57,7 +60,7 @@ The crucial step for this thesis lies in the third step, because many different 
 
 \itodo{update necessary data and equations in step 2 of the enumeration}
 
-For our approach, we use the \ac{SOBMOR} framework highlighted at the end of Subsection~\ref{subsec:optimization-based-inference}.
+For our approach, we use the \ac{SOBMOR} framework highlighted at the end of Subsection~\ref{sec:optimization-based-inference}.
 To apply this procedure, we have to generate a sequence of $\gamma$ values for the levelling of the \ac{LSQ} objective function~\eqref{eq:sobmor-objective}.
 As hinted at in the description of the \ac{SOBMOR} method, choosing appropriate values of $\gamma$ is essential in obtaining a lower bound for the error term of the approximation, but it also influences the performance of the \ac{SOBMOR} algorithm by stopping the optimization loop early if the value of $\gamma$ is large.
 For the following numerical experiments, we use two different approaches: first, a fixed sequence of $\gamma$ values, and then an adaptive bisection algorithm like the one in~\cite{SV2021} as a comparison.

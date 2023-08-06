@@ -1,0 +1,138 @@
+\section{Realization-Based Inference}\label{sec:realization-based-inference}
+
+Realization-based \ac{OI} works as a two step procedure:
+\begin{enumerate}
+    \item Use the provided data $x_i, u_i, y_i, i = 1, \dots, k$, in state-based approaches or $\tfunc(s_i), u_i, y_i, i = 1, \dots, k$, in the case of frequency domain-based methods to infer an \ac{LTI} realization $(A, B, C, D, E)$.
+    \item Compute a \ac{PH} realization $\Sigma_\msc{ph}$ from $\Sigma_\msc{lti}$.
+\end{enumerate}
+There are quite a few downsides to this way of approximating a system.
+If either of the two steps is not robust with respect to the input data, then even small numerical errors or noise in the measurements can cause the result to be nonsensical.
+We thus only consider this framework as a theoretical stepping stone to later on introduce more direct ideas.
+
+Foremost, there exists the paradigm of the Loewner method.
+This method uses samples of the transfer function and the corresponding tangential directions to construct the system's matrices, however,~\cite{Peherstorfer2017} demonstrates an implementation based on time domain data.
+We commence as described in~\cite{BGD2020} with the transfer function $\tfunc$ of $\Sigma_\msc{lti}$ and the interpolation points
+\begin{equation*}
+    v_i \coloneqq l_i\trans \tfunc(\mu_i),\quad w_i \coloneqq \tfunc(\lambda_i) r_i,\quad D\coloneqq \tfunc(\infty) = \lim\limits_{\omega \to \infty} \tfunc(\omega),
+\end{equation*}
+where $l_i, r_i, v_i, w_i \in \bb{C}^m$ and $\lambda_i, \mu_i \in \bb{C}$.
+Then we can construct the Loewner and the shifted Loewner matrices defined by the following vector products
+\begin{equation}\label{eq:loewner-matrices}
+    \bb{L} \coloneqq \begin{pmatrix}
+        \frac{l_1\trans w_1  - v_1\trans r_1}{\lambda_1 - \mu_1} & \cdots & \frac{l_1\trans w_n  - v_1\trans r_n}{\lambda_n - \mu_1} \\
+        \vdots & \ddots & \vdots \\
+        \frac{l_n\trans w_1  - v_n\trans r_1}{\lambda_1 - \mu_n} & \cdots & \frac{l_n\trans w_n  - v_n\trans r_n}{\lambda_n - \mu_n}
+    \end{pmatrix},\quad \bb{L}_\sigma \coloneqq \begin{pmatrix}
+        \frac{\lambda_1 l_1\trans w_1 - \mu_1 v_1\trans r_1}{\lambda_1 - \mu_1} & \cdots & \frac{\lambda_n l_1\trans w_n - \mu_1 v_1\trans r_n}{\lambda_n - \mu_1} \\
+        \vdots & \ddots & \vdots \\
+        \frac{\lambda_1 l_n\trans w_1 - \mu_n v_n\trans r_1}{\lambda_1 - \mu_n} & \cdots & \frac{\lambda_n l_n\trans w_n - \mu_n v_n\trans r_n}{\lambda_n - \mu_n}
+    \end{pmatrix}.
+\end{equation}
+If the Loewner matrix $\bb{L}$ is invertible, then, according to~\cite[Theorem~5.1]{BGD2020}, we can use $\bb{L}$ and $\bb{L}_\sigma$ as well as the matrices $L \coloneqq {(l_1, \dots, l_n)}\trans, R \coloneqq (r_1, \dots, r_n), M \coloneqq \diag{\mu_1, \dots, \mu_n}, N \coloneqq \diag{\lambda_1, \dots, \lambda_n}$, $V = {(v_1, \dots, v_n)}\trans, W \coloneqq (w_1, \dots, w_n)$ to create a realization of $\Sigma_\msc{lti}$ with the following block structure
+\begin{equation}\label{eq:loewner-realization}
+    \begin{pmatrix}
+        A - sE & B \\
+        C & D
+    \end{pmatrix} = \begin{pmatrix}
+        \bb{L}_\sigma - s \bb{L} & V \\
+        -W & 0
+    \end{pmatrix} + \begin{pmatrix}
+        -L \\
+        \id
+    \end{pmatrix} D \begin{pmatrix}
+        R & \id
+    \end{pmatrix}.
+\end{equation}
+This basic procedure can be amended and extended in various ways.
+Choosing a specific set of interpolation points, like the set of spectral zeros of the transfer function $\tfunc$, can yield additional properties such as positive realness, which directly allows the construction of a \ac{PH} system similar to~\cite{BGD2020, Poussot2022}.
+Instead of directly sampling the transfer function, we can also apply transformations such as the Discrete Fourier Transform to time domain data, which, in particular, was proposed in~\cite{Peherstorfer2017, Cherifi2021}.
+Other authors have also directly incorporated higher order terms into the \ac{LTI} system structure, for example, by making use of the fact that a system's Loewner matrices are generalized observability and controllability Gramians, see~\cite{Antoulas2019}, or by iteratively computing a separate higher order model which mitigates the error of the linear reduced \ac{LTI} system with respect to the \ac{FOM} by fitting the higher order terms to the error data similarly to~\cite{GKA2021}.
+In a similar fashion to time domain data-based Loewner methods, \ac{LTI} systems can be inferred from the output produced when a unit step input is applied at time $t = 0$, for more details see~\cite{Miller2012}.
+
+In a corresponding fashion to the \ac{LSQ} problem in Section~\ref{sec:mor-quadratically-embedded-manifolds}, we can formulate an approach to fit operators in \ac{LTI} systems.
+This idea relies on \ac{DMD} as well as its extension \ac{IODMD} as introduced in~\cite{Annoni2016}.
+For an \ac{LTI} system $\Sigma_\msc{lti}$ with a known matrix $E \in \bb{R}^{n \times n}$, we concatenate the individual data snapshots for the discrete time points $t_i, i = 1, \dots, k$, into the matrices
+\begin{equation}\label{eq:iodmd-data-matrices}
+    \Omega \coloneqq \begin{pmatrix}
+        x_1 & \cdots & x_k \\
+        u_1 & \cdots & u_k
+    \end{pmatrix},\quad \Gamma \coloneqq \begin{pmatrix}
+        E \dot{x}_1 & \cdots & E \dot{x}_k \\
+        y_1 & \cdots & y_k
+    \end{pmatrix}.
+\end{equation}
+With these matrices we can write the \ac{LTI} system's discrete response as $\Gamma = \Lambda \Omega$, where $\Lambda$ corresponds to the block matrix containing the remaining system matrices of $\Sigma_\msc{lti}$, cf.~\cite{Heiland2022}.
+The usual \ac{LSQ} problem
+\begin{equation*}
+    \min\limits_{\Lambda \in \bb{R}^{n + m \times n + m}} \norm{\Gamma - \Lambda \Omega}{F}^2
+\end{equation*}
+is then solved by $\Lambda = \Gamma \Omega^\dagger$, with $\Omega^\dagger$ denoting the Moore-Penrose pseudo-inverse of $\Omega$.
+The \ac{IODMD} framework has further been extended in~\cite{Gosea2021} to bilinear and quadratic terms by appropriately amending the data matrices.
+
+Finally, as a last method to come up with an initial \ac{LTI} system's realization, we propose to extend the \ac{SINDY} framework.
+\ac{SINDY} is based on a function library-based approach, which has been extended to implicit dynamical systems~\cite{Mangan2016, Kaheman2020} and systems with control terms~\cite{Kaiser2018}.
+The principle formulation of \ac{SINDY} as given in~\cite{Brunton2016} acts on dynamical systems of the form
+\begin{equation}\label{eq:sindy-explicit-dynamical-system}
+    \frac{\dif}{\dif t} x = f(x).
+\end{equation}
+Next, we construct the state and state derivative data matrices
+\begin{equation*}
+	X \coloneqq (x_1, \dots, x_k), \dot{X} \coloneqq (\dot{x}_1, \dots, \dot{x}_k) \in \bb{R}^{n \times k}
+\end{equation*}
+to which we apply nonlinear transformations when forming the function library
+\begin{equation}\label{eq:sindy-explicit-library}
+    \Theta(X) = (\theta_1(X), \dots, \theta_\ell(X)),\quad \theta_i \colon \bb{R}^n \to \bb{R}^n,\quad i = 1, \dots, n.
+\end{equation}
+Similarly to \ac{DMD}, we fit the transformed data such that the following equality holds true
+\begin{equation}\label{eq:sindy-explicit-fit}
+    \dot{X} = P \Theta(X).
+\end{equation}
+Here, $P \in \bb{R}^{n \times n}$ is a sparse matrix of coefficients reflecting which library components have been selected to form the final nonlinear representation of the model.
+The solution $P$ has to be computed with a sparsity promoting solver such as \ac{STLSQ} in~\cite{Zhang2019}, the LASSO framework as detailed by~\cite{Tibshirani1996}, or other similar methods as mentioned in~\cite{Kaiser2018, Kaheman2020}.
+Incorporating control variables into the \ac{SINDY} framework has been accomplished by including appropriate control and mixed state-control terms into the function library~\eqref{eq:sindy-explicit-library}, see e.g.~\cite{Kaiser2018}, yielding the so-called \ac{SINDYC} procedure, which is closely related to \ac{DMDC}.
+We propose to proceed with \ac{SINDYC}, but instead of extending the \ac{SINDYC} library to act on both state and control variables, only consider library functions that exclusively act on the state variables.
+This results in the explicit system
+\begin{equation}\label{eq:sindy-io}
+    f(x, u) = P \Theta \begin{pmatrix}
+        X \\
+        U
+    \end{pmatrix} = \begin{pmatrix}
+        E \\
+        \id
+    \end{pmatrix} \begin{pmatrix}
+        \dot{x} & y
+    \end{pmatrix}.
+\end{equation}
+Thereafter, we can extract the matrix blocks from the coefficient matrix $P$ as the system matrices $A, B, C, D$ by selecting appropriate row and column indices.
+As an extension to the linear library we would use if we were to fit a simple \ac{LTI} system, we could also directly choose quadratic, other higher order polynomial, or even nonpolynomial nonlinear transformations.
+Thus, \ac{SINDY} can in theory be directly applied to solve the main problem of this thesis, nevertheless, we prefer to use methods more directly designed to result in \ac{PH} systems because computing \ac{PH} realizations is much more difficult than an \ac{LTI} one as a consequence of the structural matrix constraints~\eqref{eq:ph-matrix-structure}.
+Some authors like~\cite{Lee2022} have proposed remedies to this problem but their methods involve \acp{NN}, therefore once again culminating in the explainability issue.
+
+As soon as we have constructed an \ac{LTI} system $\Sigma_\msc{lti}$, we can transform it until we are left with a \ac{PH} system.
+To this end, there are various methods available in the literature, which is why we only discuss those that are closely related to the concepts we have brought up so far.
+It is imperative that we once more mention the similarities between stable, positive real, and \ac{PH} systems as explained in Subsection~\ref{subsec:prbt} and~\cite{Cherifi2022}.
+This is due to the fact that most of the ideas to convert \acp{LTI} to \ac{PH} systems directly rely on this connection of positive real systems and \ac{PH} systems by means of Lemma~\ref{lem:kyp-invertible-solution} and Equation~\eqref{eq:prbt-ph-system}.
+
+First off, we discuss the results from~\cite{Beattie2022}.
+In this publication, the authors explicitly derive properties that an \ac{LTI} system needs to fulfill such that one can compute a \ac{PH} realization from $\Sigma_\msc{lti}$ with the \ac{LTI} realization $(A, B, C, D, \id)$.
+They use the \ac{KYP}~\eqref{eq:kyp-lmi}
+\begin{equation*}
+    \begin{pmatrix}
+        - A\trans Q - Q A & C\trans - QB \\
+        C - B\trans Q & D + D\trans
+    \end{pmatrix} \succcurlyeq 0.
+\end{equation*}
+Afterwards, using the symmetric positive definite solution $Q$, we derive a regular transformation matrix $T \in \bb{R}^{n \times n}$ from the Cholesky decomposition $Q = T\trans T$ and derive the transformed system
+\begin{equation}\label{eq:ph-transformation-from-passive-system}
+    \begin{alignedat}{8}
+        Q &\coloneqq \id, &J &\coloneqq \frac{1}{2} \left( T A T\inv - {\left( T A T\inv \right)}\trans \right), &R &\coloneqq -\frac{1}{2} \left( T A T\inv + {\left( T A T\trans \right)}\trans \right), \\
+        & &G &\coloneqq \frac{1}{2} \left( T B + {\left( C T\inv \right)}\trans \right), &P &\coloneqq \frac{1}{2} \left( T B + {\left( C T\inv \right)}\trans \right), \\
+        & &S &\coloneqq \frac{1}{2} \left( D + D\trans \right), &N &\coloneqq \frac{1}{2} \left( D - D\trans \right).
+    \end{alignedat}
+\end{equation}
+According to~\cite{Beattie2011}, the system~\eqref{eq:ph-transformation-from-passive-system} is indeed a \ac{PH} realization.
+This method is feasible only for small to medium scale problems as explained in~\cite{Cherifi2019}, leading the authors to suggest two other methods.
+The first of these proposes to use a procedure like \ac{PRBT} to balance the \ac{LTI} system, resulting in much better scaling with respect to large model orders.
+The second method takes a completely different angle.
+Instead of manipulating \ac{LTI} systems' matrices, the authors present an optimization over the system matrices to obtain a \ac{PH} bestapproximation of the original \ac{LTI} system $\Sigma_\msc{lti}$, in a sense resulting in a nearest \ac{PH} system.
+This change of perspective opens up a set of optimization-based methods which we discuss in Section~\ref{sec:optimization-based-inference}.
