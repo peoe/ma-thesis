@@ -21,16 +21,16 @@ In order to construct the polynomially embedded manifold model, we compare the f
 \end{equation}
 Crucially, we now get to choose how we want to approximate the signed error $\varepsilon$.
 Theoretically, we could choose an arbitrary linear combination of nonlinear transformations of the reduced state $x_\msc{r}$, but for simplicity we constrain ourselves to the quadratic terms $x_\msc{r} \odot x_\msc{r}$.
-Here, the operator $\odot$ denotes the Khatri-Rao product, also known as the column-wise Kronecker product as described in~\cite{Slyusar1999, Shuangzhe2008, Favier2021}, which acts on a state variable $x_\msc{r} = {\left( \hat{x}_{(1)}, \dots, \hat{x}_{(r)} \right)}\trans$ in the following manner
+Here, the operator $\odot$ denotes the Khatri--Rao product, also known as the column-wise Kronecker product as described in~\cite{Slyusar1999, Shuangzhe2008, Favier2021}, which acts on a state variable $x_\msc{r} = {\left( \hat{x}_{(1)}, \dots, \hat{x}_{(r)} \right)}\trans$ in the following manner
 \begin{equation}\label{eq:redundant-khatri-rao}
     x_\msc{r} \odot x_\msc{r} \coloneqq {\left( \hat{x}_{(1)}^2, \hat{x}_{(1)}^{\phantom{1}} \hat{x}_{(2)}^{\phantom{1}}, \dots, \hat{x}_{(1)}^{\phantom{1}} \hat{x}_{(r)}^{\phantom{1}}, \hat{x}_{(2)}^{\phantom{1}} \hat{x}_{(1)}^{\phantom{1}}, \hat{x}_{(2)}^2, \dots, \hat{x}_{(r)}^2 \right)}\trans \in \bb{R}^{r^2}.
 \end{equation}
 In practice, this formulation contains many duplicate entries such as $x_{(1)}^{\phantom{1}} x_{(2)}^{\phantom{1}}$ and $x_{(2)}^{\phantom{1}} x_{(1)}^{\phantom{1}}$, thus we can omit these terms without losing any information in the quadratic state.
-This results in the reformulation of the Khatri-Rao product as the non-redundant version
+This results in the reformulation of the Khatri--Rao product as the non-redundant version
 \begin{equation}\label{eq:khatri-rao}
     x_\msc{r} \odot x_\msc{r} \coloneqq {\left( \hat{x}_{(1)}^2, \hat{x}_{(1)}^{\phantom{1}} \hat{x}_{(2)}^{\phantom{1}}, \dots, \hat{x}_{(1)}^{\phantom{1}} \hat{x}_{(r)}^{\phantom{1}}, \hat{x}_{(2)}^2, \hat{x}_{(2)} \hat{x}_{(3)}, \dots, \hat{x}_{(r)}^2 \right)}\trans \in \bb{R}^{\frac{r (r + 1)}{2}}.
 \end{equation}
-By abuse of notation, we will henceforth consider the ordinary Khatri-Rao product~\eqref{eq:redundant-khatri-rao} in theoretic discussions while using the non-redundant version~\eqref{eq:khatri-rao} in numerical applications unless otherwise specified.
+By abuse of notation, we will henceforth consider the ordinary Khatri--Rao product~\eqref{eq:redundant-khatri-rao} in theoretic discussions while using the non-redundant version~\eqref{eq:khatri-rao} in numerical applications unless otherwise specified.
 This replacement results in no changes to those of the product's properties we would need to use later on.
 To ease the handling of the different dimensions invoked by both~\eqref{eq:redundant-khatri-rao} and~\eqref{eq:khatri-rao}, we denote the quadratic data dimension as $q \in \bb{N}$ such that $x_\msc{r} \odot x_\msc{r} \in \bb{R}^q$ no matter which version of the product we use.
 
