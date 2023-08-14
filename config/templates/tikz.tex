@@ -1,6 +1,6 @@
 %        Tikz Styles        %
 \usepackage{tikz}
-\usetikzlibrary{spy, arrows, arrows.meta, calc, decorations.pathmorphing, fit, matrix, patterns, shapes, shapes.multipart, shapes.misc}
+\usetikzlibrary{spy, arrows, arrows.meta, calc, decorations.pathmorphing, decorations.pathreplacing, fit, matrix, patterns, shapes, shapes.multipart, shapes.misc, positioning}
 
 \tikzset{cross/.style={cross out, draw=black, minimum size=2*(#1-\pgflinewidth), inner sep=0pt, outer sep=0pt}, cross/.default={1pt}}
 
@@ -33,6 +33,10 @@
 \tikzstyle{hsupermatrix} = [matrix of math nodes, ampersand replacement=\&, column sep=1mm, left delimiter=(, right delimiter=)]
 \tikzstyle{hsubmatrix} = [rectangle, fill=black!25, minimum width=50pt, minimum height=10pt]
 \tikzstyle{vsupermatrix} = [matrix of math nodes, ampersand replacement=\&, row sep=1mm, left delimiter=(, right delimiter=)]
+\tikzstyle{submatrix} = [rectangle, fill=black!25, anchor=center, minimum width=30pt, minimum height=30pt]
+\tikzstyle{supermatrix} = [matrix of math nodes, ampersand replacement=\&, row sep={1mm, between borders}, column sep=1mm, left delimiter=(, right delimiter=)]
+\tikzstyle{topdelim} = [inner xsep=0, above delimiter=\{]
+\tikzstyle{rightdelim} = [inner xsep=15pt, inner ysep=0, right delimiter=\}]
 
 %        Domains        %
 \tikzstyle{force} = [draw, -Stealth]
