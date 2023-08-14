@@ -54,8 +54,11 @@
 \newcommand{\trans}{^{\top}}
 \newcommand{\herm}{^{\mkern1mu \mathsf{H}}}
 \NewDocumentCommand{\inv}{O{1}}{^{-#1}}
-\newcommand{\id}[1][]{\text{id}_{#1}}
+\newcommand{\id}[1][]{\text{id}_{\mkern2mu #1}}
 \newcommand{\diag}[1]{\mathop{}\!\mathrm{diag}\left(#1\right)}
+\newcommand{\sksym}[1]{\mathop{}\!\mathrm{skew}\left(#1\right)}
+\newcommand{\psd}[1]{\mathop{}\!\mcl{P}_{\succcurlyeq 0}\left(#1\right)}
+\newcommand{\kron}[1]{\mathop{}\!\mathrm{kron}\left(#1\right)}
 
 %        Typesetting Commands        %
 \newcommand{\pd}[2][x]{\partial_{#1}^{#2}}
