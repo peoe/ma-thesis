@@ -49,7 +49,7 @@ Lastly, we demonstrate how higher order systems can be transformed to first orde
     A variety of models can be used to run simulations of the concentrations $c_i \in \bb{R}, i = 1, \dots, S$, of $S \in \bb{N}$ individual chemicals in an open domain $\Omega \subseteq \bb{R}^n$ depending on the velocity of the wind $v \in \bb{R}^n$, diffusion through turbulence $K \in \bb{R}^{n \times n}$, and reactions occuring at rates $R_i \in \bb{R}$.
     Put together, we can express this model using the advection-reaction-diffusion equation
     \begin{equation}\label{eq:air-quality-state-equation}
-        \pd[t]{} c_i(x, t) + \dvg \left( v(x, t) c_i(x, t) \right) - \dvg \left( K(x, t) \nabla c_i(x, t) \right) - R_i(c, x, t) = u_i(x, t),\quad i = 1, \dots, S.
+        \pd[t]{} c_i(x, t) + \dvg{v(x, t) c_i(x, t)} - \dvg{K(x, t) \nabla c_i(x, t)} - R_i(c, x, t) = u_i(x, t),\quad i = 1, \dots, S.
     \end{equation}
     In contrast to the controlled heating model from Example~\ref{ex:heating}, we do not use a control variable on the boundary of the domain but rather at specific places of interest such as factories, roads, residential zones, or forests.
     This control $u_i \colon \Omega \times I \to \bb{R}$ acts in $M_i \in \bb{N}$ individual points for each chemical and models both chemical emissions as well as localized air purification measures.
