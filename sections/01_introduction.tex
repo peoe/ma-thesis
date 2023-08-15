@@ -33,7 +33,7 @@ In the context of \ac{PH} systems, we are particularly interested in preserving 
 For \ac{PH} systems, there exist a variety of reduction methods, cf.~\cite{Polyuga2010}:
 \begin{itemize}
     \item The first idea to obtain a reduced (linear) \ac{PH} problem is to reduce an \ac{LTI} representation of the full order \ac{PH} model and afterwards to find the closest \ac{PH} realization of the reduced order \ac{LTI} system; cf.~\cite{Gillis2018, Cherifi2019}.
-    \item The second method is to interpolate the \ac{PH} system in the frequency domain using its transfer function to obtain a realization of the transfer function that satisfies the structural requirements of a \ac{PH} system; cf.~\cite{BGD2020, Schwerdtner2021, Poussot2022}.
+    \item The second method is to interpolate the \ac{PH} system in the frequency domain using its transfer function to obtain a realization of the transfer function that satisfies the structural requirements of a \ac{PH} system; cf.~\cite{BGD2020, Schwerdtner2021, Poussot2023}.
     \item The third idea is closely linked to the second; however, it tries to omit evaluations in the frequency domain by sampling the time domain and then transforming the gathered data into frequency space measurements by means of discrete Fourier and Z-transforms; cf.~\cite{Najnudel2021, Cherifi2022, Günther2023}.
     \item Additionally, there is the thought of fitting a \ac{PH} system with optimization algorithms based around some select parts of the dynamical system's data.
         Among these are the \ac{PHDMD} algorithm, cf.~\cite{Morandin2023}, and the SOBMOR algorithm, cf.~\cite{SV2023}, which aim to approximate the system matrices using control-output data and transfer function measurements, respectively.

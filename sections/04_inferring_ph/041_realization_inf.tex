@@ -44,7 +44,7 @@ If the Loewner matrix $\bb{L}$ is invertible, then, according to~\cite[Theorem~5
     \end{pmatrix}.
 \end{equation}
 This basic procedure can be amended and extended in various ways.
-Choosing a specific set of interpolation points, like the set of spectral zeros of the transfer function $\tfunc$, can yield additional properties such as positive realness, which directly allows the construction of a \ac{PH} system similar to~\cite{BGD2020, Poussot2022}.
+Choosing a specific set of interpolation points, like the set of spectral zeros of the transfer function $\tfunc$, can yield additional properties such as positive realness, which directly allows the construction of a \ac{PH} system similar to~\cite{BGD2020, Poussot2023}.
 Instead of directly sampling the transfer function, we can also apply transformations such as the Discrete Fourier Transform to time domain data, which, in particular, was proposed in~\cite{Peherstorfer2017, Cherifi2021}.
 Other authors have also directly incorporated higher order terms into the \ac{LTI} system structure, for example, by making use of the fact that a system's Loewner matrices are generalized observability and controllability Gramians, see~\cite{Antoulas2019}, or by iteratively computing a separate higher order model which mitigates the error of the linear reduced \ac{LTI} system with respect to the \ac{FOM} by fitting the higher order terms to the error data similarly to~\cite{GKA2021}.
 In a similar fashion to time domain data-based Loewner methods, \ac{LTI} systems can be inferred from the output produced when a unit step input is applied at time $t = 0$, for more details see~\cite{Miller2012}.
