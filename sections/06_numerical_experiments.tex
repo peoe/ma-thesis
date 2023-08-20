@@ -1,15 +1,175 @@
 \chapter{Numerical Experiments}\label{chap:numerical-experiments}
 
-asdf.
+In this chapter, we demonstrate the effect of our procedure for a set of example problems.
+In Section~\ref{sec:msd-systems}, we commence with a model problem for the \ac{PHDMD} algorithm, the \ac{MSD} system.
+Thereafter we apply the same procedures to the damped wave equation, showing how we can transform wave equations into \ac{PH} systems and testing our method on a more difficult problem in Section~\ref{sec:damped-wave-equation}.
+
+\itodo{make this tighter, this is way too loose/short!}
+\itodo{make description/references better!}
+\itodo{don't forget to allow for a reference to the summary chapter\dots}
+
+% include discussion on the effect of the initial alpha/beta parameters in here! graphics perhaps???
+% discuss initialization of the E matrix, this is currently known to be quite bad!
 
 \section{Mass-Spring-Damper Systems}\label{sec:msd-systems}
 
-qwer.
+In this section we consider numerical experiments for an \ac{MSD} system.
+In particular, we want to generalize the system from Example~\ref{ex:ms-system} to consist of many mass, spring and damper components arranged successively, following~\cite{Gugercin2012, Morandin2023} closely.
+For our model problem we consider a system containing $50$ mass and spring-damper pairs, resulting in a totel \ac{FOM} order of $100$.
+Additionally, we allow for two separate controls to act on the first and the second mass, respectively, thus mimicing the model investigated in~\cite[Section~4.3]{Morandin2023}.
+
+We apply both \ac{PHDMD} methods described in Chapter~\ref{chap:quadratically-embedded-manifolds-ph-systems} to the system with the sampling control
+\begin{equation*}
+    u(t) \coloneqq \begin{pmatrix}
+        \exp (-t / 2) \sin (t^2) \\
+        \exp (-t / 2) \cos (t^2)
+    \end{pmatrix}.
+\end{equation*}
+To compare the results of both methods, we additionally compare them to the models generated using \ac{IODMD} and a simple \ac{OI} method derived from \ac{IODMD}.
+
+\itodo{explain error measures}
+\itodo{evaluate experiment}
+\itodo{consider smaller msd model}
+\itodo{plot data}
+
+% include dim 6 MSD matrices from morandin/gugercin source
+% in experiment use dim 100 as FOM and reduce to lower orders as needed
+% quadratic models are prob only feasible upto 10/12, beyond that we overfit
+% compute more LROM instances to compare the decay to equivalent QROM dims (i.e. LROM dim 6 -> QROM dim 27 -> compare to another LROM of dim 27)
+% mention drawbacks in comparison to phirka/prbt lroms (data-based in general is much worse due to reduced amounts of informaiton availbale)
+% try to run SOBMOR on the inferred LROM :)
 
 \section{Damped Wave Equation}\label{sec:damped-wave-equation}
 
-qwer.
+\itodo{sources for this part! we have a lot (consult Mendeley!)}
+\itodo{Main source: Poussot-Vassal~\cite{Poussot2023}}
+\itodo{additionally, for a higher level discretization overview~\cite{Brugnoli2021, HMS2022}}
+
+Unlike the \ac{MSD} model from Section~\ref{sec:msd-systems}, we also want to demonstrate the performance of our method on a more complex system.
+To this end we consider the unit interval $\Omega = \interval{0}{1}$ as well as the temporal domain $\interval[open right]{0}{T}, T > 0$, and model a damped wave with the equation
+\begin{equation}\label{eq:basic-damped-wave}
+    \pd[t]{2} \omega + \alpha \pd[t]{} \omega = c^2 \lapl[\omega],
+\end{equation}
+where $\omega \colon \Omega \times I \to \bb{R}$ denotes the amplitude of our medium in space, $\lapl$ is the Laplace operator, $n \in \bb{R}$ is the unit outer normal of the spatial domain $\Omega$, and $\alpha, c > 0$ describe the damping coefficient and wave speed, respectively.
+Obviously, this is not yet a \ac{PH} system.
+In order to obtain a \ac{PH} formulation, we follow the the procedure described in~\cite{Serhani2019_2, HMS2022} in combination with the problems described in~\cite{Brugnoli2021, Poussot2023}.
+Instead of discretizing the entire equation in terms of the local function $\omega$, we consider the following subsitutive variables
+\begin{equation*}
+    v \coloneqq \pd[t]{} \omega,\quad w \coloneqq c^2 \nabla \omega.
+\end{equation*}
+Substituting these variables in the original damped wave equation~\eqref{eq:basic-damped-wave} we calculate
+\begin{equation}\label{eq:substituted-damped-wave}
+    \pd[t]{} v + \alpha v = \dvg{w}.
+\end{equation}
+Additionally, we consider the following trivial coupling between the two components $v$ and $w$
+\begin{equation}\label{eq:relation-damped-wave}
+    \frac{1}{c^2} \pd[t]{} w = \pd[t]{} \nabla \omega = \nabla \pd[t]{} \omega = \nabla v.
+\end{equation}
+To derive the control and the output of the entire system, we combine Equations~\eqref{eq:substituted-damped-wave} and~\eqref{eq:relation-damped-wave} into a single system of equations and, for an arbitrary test function $\varphi \in C_\msc{c}^\infty(\Omega)$, consider its weak formulation
+\begin{equation*}
+    \begin{aligned}
+        \frac{1}{c^2} \inner{\pd[t]{} w}{\varphi}{} &= \inner{\nabla v}{\varphi}{}, \\
+        \inner{\pd[t]{} v}{\varphi}{} &= \inner{\dvg{w}}{\varphi}{} - \alpha \inner{v}{\varphi}{},
+    \end{aligned}
+\end{equation*}
+which we once more transform with the usual application of Green's formula to calculate
+\begin{equation}\label{eq:weak-damped-wave}
+    \begin{aligned}
+        \frac{1}{c^2} \inner{\pd[t]{} w}{\varphi}{} &= \inner{\nabla v}{\varphi}{}, \\
+        \inner{\pd[t]{} v}{\varphi}{} &= - \inner{w}{\nabla \varphi}{} + \inner{\inner{\res{w}{\partial \Omega}}{n}{}}{\varphi}{} - \alpha \inner{v}{\varphi}{}.
+    \end{aligned}
+\end{equation}
+After defining $u \coloneqq \inner{\res{w}{\partial \Omega}}{n}{}$ and choosing an appropriate \ac{FEM} discretization, we formulate the weak damped wave equation system~\eqref{eq:weak-damped-wave} as
+\begin{equation}\label{eq:damped-wave-state}
+    \begin{aligned}
+        \frac{1}{c^2} M_w \pd[t]{} w &= D v, \\
+        M_v \pd[t]{} v &= - D\trans w - \alpha C v + B u,
+    \end{aligned}
+\end{equation}
+with the vectorized state variables $w, v \in \bb{R}^n$, the control on the boundary $u \in \bb{R}^2$ and the system matrices $M_w, M_v, D \in \bb{R}^{n \times n}, B \in \bb{R}^{n \times 2}$.
+We remark that the block matrices $G\trans = \begin{pmatrix}
+    0 & B\trans
+\end{pmatrix}$ and
+\begin{equation}\label{eq:damped-wave-blocks}
+    E \coloneqq
+    \begin{tikzpicture}[baseline]
+        \matrix[supermatrix, nodes=submatrix] {
+            \frac{1}{c^2} M_w \&  \\
+            \& M_v \\
+        };
+    \end{tikzpicture}
+    ,\quad J =
+    \begin{tikzpicture}[baseline]
+        \matrix[supermatrix, nodes=submatrix] {
+            \& D \\
+            -D\trans \&  \\
+        };
+    \end{tikzpicture}
+    ,\quad R =
+    \begin{tikzpicture}[baseline]
+        \matrix[supermatrix, nodes=submatrix] {
+            0 \&  \\
+            \& \alpha C \\
+        };
+    \end{tikzpicture}
+\end{equation}
+form the foundations of a port-Hamiltonian system.
+As the final component of the \ac{PH} system we define the output of the model by considering the structure of a \ac{PH} model.
+This results in the following last system equation, as well as the immediate relation to the internal states
+\begin{equation}\label{eq:damped-wave-output}
+    y = G\trans \begin{pmatrix}
+        w \\
+        v
+    \end{pmatrix},\quad y = \res{v}{\partial \Omega}.
+\end{equation}
+Ultimately, we can substitute the block matrices~\eqref{eq:damped-wave-blocks} into the system of equations~\eqref{eq:damped-wave-state} to obtain the state equation and combine it with the output part~\eqref{eq:damped-wave-output} into the system
+\begin{equation}\label{eq:damped-wave-ph}
+    \Sigma_\msc{comb} \colon \left\lbrace
+    \begin{aligned}
+        E \pd[t]{} \begin{pmatrix}
+            w \\
+            v
+        \end{pmatrix} &= (J - R) \begin{pmatrix}
+            w \\
+            v
+        \end{pmatrix} + G u, \\
+        y &= G\trans \begin{pmatrix}
+            w \\
+            v
+        \end{pmatrix}.
+    \end{aligned}
+    \right.
+\end{equation}
+
+\begin{remark}
+    The block matrix $R$ in Equation~\eqref{eq:damped-wave-blocks} is singular which causes problems when simulating the model~\eqref{eq:damped-wave-ph} or applying the \ac{PHDMD} algorithm to the system.
+    We mitigate this issue by regularizing the upper left block such that we instead use
+    \begin{equation*}
+        \tilde{R} =
+        \begin{tikzpicture}[baseline]
+            \matrix[supermatrix, nodes=submatrix] {
+                \lambda \id \&  \\
+                \& \alpha C \\
+            };
+        \end{tikzpicture}
+    \end{equation*}
+    for some regularization parameter $\lambda > 0$.
+    For our simulations in particular we choose $\lambda = $.
+\end{remark}
+
+\itodo{Add the final $\lambda$ value here!}
+
+\itodo{mention what we apply to this system}
+\itodo{plot data}
+
+% include equations and deduction of ph lti systems
+% use smaller dims, because numerical simulations might be bad, also the FOM dim scales quadratically if we choose 2d so be careful
+% use 1d as general case
 
 \section{Burgers' Equation}\label{sec:burgers-equation}
 
 qwer.
+
+% mention 1d burgers, potentially 2d???
+% infer from non lti system, so no real comparison possible, also I'm not sure if we can get any roms???
+% thus, purely data-based approach :)
