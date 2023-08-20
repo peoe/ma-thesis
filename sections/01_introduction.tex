@@ -8,7 +8,8 @@ Thereafter, we state the motivation for the object of this thesis and finally co
 Dynamical systems are descriptions of the evolution of complex models over time.
 These models are subject to the outside influence of a control and themselves produce an output that interplays with the environment; cf.~\cite{Hinrichsen2005}.
 The general definition of these systems distinguishes between the control and output variables, as well as the internal states of the system, where the system's output is a combination of potentially both the current states in addition to the control.
-Generally, dynamical systems do not include physically motivated structural relations between states, controls, and outputs; however, problem descriptions that result from physical considerations can hugely benefit from this additional information, for instance, energy preservation and similar conservation laws.
+Generally, dynamical systems do not include physically motivated structural relations between states, controls, and outputs.
+Yet, problem descriptions that result from physical considerations can hugely benefit from this additional information, for instance, energy preservation and similar conservation laws.
 With respect to the problems relevant to this thesis, we especially consider the energy contained within a dynamical system as a quantity of interest.
 In the physics equivalent of this abstract thought, Hamiltonian Mechanics, energy conservation plays a central role: energy can only be transformed from one type to another but never be created out of nowhere or destroyed; cf.~\cite{Taylor2005, Giorgilli2022}.
 Thus, to add energy to a system or to remove it from the very same, additional outside forces have to interact with the relevant dynamical system.
@@ -19,7 +20,7 @@ This in turn gives rise to the name of \ac{PH} systems, a rigorous energy preser
 \ac{MOR} as a framework provides many different approaches to creating reduced order models.
 One of the most intuitive are greedy algorithms, where we iteratively select elements such that after every iteration the projection error of the \ac{ROM} decreases by the largest amount possible.
 For more detailed descriptions of greedy reduction methods we refer to~\cite{Grepl2005, Rozza2008, Buffa2012} as well as the other publications cited therein.
-The greedy approximation can be adapted for the reduction of dynamical systems; however, because the underlying dynamics are directly linked to the system's transfer function, \ac{MOR} techniques often avoid the construction of explicit bases in favour of performing frequency domain based operations.
+The greedy approximation can be adapted for the reduction of dynamical systems, however, because the underlying dynamics are directly linked to the system's transfer function, \ac{MOR} techniques often avoid the construction of explicit bases in favour of performing frequency domain based operations.
 The problem with reducing a dynamical system with a fixed set of reduced bases is the fact that these systems also have a frequency-based description which does not rely on a set of specific bases.
 Hence, frequency-based reduction is more versatile due to the fact that the reduction of a system is independent of the specific realization of the system's matrices.
 For this thesis, interpolatory \ac{MOR} and \ac{BT} are of particular interest because their extensions to structure-preserving methods have been well researched.
@@ -34,15 +35,16 @@ For \ac{PH} systems, there exist a variety of reduction methods, cf.~\cite{Polyu
 \begin{itemize}
     \item The first idea to obtain a reduced (linear) \ac{PH} problem is to reduce an \ac{LTI} representation of the full order \ac{PH} model and afterwards to find the closest \ac{PH} realization of the reduced order \ac{LTI} system; cf.~\cite{Gillis2018, Cherifi2019}.
     \item The second method is to interpolate the \ac{PH} system in the frequency domain using its transfer function to obtain a realization of the transfer function that satisfies the structural requirements of a \ac{PH} system; cf.~\cite{BGD2020, Schwerdtner2021, Poussot2023}.
-    \item The third idea is closely linked to the second; however, it tries to omit evaluations in the frequency domain by sampling the time domain and then transforming the gathered data into frequency space measurements by means of discrete Fourier and Z-transforms; cf.~\cite{Najnudel2021, Cherifi2022, Günther2023}.
+    \item The third idea is closely linked to the second but it tries to omit evaluations in the frequency domain by sampling the time domain and then transforming the gathered data into frequency space measurements by means of discrete Fourier and Z-transforms; cf.~\cite{Najnudel2021, Cherifi2022, Günther2023}.
     \item Additionally, there is the thought of fitting a \ac{PH} system with optimization algorithms based around some select parts of the dynamical system's data.
         Among these are the \ac{PHDMD} algorithm, cf.~\cite{Morandin2023}, and the SOBMOR algorithm, cf.~\cite{SV2023}, which aim to approximate the system matrices using control-output data and transfer function measurements, respectively.
 \end{itemize}
 
 The problem with all these methods is that most linear MOR algorithms struggle to efficiently reduce nonlinear \acp{FOM} to small \acp{ROM} under specific initial conditions.
 A codification of this drawback can be observed in the Kolmogorov $N$-width, a theoretical measure for describing how well the solution manifold of a problem can be described by a set of linear subspaces of fixed dimension.
-For some problems and initial conditions, the Kolmogorov $N$-width provides an explicit bound on the projection error; for others, however, it has been shown that the Kolmogorov $N$-width decays slowly, thus resulting in almost no theoretical statements about the ability of linear \ac{MOR} to approximate \acp{ROM} for this setting.
-Some authors even explicitly proclaim this to be the ``Kolmogorov Barrier'', a hinderance to be overcome by means other than linear approximation; cf.~\cite{Barnett2022}.
+For some problems and initial conditions, the Kolmogorov $N$-width provides an explicit bound on the projection error.
+For others, however, it has been shown that the Kolmogorov $N$-width decays slowly, thus resulting in almost no theoretical statements about the ability of linear \ac{MOR} to approximate \acp{ROM} for this setting.
+Some authors even explicitly proclaim this to be the ``Kolmogorov Barrier'', a hindrance to be overcome by means other than linear approximation; cf.~\cite{Barnett2022}.
 Profiting from the nonlinear capabilities of Deep \acfp{NN}, several publications have applied techniques from Machine Learning to avoid this bottleneck in model reduction.
 In particular, publications such as~\cite{Lee2020, Benner2022, Romor2023, Buchfink2023} employ \acp{DCAE}, components of Deep \acp{NN} explicitly designed for reducing data dimensionality.
 The downsides of this approach reflect common negative effects of using \acp{NN}.
@@ -51,11 +53,10 @@ We can also consider the \ac{OI} identification problems for nonlinear dynamics 
 This framework cannot only handle general nonlinear functions in the approximation but also incorporate additional control variables and structure-preserving methods; cf.~\cite{Kaiser2018, Lee2022}.
 The downside to structure-preserving \acs{SINDY} is that, at the time of writing, this method has only been implemented using the aforementioned \ac{NN} approach, which we explicitly want to avoid.
 
-\itodo{make sure to avoid the $N$-width fallacy!}
-
 As an alternative to the expensive \ac{NN} approach, polynomial approximation has been proposed in mitigating nonlinear models in several forms such as QLMOR, cf.~\cite{Gu2011}, data-driven \ac{OI}, cf.~\cite{Peherstorfer2016, Kramer2019, BGK2020, Qian2022, Geelen2023, Sharma2023}, or by the use of modal derivatives, cf.~\cite{Jain2017, Rutzmoser2017}.
-This ansatz involves generating higher order polynomial data from an originally linear set of fitting data; however, because of the exponential growth of the data dimension for increasing polynomial orders, most authors restrict themselves to second or third order terms, resulting in quadratically or cubically embedded manifolds.
-Some of these publications have also presented results for generic dynamical systems with simple structural constraints, cf.~\cite{BGH2020, Qian2020, Gosea2021, Khodabakhshi2022}; however, no such progress has been made for the more restrictive setting of \ac{PH} systems.
+This ansatz involves generating higher order polynomial data from an originally linear set of fitting data.
+Despite that, because of the exponential growth of the data dimension for increasing polynomial orders, most authors restrict themselves to second or third order terms, resulting in quadratically or cubically embedded manifolds.
+Some of these publications have also presented results for generic dynamical systems with simple structural constraints, cf.~\cite{BGH2020, Qian2020, Gosea2021, Khodabakhshi2022}, however, no such progress has been made for the more restrictive setting of \ac{PH} systems.
 Additionally, hyper-reduction can be applied to non-polynomial nonlinear systems with methods such as the \ac{DEIM}, cf.~\cite{Chaturantabut2010}, with the positive side effect that \ac{DEIM} directly allows application to \ac{PH} systems as outlined in~\cite{Chaturantabut2016}.
 
 Our goal, therefore, is to derive a method to incorporate \ac{MOR} methods with quadratically embedded manifolds into the \ac{PH} system setting.

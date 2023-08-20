@@ -6,7 +6,7 @@ Afterwards, we discuss reduction by means of interpolating the transfer function
 
 \subsection{Balanced Truncation}\label{subsec:balanced-truncation}
 
-\acl{BT} is a method consisting of a two step procedure: balancing and truncation.
+\ac{BT} is a two step procedure consisting of balancing and truncation.
 Firstly, balancing an \ac{LTI} system in a heuristic way means transforming the system such that hard-to-reach states are simultaneously hard to observe.
 Secondly, truncation of the balanced system constitutes itself by omission of the matrix blocks that correspond to hard-to-reach and hard-to-observe system states.
 In this manner, we create a system that prioritizes easily controllable and easily observable states.
@@ -17,7 +17,7 @@ Standard Lyapunov balancing often requires large computational times as~\cite{Gu
 To mitigate this drawback, approximate balanced truncation methods have been developed.
 These include, among others, stochastic balancing~\cite{Desai1984, Green1988}, frequency weighted balancing~\cite{Enns1984, Wang1999}, bounded real balancing~\cite{Opdenacker1988, Reis2010}, or positive real balancing~\cite{Desai1984, Ober1991}.
 For our purposes, it suffices to consider Lyapunov \ac{BT} and \ac{PRBT} since we are not primarily interested in the theory of balancing \ac{MOR} methods.
-\ac{PRBT} in particular plays an important role in the context of this thesis because it produces passive systems that are closely linked to \ac{PH} systems; however, we cover this connection later on in Subsection~\ref{subsec:prbt}.
+\ac{PRBT} in particular plays an important role in the context of this thesis because it produces passive systems that are closely linked to \ac{PH} systems but we cover this connection later on in Subsection~\ref{subsec:prbt}.
 
 We commence with standard Lyapunov \ac{BT} as described in~\cite{BB2017}.
 Consider $(A, B, C, D, E)$ to be a realization of an \ac{LTI} system as in Definition~\ref{def:lti}.
@@ -72,7 +72,10 @@ To finally truncate the system, that is, to obtain a reduced order system, we sp
     \end{pmatrix}.
 \end{equation*}
 Thereafter, we define the balanced \ac{ROM} as $(A_1, B_1, C_1, D, \id)$.
-This reduction even yields the following estimate of the $\mcl{H}_\infty$ projection error $\norm{\tfunc}{\mcl{H}_\infty} \coloneqq \sup\limits_{\omega \in \bb{R}} \sigma_{\max} \left( \tfunc(\iu \omega) \right)$.
+This reduction even yields the following estimate of the $\mcl{H}_\infty$ projection error
+\begin{equation*}
+	\norm{\tfunc - \hat{\tfunc}}{\mcl{H}_\infty} \coloneqq \sup\limits_{\omega \in \bb{R}} \sigma_{\max} \left( \tfunc(\iu \omega) - \hat{\tfunc}(\iu \omega) \right).
+\end{equation*}
 
 \begin{theorem}[{Adapted from~\cite[Theorem~6.4]{BB2017}}]\label{thm:h-inf-error}
     Let $(A_\msc{b}, B_\msc{b}, C_\msc{b}, D_\msc{b}, \id)$ be a balanced realization of an asymptotically stable and minimal system as defined in Definitions~\ref{def:minimal-system} and~\ref{def:lti-stability} with an ordered sequence of real numbers $\sigma_1 > \cdots > \sigma_k > 0$ such that the Gramians read $P = Q = \diag{\sigma_1 \id, \dots, \sigma_k \id}$.
@@ -85,7 +88,10 @@ This reduction even yields the following estimate of the $\mcl{H}_\infty$ projec
 
 \subsection{Interpolation-Based Reduction}\label{subsec:interpolation-reduction}
 
-Whereas balanced \acp{ROM} try to minimize the $\mcl{H}_\infty$-norm, interpolation-based reduced models aim to find bestapproximations with respect to the $\mcl{H}_2$-norm as defined in~\cite[Section~3]{Gugercin2008} by $\norm{\tfunc}{\mcl{H}_2}^2 \coloneqq \frac{1}{2 \pi} \int\limits_{- \infty}^\infty \norm{\tfunc(\iu \omega)}{}^2 \dif \omega$.
+Whereas balanced \acp{ROM} try to minimize the $\mcl{H}_\infty$-norm, interpolation-based reduced models aim to find bestapproximations with respect to the $\mcl{H}_2$-norm as defined in~\cite[Section~3]{Gugercin2008} by
+\begin{equation*}
+	\norm{\tfunc}{\mcl{H}_2}^2 \coloneqq \frac{1}{2 \pi} \int\limits_{- \infty}^\infty \norm{\tfunc(\iu \omega)}{}^2 \dif \omega.
+\end{equation*}
 The problem with this type of optimization problem, as indicated in~\cite[Section~3.1]{Gugercin2008}, is that the set of stable \acp{LTI} does not form a subspace of $\mcl{H}_2$, hence the $\mcl{H}_2$ optimal approximation is not easy to characterize.
 As a replacement for this optimization set, we instead consider the set of all proper rational transfer functions as defined in~\cite[Section~1.3.1]{Corless2003} with the simple poles $\mu \coloneqq {\sset{\mu_i}}_{i = 1}^r \subseteq \bb{C}^r$ in the open left half plane $\bb{C}_{-}$
 \begin{equation*}
@@ -99,7 +105,7 @@ Following~\cite[Theorem~3.1]{Gugercin2008}, this results in an subset of $\mcl{H
 \end{enumerate}
 As a consequence of~\cite[Theorem~3.1]{Gugercin2008}, if we interpolate the \ac{FOM} transfer function $\tfunc$ at the mirror images $\hat{\sigma} = -a + \iu b$ of its poles $\sigma = a + \iu b$, the subspace transfer function $\tfunc_\msc{r} \in \mcl{M}(\mu)$ is $\mcl{H}_2$-optimal among all \acp{ROM} with the same reduced poles $\mu$.
 
-For any local minimizer we can formulate the following necessary optimality conditions of the $\mcl{H}_2$ bestapproximation problem with the interpolation points $\sigma_i \in \bb{C}$ and the tangential directions $b_i, c_i \in \bb{C}^{m}$ for an \ac{LTI} system with $m \in \bb{N}$ inputs and outputs
+For any local minimizer we can formulate the following necessary optimality conditions of the $\mcl{H}_2$ bestapproximation problem with the interpolation points $\sigma_i \in \bb{C}$ and the corresponding tangential directions $b_i, c_i \in \bb{C}^{m}$ for an \ac{LTI} system with $m \in \bb{N}$ inputs and outputs
 \begin{equation}\label{eq:h2-optimality-conditions}
     \tfunc_\msc{r}(- \sigma_i) b_i = \tfunc(- \sigma_i) b_i,\quad c_i\trans \tfunc_\msc{r}(- \sigma_i) = c_i\trans \tfunc(- \sigma_i),\quad c_i\trans \tfunc'_\msc{r}(- \sigma_i) b_i = c_i\trans \tfunc(- \sigma_i) b_i.
 \end{equation}
@@ -128,7 +134,7 @@ It is further notable, that, due to the complex conjugates in the interpolation 
 
 \begin{algorithm}\label{alg:irka}
     \caption{\ac{IRKA}, adapted from~\cite[Algorithm~7.1]{Beattie2017}}
-    \KwData{Initial interpolation points ${\sset{\sigma_i^{(0)}}}_{i = 1}^r$ closed and initial tangent directions ${\sset{r_i^{(0)}}}_{i = 1}^r, {\sset{\ell_i^{(0)}}}_{i = 1}^r$ under complex conjugation, full order model $\Sigma$}
+    \KwData{Initial interpolation points ${\sset{\sigma_i^{(0)}}}_{i = 1}^r$ and initial tangent directions ${\sset{r_i^{(0)}}}_{i = 1}^r, {\sset{\ell_i^{(0)}}}_{i = 1}^r$ closed under complex conjugation, full order model $\Sigma$}
     \tcc{Initialize reduced subspaces}
     $V_r^{(0)} \coloneqq {\left( {(\sigma_i^{(0)} E - A)}\inv B r_i^{(0)} \right)}_{i = 1}^r,\quad W_r^{(0)} \coloneqq {\left( {(\sigma_i^{(0)} E - A\trans)}\inv C\trans \ell_i^{(0)} \right)}_{i = 1}^r$\;
     $k \coloneqq 0$\;

@@ -4,7 +4,7 @@ This subsections deals with optimization-based \ac{PH} \ac{OI} methods.
 In essence, all of these methods choose some parametrization of the underlying system matrices and then run an optimization algorithm to minimize the cost functional that enforces \ac{PH} structure.
 The choice of algorithm, the construction of the individual optimization objectives, and the inclusion of structural constraints reflecting~\eqref{eq:ph-matrix-structure} heavily varies between publications.
 Importantly, we have to consider the initialization of the matrices.
-Most of the algorithms are very succeptible to initial value changes because the respective optimization problems are generally hard to solve.
+Most of the algorithms are very susceptible to initial value changes because the respective optimization problems are generally hard to solve.
 
 The first method we consider is the nearest \ac{PH} system mentioned at the end of the previous subsection as described in~\cite{Gillis2018} and~\cite{Cherifi2019}.
 The main minimization problem is given by the relation to the inferred \ac{LTI} system $\Sigma_\msc{lti}$ with the realization $(A, B, C, D, E)$
@@ -25,8 +25,6 @@ Besides this advantage, we can computate the cost function's gradient in the Fro
     \nabla_X \norm{A X - B}{F}^2 = 2 A\trans (A X - B).
 \end{equation*}
 As far as initialization is concerned, the authors of~\cite{Gillis2018} propose two methods: initialize with the additional assumption $P = 0$ such that the optimal solution can be given analytically, or solve a \ac{LMI} to compute an initial \ac{PH} realization along the same line of arguments as previous links between \acp{LMI} and positive real systems have done.
-
-\itodo{Changes from here!}
 
 Another \ac{FGM}-related method is the \ac{PHDMD} algorithm given in~\cite{Morandin2023}.
 As the name implies, this is closely linked to the \ac{DMD} method in that we want to minimize
@@ -79,10 +77,10 @@ The benefit of this formulation is immediate by the next result, and its effects
         \mcl{T} = V \Sigma W_1\trans,\quad V \in \bb{R}^{(n + m) \times r},\quad \Sigma \in \bb{R}^{r \times r},\quad W_1 \in \bb{R}^{k \times r},
     \end{equation*}
     where $r = \rank{\mcl{T}}$, $\Sigma$ is regular, and $V$ as well as $W_1$ satisfy $V\trans V = \id[r], W_1\trans W_1 = \id[r]$, respectively.
-    Further let $V_2 \in \bb{R}^{k \times k - r}$ extend $V_1$ such that $V = \begin{pmatrix}
+    Further let $V_2 \in \bb{R}^{k \times (k - r)}$ extend $V_1$ such that $V = \begin{pmatrix}
         V_1 & V_2
     \end{pmatrix}$ satisfies $V\trans V = \id[k]$.
-    Then, the matrices
+    Then the matrices
     \begin{equation*}
         \mcl{J}^\ast \coloneqq W \Sigma\inv \sksym{\Sigma W\trans \mcl{Z} V_1} \Sigma\inv W\trans,\quad \mcl{R}^\ast \coloneqq W \Sigma\inv \psd{- \Sigma W\trans \mcl{Z} V_1} \Sigma\inv W\trans
     \end{equation*}
@@ -99,7 +97,7 @@ The benefit of this formulation is immediate by the next result, and its effects
 
 \begin{lemma}[{Adapted from~\cite[Theorem~3.11]{Morandin2023}}]\label{lem:relation-ph-dmd-problems}
     Let $\mcl{T}, \mcl{Z} \in \bb{R}^{(n + m) \times k}$ be the two data matrices as defined in Equation~\eqref{eq:ph-dmd-data-matrices} with $\rank{\mcl{T}} = n + m$.
-    Then, there exists a constant $c > 0$ such that for all matrices $\mcl{J}, \mcl{R} \in \bb{R}^{(n + m) \times (n + m)}$ it holds that
+    Then there exists a constant $c > 0$ such that for all matrices $\mcl{J}, \mcl{R} \in \bb{R}^{(n + m) \times (n + m)}$ it holds that
     \begin{equation*}
         \norm*{\mcl{Z} - (\mcl{J} - \mcl{R}) \mcl{T}}{F}^2 \leq c^2 \norm*{\mcl{T}\trans \left( \mcl{Z} - (\mcl{J} - \mcl{R}) \mcl{T} \right)}{F}^2.
     \end{equation*}
@@ -133,7 +131,7 @@ Solutions to the subproblem~\eqref{eq:ph-dmd-skew-sym-subproblem} are given by t
             0 & 0
         \end{pmatrix},\quad \Sigma_1 = \diag{\sigma_1, \dots, \sigma_r} \in \bb{R}^{r \times r}.
     \end{equation*}
-    Next, we define the matrices $\Phi = {\varphi_{i, j}}_{i, j = 1}^r \in \bb{R}^{r \times r}$, where $\varphi_{i, j} = \frac{1}{\sigma_i^2 + \sigma_j^2}$, and
+    Next, we define the matrices $\Phi = {(\varphi_{i, j})}_{i, j = 1}^r \in \bb{R}^{r \times r}$, where $\varphi_{i, j} = \frac{1}{\sigma_i^2 + \sigma_j^2}$, and
     \begin{equation*}
         A = \begin{pmatrix}
             \id[r] & 0
@@ -148,7 +146,7 @@ Solutions to the subproblem~\eqref{eq:ph-dmd-skew-sym-subproblem} are given by t
         \end{pmatrix} \in \bb{R}^{(n + m - r) \times r},
     \end{equation*}
     with which we further calculate $J_1 = 2 \Phi \odot \sksym{A \Sigma_1}, J_2 = B \Sigma_1\inv$, where the matrix operator $\odot$ denotes the usual Hadamard product and $\sksym{\cdot}$ is the projection onto the set of skew-symmetric matrices as mentioned in Lemma~\ref{lem:weighted-ph-dmd-solution}.
-    Then, for any skew-symmetric matrix $J_4 \in \bb{R}^{(n + m - r) \times (n + m - r)}$, the matrix
+    Then for any skew-symmetric matrix $J_4 \in \bb{R}^{(n + m - r) \times (n + m - r)}$, the matrix
     \begin{equation*}
         \mcl{J} \coloneqq V\trans \begin{pmatrix}
             J_1 & -J_2\trans \\
@@ -186,8 +184,6 @@ Notably, this algorithm is very sensitive to initial conditions: if we use an in
     }
     $\mcl{J} \coloneqq \mcl{J}_k,\quad \mcl{R} \coloneqq \mcl{R}_k$\;
 \end{algorithm}
-
-\itodo{Changes up to here!}
 
 Instead of choosing an \ac{LSQ} approach which fits both the output data and the state data, we can also consider a calibration problem
 \begin{equation}\label{eq:günther-calibration-objective}
@@ -260,7 +256,7 @@ To this end, we introduce the following vector-to-matrix functions
     \end{pmatrix}, \label{eq:v2u}\\
     &\vecstrict \colon \bb{C}^{\frac{n (n - 1)}{2}} \to \bb{C}^{n \times n},\quad &&\theta \mapsto \begin{pmatrix}
         0 & v_1 & v_2 & \cdots & v_{n - 1} \\
-        0 & 0 & v_n & \cdots & v_{2n - 2} \\
+        0 & 0 & v_n & \cdots & v_{2n - 3} \\
         0 & 0 & 0 & \ddots & \vdots \\
         0 & 0 & 0 & 0 & v_{\frac{n (n - 1)}{2}} \\
         0 & 0 & 0 & 0 & 0
@@ -284,20 +280,19 @@ Note that the matrices $R, P$, and $S$ can also be amalgated into a single block
 The \ac{SOBMOR} algorithm as described in~\cite{SV2023} too uses a data-based objective functional such as the one in Equation~\eqref{eq:günther-calibration-objective} from~\cite{Günther2023}.
 In contrast to Equation~\eqref{eq:günther-calibration-objective}, the authors compute the error as a sum of singular values of an error matrix $\tfunc(s_i) - \tfunc_\theta(s_i) \in \bb{R}^{m \times m}$, where $s_i \in \bb{C}$ are sample points, and $\tfunc$ and $\tfunc_\theta$ denote the transfer functions of the \ac{FOM} $\Sigma_\msc{ph}$ as well as the reduced system $\hat{\Sigma}_\msc{ph}$.
 This error term directly relates the optimized system to the $\mcl{H}_\infty$ norm from truncation-based model reduction described in Section~\ref{subsec:balanced-truncation}.
-The computation of the $\mcl{H}_\infty$ norm; however, is slow in repeated settings as well as for large scale systems, rendering it undesirable as an optimization objective.
+The computation of the $\mcl{H}_\infty$ norm, however, is slow in repeated settings as well as for large scale systems, rendering it undesirable as an optimization objective.
 
 For this thesis, we only consider the levelled objective functional on a set of sample points $\mcl{S}$, which includes the $L$ largest singular values
 \begin{equation}\label{eq:sobmor-objective}
     \mcl{L}(\gamma, \tfunc, \tfunc_\theta, \mcl{S}) \coloneqq \frac{1}{\gamma} \sum\limits_{s \in \mcl{S}} \sum\limits_{i = 1}^L {\left( {[\sigma_i(\tfunc(s) - \tfunc_\theta(s)) - \gamma]}_+ \right)}^2,
 \end{equation}
 where we define ${[x]}_+ \coloneqq \max \{ 0, x \}$.
-In~\cite{Schwerdtner2021, SV2021}, the authors consider only the $L$ largest singular value for every datum; however, in the later publications~\cite{Schwerdtner2023, SV2023} they rely on a fixed number of the largest singular values instead.
-\itodo{mention selecting relevant singular values (not necessary, because num svals depends on I/O dim\dots)}
+In~\cite{Schwerdtner2021, SV2021}, the authors consider only the $L$ largest singular value for every datum but in the later publications~\cite{Schwerdtner2023, SV2023} they rely on a fixed number of the largest singular values instead.
 In practice, the levelled \ac{LSQ} truncates the minimum error at every optimization step, which then allows us to update the bound via either specifying a fixed sequence of tolerances or by adaptively performing a bisection algorithm on the bound.
 
-In order to compute the gradient of the objective function~\eqref{eq:sobmor-objective} with respect to $\theta$, let $f_i(s; \theta) \coloneqq \sigma_i(\tfunc(s) - \tfunc_\theta(s))$ and $g(\theta) \coloneqq L(\gamma, \tfunc, \tfunc_\theta, \mcl{S})$ denote the inner and outer function, respectively.
+In order to compute the gradient of the objective function~\eqref{eq:sobmor-objective} with respect to $\theta$, we define $f_i(s; \theta) \coloneqq \sigma_i(\tfunc(s) - \tfunc_\theta(s))$ and $g(\theta) \coloneqq L(\gamma, \tfunc, \tfunc_\theta, \mcl{S})$ to denote the inner and outer function, respectively.
 We first calculate the derivative of the outer function $g$ and afterwards the inner derivative of $f$.
-For a parameter $\theta \in \bb{R}^N$ we consider the gradient at the point $\xi \in \bb{R}^N$ given by $\nabla_\theta g(\xi) = {(\pd[\theta_1]{} g(\xi), \dots, \pd[\theta_N]{} g(\xi))}\trans$.
+For a parameter $\theta \in \bb{R}^N$ we consider the gradient for each of its components $\theta_1, \dots, \theta_N$ at the point $\xi \in \bb{R}^N$ given by $\nabla_\theta g(\xi) = {(\pd[\theta_1]{} g(\xi), \dots, \pd[\theta_N]{} g(\xi))}\trans$.
 We compute each of its left and right partial derivatives $\pd[]{-}$ and $\pd[]{+}$, respectively, by evaluating
 \begin{equation}\label{eq:outer-sobmor-objective-gradient}
     \begin{alignedat}{1}
@@ -305,7 +300,7 @@ We compute each of its left and right partial derivatives $\pd[]{-}$ and $\pd[]{
         &= \frac{2}{\gamma} \sum\limits_{f_i(s; \xi) > \gamma} (f_i(s; \xi) - \gamma) \pd[\theta_l]{-} f_i(s; \xi),\quad l = 1, \dots, N.
     \end{alignedat}
 \end{equation}
-As noted in~\cite[Remark~3.8]{SV2023}, the inner function $f$ is not differentiable at $\xi \in \bb{C}$ in general; however, the sum of the $L$ singular values still is.
+As noted in~\cite[Remark~3.8]{SV2023}, the inner function $f$ is not differentiable at $\xi \in \bb{C}$ in general but the sum of the $L$ singular values still is.
 Furthermore, if all singular values represented in $f_i(s; \xi)$ that are greater than $\gamma$ are simple, then the left and right partial derivatives coincide and can be computed explicitly.
 Henceforth, we assume that this simplicity condition on the singular values holds true for all the relevant ones.
 In order to compute the gradients of the inner functions $f_i$, we require the following Lemma.
@@ -325,7 +320,10 @@ In order to compute the gradients of the inner functions $f_i$, we require the f
     We only demonstrate why the statement holds for the functions $\vecmat$ and $\matvec$.
     Let $A \in \bb{C}^{m \times n}$ be a matrix and consider $e_i$ to be the $i$-th standard basis vector of $\bb{R}^{n \cdot m}$.
     Suppose that $i$ corresponds to some index pair $(k, l) \in \bb{N}^2$ such that $\vecmat(e_i) = {(\delta_{i, k} \cdot \delta_{j, l})}_{i, j = 1}^{n, m} \eqqcolon E$.
-    By consulting the definition of $\matvec$, we see that $\matvec(A\trans) = {(a_{1, 1}, \dots, a_{m, 1}, a_{1, 2}, \dots, a_{m, n})}\trans$.
+    By consulting the definition of $\matvec$, we see that
+    \begin{equation*}
+        \matvec(A\trans) = {(a_{1, 1}, \dots, a_{m, 1}, a_{1, 2}, \dots, a_{m, n})}\trans.
+    \end{equation*}
     Thus, by multiplication we calculate $e_i\trans \matvec(A\trans) = a_{l, k}$, where $a_{l, k}$ is the entry of $A$ at index $(l, k)$.
     On the other hand, we compute $A E = (0, \dots, a^{(k)}, \dots, 0) \eqqcolon \bb{A}$, with $a^{(k)}$ signifying the $k$-th column of $A$ located at the $l$-th column of $\bb{A}$.
     Therefore, by applying the trace operator to $A E$, we only select the $l$-th element from the $l$-th column of $\bb{A}$, corresponding to the $l$-th element of the $k$-th column of $A$, which thus implies that $\trace{A E} = a_{l, k}$.
@@ -368,7 +366,7 @@ In order to compute the gradients of the inner functions $f_i$, we require the f
              &= E(\theta) + \varepsilon \left( {\vecupper(e_i)}\trans \vecupper(\theta_E) + {\vecupper(\theta_E)}\trans \vecupper(e_i) \right) + \varepsilon^2 {\vecupper(e_i)}\trans \vecupper(e_i).
         \end{aligned}
     \end{equation}
-    We now want to take the first derivative of~\eqref{eq:sobmor-e-matrix-update} with re $\varepsilon$.
+    We now want to take the first derivative of~\eqref{eq:sobmor-e-matrix-update} with respect to $\varepsilon$.
     For this, we define the intermediary matrix $\Delta_E \coloneqq {\vecupper(e_i)}\trans \vecupper(\theta_E) + {\vecupper(\theta_E)}\trans \vecupper(e_i)$ and compute the transfer function
     \begin{equation}\label{eq:sobmor-e-variation}
         \begin{aligned}

@@ -174,8 +174,6 @@ In this system formulation we use the following combined block matrix constructi
     \end{gathered}
 \end{equation*}
 
-\itodo{To the reviewer: is the $J$ matrix stacking okay? Does it look bad?}
-
 Another consideration we mention in this part of the thesis is the possibility for considering quadratic controls and by extension quadratic outputs.
 In effect, if we repeat the process described above but instead of using the quadratic state variables $X_\msc{q}, \dot{X}_\msc{q}$ when inferring the quadratic system we consider the quadratic control and output variables $\hat{U}_\msc{q} = U \odot U, \hat{Y}_\msc{q} = (Y - Y_\msc{l}) \odot (Y - Y_\msc{l}) \in \bb{R}^{m \times k}$, then we can repeat the \ac{PHDMD} algorithm to infer another quadratic model $\hat{\Sigma}_\msc{q}$.
 The coupling of the linear system $\Sigma_\msc{l}$ and the quadratic system $\hat{\Sigma}_\msc{q}$ for quadratic control and output variables $u_\msc{q}, y_\msc{q} \in \bb{R}^{\frac{m (m + 1)}{2}}$ then takes the form
@@ -235,7 +233,7 @@ The first of these is that \ac{PH} systems are often only viewed through the len
 Secondly, the increase in the dimensionality only depends on the number of controls and outputs, remaining constant for increasing \ac{ROM} orders instead of scaling quadratically like in the construction of the quadratically embedded systems detailed above.
 Lastly, this choice also resolves the issue of constructing an appropriate matrix $E_\msc{q}$ because we no longer need to couple quadratic internal states.
 Thus, constructing frequency-based quadratically embedded systems enriches the model in a meaningful way.
-In contrast hoewver, there are also some downsides to this.
+In contrast however, there are also some downsides to this.
 First of all, ignoring the internal states misses the original motivation of the quadratically embedded manifolds as described in Section~\ref{sec:mor-quadratically-embedded-manifolds} and thus ignores the order of the linear \ac{ROM}.
 Secondly, the final combined system does not share the same number of inputs and outputs as the \ac{FOM}.
 While this downside can easily be mitigated by selecting the relevant linear outputs of the coupled system, this still requires care when simulating the model.

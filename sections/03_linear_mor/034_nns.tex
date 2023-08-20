@@ -6,12 +6,12 @@ Thus, we inherently rely on some basic knowledge in the structure of \acp{NN} an
 For references on \acp{NN} and Deep Learning we refer to sources such as~\cite{Goodfellow2016, Kubat2017, Sarker2021}, as well as the other citations therein.
 
 To approximate a function $f \colon \bb{R}^n \to \bb{R}$ or, more generally, an operator $A \colon \bb{R}^n \to \bb{R}^m$ with \acp{NN}, the general procedure consists of first constructing a parametrized network $A_\theta$ intended to approximate the operator $A$ and then training the network by successively updating the parameter $\theta$.
-We obtain these updates by evaluating an approximate gradient of a loss function which ressembles a measured error between the output of the original operator $A$ and its computed counterpart as the output of $A_\theta$.
+We obtain these updates by evaluating an approximate gradient of a loss function which resembles a measured error between the output of the original operator $A$ and its computed counterpart as the output of $A_\theta$.
 By the choice of nonlinear activation functions in the network's hidden layers, this method can produce very accurate nonlinear models while being easily parallelizable.
 However, it requires both large amounts of data as well as appropriate design choices in the structure of the \ac{NN} to generalize from restrictive input data to more complex verification data.
 
 Besides the ability to mimic operator behaviour, \ac{NN} architectures can recreate effects akin to \ac{MOR}.
-To this end, modern deep \ac{NN} techniques are employed to inherently produce \acp{NN} that in turn ressemble a low order network.
+To this end, modern deep \ac{NN} techniques are employed to inherently produce \acp{NN} that in turn resemble a low order network.
 In recent publications such as~\cite{Lee2020, Salvador2021, Benner2022, Kim2022, Buchfink2023}, \acp{DCAE} are introduced.
 These networks consist of two parametrized components: an encoder $e_\theta \colon \bb{R}^n \to \bb{R}^r$ and a decoder $d_\theta \colon \bb{R}^r \to \bb{R}^n$.
 Here, the encoder serves as a means to reduce the state order by computing $x_\msc{r} = e_\theta(x) \in \bb{R}^r$, and the decoder acts as the reconstruction of the reduced state back to the \ac{FOM} state $\hat{x} = d_\theta(x_\msc{r})$.
@@ -21,7 +21,7 @@ To train the encoder-decoder pair, we typically choose a loss function that corr
 \end{equation}
 In addition to the loss function $\mcl{L}_{\msc{data}}$, we can also enforce systemic constraints on the components of the \acp{ROM}.
 As an example, the approach highlighted in~\cite{Buchfink2023} introduces a second loss function $\mcl{L}_{\msc{sympl}}(\theta)$ that weakly enforces the final \ac{ROM}'s symplecticity, a property closely related to the physically motivated nature of \ac{PH} systems.
-Then, the combined loss function $\mcl{L} \coloneqq \alpha \mcl{L}_{\msc{data}} + (1 - \alpha) \mcl{L}_{\msc{sympl}}$ not only generates a reduced order model but also weakly forces a symplectic structure of the \ac{ROM}.
+Then the combined loss function $\mcl{L} \coloneqq \alpha \mcl{L}_{\msc{data}} + (1 - \alpha) \mcl{L}_{\msc{sympl}}$ not only generates a reduced order model but also weakly forces a symplectic structure of the \ac{ROM}.
 
 When we consider \ac{NN}-based approximation, we arrive at a clear distinction between the offline and the online phases: we have to perform expensive calculations while training the model offline, and after the reduction we can efficiently evaluate the structure of the network to get results in the online evaluation phase.
 Unfortunately, the training process conceptually obfuscates how the low order state representation $e_\theta(x)$ is connected to the full order state $x$.

@@ -3,7 +3,7 @@
 In Section~\ref{sec:system-mor}, we covered some linear \ac{MOR} frameworks for \ac{LTI} systems.
 Now, we want to extend these linear methods to \ac{PH} systems by introducing structure preservation into the \ac{BT} and \ac{IRKA} methods.
 This is by no means easy because the restriction from the set of unstructured matrices to more restrictive sets, like the families of skew-symmetric or symmetric positive definite matrices, causes even more complexity in the optimization step.
-However, these algorithms are the foundation for the linear \acp{ROM} we need when constructing more involved models.
+Yet, these algorithms are the foundation for the linear \acp{ROM} we need when constructing more involved models.
 To start off this section, we expand the standard \ac{BT} formulation to positive real \ac{LTI} systems and demonstrate how these are related to \ac{PH} systems in Subsection~\ref{subsec:prbt}.
 Afterwards, in Subsection~\ref{subsec:ph-irka}, we quickly illustrate \ac{PHIRKA}, an extension of the usual \ac{IRKA} algorithm.
 Lastly, we mention \ac{DEIM} and effort to apply it to \ac{PH} systems in Subsection~\ref{subsec:ph-deim}.
@@ -181,7 +181,14 @@ In order to understand why the specific choice of $V_r^{(k)}$ and $W_r^{(k)}$ cr
 
 \begin{lemma}[{Adapted from~\cite[Theorem~7]{Gugercin2012}}]\label{lem:ph-irka-subspace}
     Let $\Sigma_\msc{ph}$ be an \ac{LTI} \ac{PH} system with the realization $(E, Q, J, R, G, P, N, S)$ and consider the following sets of interpolation points ${\sset{\sigma_i}}_{i = 1}^r \subseteq \bb{C}$ and tangential directions ${\sset{r_i}}_{i = 1}^r \subseteq \bb{C}^m$ closed under complex conjugation.
-    If we construct the reduced subspaces $V_r \coloneqq {\left( {(\sigma_i E - (J - R) Q)}\inv (G - P) r_i \right)}_{i = 1}^r$ and $W_r = Q V_r {(V_r\trans Q V_r)}\inv$ and define the reduced system matrices $E_r = W_r\trans E W_r, Q_r = V_r\trans Q V_r, J_r = W_r\trans J W_r, R_r = W_r\trans R W_r, G_r = W_r\trans G, P_r = W_r\trans P, N_r = N, S_r = S$, then $(E_r, Q_r, J_r, R_r, G_r, P_r, N_r, S_r)$ is the realization of a passive \ac{PH} system.
+    If we construct the reduced subspaces $V_r \coloneqq {\left( {(\sigma_i E - (J - R) Q)}\inv (G - P) r_i \right)}_{i = 1}^r$ and $W_r = Q V_r {(V_r\trans Q V_r)}\inv$, and define the reduced system matrices
+    \begin{equation*}
+        \begin{split}
+            E_r = W_r\trans E W_r,\quad Q_r = V_r\trans Q V_r,\quad J_r = W_r\trans J W_r,\quad R_r = W_r\trans R W_r, \\
+            G_r = W_r\trans G,\quad P_r = W_r\trans P,\quad N_r = N,\quad S_r = S,
+        \end{split}
+    \end{equation*}
+    then $(E_r, Q_r, J_r, R_r, G_r, P_r, N_r, S_r)$ is the realization of a passive \ac{PH} system.
     Additionally, the reduced transfer function $\tfunc_r$ interpolates the \ac{FOM} transfer function $\tfunc$ at all interpolation points $\sigma_i$ and all tangential directions $r_i$.
 \end{lemma}
 
@@ -203,10 +210,10 @@ In order to understand why the specific choice of $V_r^{(k)}$ and $W_r^{(k)}$ cr
 \begin{remark}
     While we have so far only presented \ac{PRBT} and \ac{PHIRKA} in this section, other \ac{PH} reduction methods are available.
     Among them are moment matching as detailed in~\cite{Polyuga2010} or algorithms based on \ac{OI} such as~\cite{BGD2020} and~\cite{Lee2022}.
-    We discuss some more optimization-based \ac{OI} procedures in Chapter~\ref{chap:inferring-models}; however, the focus for these will be on how we can adapt them to allow the application of quadratically embedded manifolds.
+    We discuss some more optimization-based \ac{OI} procedures in Chapter~\ref{chap:inferring-models} but the focus for these will be on how we can adapt them to allow the application of quadratically embedded manifolds.
 \end{remark}
 
-\begin{algorithm}\label{alg:ph-irka}
+\begin{algorithm}[ht]\label{alg:ph-irka}
     \caption{\ac{PHIRKA}, adapted from~\cite[Algorithm~1]{Gugercin2012}}
     \KwData{Initial interpolation points $\sigma$ closed and initial tangent directions $r_1^{(0)}, \dots, r_r^{(0)}$ under complex conjugation, full order model $\Sigma$}
     \tcc{Initialize reduced subspaces}
@@ -229,7 +236,7 @@ In order to understand why the specific choice of $V_r^{(k)}$ and $W_r^{(k)}$ cr
     $G_r^{(k)} \coloneqq {W_r^{(k - 1)}}\trans G,\quad P_r^{(k)} \coloneqq {W_r^{(k - 1)}}\trans P$\;
 \end{algorithm}
 
-\subsection{\texorpdfstring{\ac{PH}}{PH} Discrete Empirical Interpolation Method}\label{subsec:ph-deim}
+\subsection{\texorpdfstring{\acs{PH}}{PH} Discrete Empirical Interpolation Method}\label{subsec:ph-deim}
 
 Besides the \ac{LTI}-based \ac{MOR} algorithms, we can also consider systems with state-dependent couplings akin to the following system under the usual conditions~\eqref{eq:ph-matrix-structure}
 \begin{equation}\label{eq:nonquadratic-ph-system}
@@ -246,7 +253,7 @@ For generic nonlinear functions $f \colon \bb{R}^n \to \bb{R}^n$, \ac{DEIM} calc
 The projection matrix $\bb{P}$ is constructed explicitly from $m \in \bb{N}$ linearly independent vectors ${\sset{u_i}}_{i = 1}^m \subseteq \bb{R}^n$ and a set of unit vectors ${\sset{e_{\gamma_i}}}_{i = 1}^m \subseteq \bb{R}^n$ selected from indices ${\sset{\gamma_i}}_{i = 1}^m \subseteq \bb{N}$.
 In order to compute the indices $\gamma_i$, we apply Algorithm~\ref{alg:deim}.
 
-\begin{algorithm}\label{alg:deim}
+\begin{algorithm}[ht]\label{alg:deim}
     \caption{\ac{DEIM}, adapted from~\cite[Algorithm~1]{Chaturantabut2010} and~\cite[Algorithm~4]{Chaturantabut2016}}
     \KwData{${\sset{}}_{i = 1}^m \subseteq \bb{R}^n$ linearly independent}
     \tcc{Compute initial index}
@@ -274,7 +281,7 @@ First, we identify any linear components of $Q$ such that for a matrix $M \in \b
 \end{equation}
 Thereafter, we select a new modelling basis orthonormalized with respect to $M$ so that the nonlinear part $q$ satisfies $\nabla_x q(x(t)) \approx U g(t)$ and $U\trans M U = \id$ for some $g(t) \in \bb{R}^m$.
 We then apply Algorithm~\ref{alg:deim}, compute $\bb{P} \in \bb{R}^{n \times n}$, and apply the projection to the nonlinear part $Q(x) \approx M x + \bb{P} q\left( \bb{P}\trans x \right)$.
-The projection step on $q$ reduces the number of nonlinear evaluations to $m$ components of $q$ on $m$ entries of $x$ each, thus allowing for a reduction in overall computational effort.
+The projection step on $q$ reduces the number of nonlinear evaluations to $m$ components of $q$ on $m$ entries of $x$ each, thus allowing for a reduction in the overall computational effort.
 
 Finally, state reduction takes place via \ac{POD}, a well known and researched \ac{MOR} technique, see e.g.~\cite{Pinnau2008}.
 We compute a projection matrix $V_\msc{r} \in \bb{R}^{n \times r}$ for a reduced dimension $r \in \bb{N}$ and calculate the reduced state coupling

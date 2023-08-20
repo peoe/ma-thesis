@@ -12,10 +12,10 @@ Modelling dynamical systems in this manner makes it incredibly easy to combine m
 We use this interconnectivity in combining linear and higher order approximations of \acl{PH} systems.
 
 Reducing \acl{PH} systems, unfortunately, is not as straightforward as reducing systems with no inherent physical structure; however, appropriate methods which originate from the unstructured approach are prevalent in literature.
-Usually, the structure-preserving procedures are more computationally involved compared to the basic model reduction algorithms from whom they originate, because more caution has to be exercised in order to conserve matrix structure.
+Usually, the structure-preserving procedures are more computationally involved compared to the basic model reduction algorithms from which they originate, because more caution has to be exercised in order to conserve matrix structure.
 The benefit of choosing one of these structure-preserving methods is that the system's overarching properties stay unchanged: energy dissipating system elements remain energy dissipating even after model reduction, and similarly, conservative components remain energy preserving.
 
 Most classical \acl{MOR} approaches suffer from the fact that the decay rate of the projection error between full order and reduced order model is linked to the kind of model and the specific initial conditions.
-This can result in very good decay rates of the so-called Kolmogorov $N$-width for elliptic problems but also in very slow decay rates for models such as wave equations under non-sinusoidal initial conditions.
+This can result in very good decay rates of the so-called Kolmogorov $N\text{-width}$ for elliptic problems but also in very slow decay rates for models such as wave equations under non-sinusoidal initial conditions.
 In mitigating these drawbacks, some authors have resorted to complex methods based on \aclp{NN} and autoencoders; however, these lose all sense of explainability due to their intransparent training process.
 The goal of this thesis is thus to incorporate explainability alongside the benefits of nonlinear \acl{MOR} by using polynomial terms in conjunction with conventionally reduced linear \acl{PH} models.

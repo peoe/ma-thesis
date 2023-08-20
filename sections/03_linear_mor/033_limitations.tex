@@ -1,21 +1,22 @@
 \section{Abstract Limitations of Linear MOR}\label{sec:limitations-linear-mor}
 
-This section is not directly linked to the scope of this thesis; however, it demonstrates an important motivation for the next chapter.
+This section is not directly linked to the scope of this thesis but it demonstrates an important motivation for the next chapter.
 We therefore think it reasonable to discuss the limitations of linear MOR for \acp{PDE}.
-In effect, we want to carry this motivation onto the problem inherent in this manuscript; however, no similar results to the ones we present in this section are available at the time of writing.
+In effect, we want to carry this motivation onto the problem inherent in this manuscript, however, no similar results to the ones we present in this section are available at the time of writing.
 We therefore commence with the description of a greedy reduction algorithm and afterwards discuss what implications we derive for the abstract Kolmogorov $N$-width.
 
 Unlike the truncation-based or interpolation-based methods presented in Section~\ref{sec:system-mor}, greedy algorithms rely on a solution snapshot based linear subspace approximation, see e.g.~\cite{Grepl2005, Rozza2008, Buffa2012}.
 In this setting, solution snapshots are defined as individual solutions $u(\mu_i) \in \bb{R}^n$ of the parametric \ac{PDE}
 \begin{equation}\label{eq:parametric-pde}
-    A(\mu) u = L(\mu),
+    A(\mu) u = L(\mu)
 \end{equation}
 with the operators $A(\mu) \in \bb{R}^{n \times n}, L(\mu) \in \bb{R}^n$ defined on a parameter space $\mcl{P} \subseteq \bb{R}^P$ for differing parameters $\mu \in \mcl{S}$ in a sample set $\mcl{S} \subseteq \mcl{P}$ with $\abs{\mcl{S}}{} = r \in \bb{N}$ elements.
 Using a greedy approach, we choose a momentarily optimal basis element to improve the approximation in each iteration instead of computing an optimal basis for the entire reduced model.
 
 The idea is as follows: Given a sample set of parameters $\mcl{S}$ and an associated reduced linear subspace $V_r \subseteq \bb{R}^r$ spanned by the solution snapshots $u(\mu_i), i = 1, \dots, r$, we then want to choose the next parameter sample $\mu_{r + 1}$ such that the \ac{ROM} solution $u_\msc{r}(\mu_{r + 1})$ creates the largest error over all possible parameters with respect to the full order solution $u(\mu_{r + 1})$.
 Afterwards, we add the basis element to our reduced subspace by computing the linear span $V_{r + 1} = \lspn{V_r, u(\mu_{r + 1})}$.
-Because $u_\msc{r}(\mu_{r + 1})$ induces the largest error with respect to the previous basis $V_r$, we maximize the reduction in error over all selected sampling parameters in every iteration; however, this cannot be guaranteed to result in the optimal basis for every problem.
+Because $u_\msc{r}(\mu_{r + 1})$ induces the largest error with respect to the previous basis $V_r$, we maximize the reduction in error over all selected sampling parameters in every iteration.
+Still, this cannot be guaranteed to result in the optimal basis for every problem.
 An algorithmic depiction of the greedy method is given in Algorithm~\ref{alg:greedy}.
 
 \begin{algorithm}\label{alg:greedy}
@@ -61,6 +62,6 @@ Similarly, as demonstrated in~\cite{Greif2019}, the Kolmogorov $N$-width~\eqref{
 \end{equation*}
 
 While the slow decay has an effect on the increase in approximation quality with respect to the \ac{ROM} dimension if the projection error can be bounded by the Kolmogorov $N$-width, the existence of such results is by no means guaranteed and can therefore only be understood as an indication.
-Similarly, obtaining an upper bound on the projection error through~\eqref{eq:kolmogorov-n-width} does not guarantee that we can preemptively determine a reduced order for which a desired error tolerance is achieved; however, a slow decay of the $N$-width often results in the need for larger \acp{ROM}.
+Similarly, obtaining an upper bound on the projection error through~\eqref{eq:kolmogorov-n-width} does not guarantee that we can preemptively determine a reduced order for which a desired error tolerance is achieved but a slow decay of the $N$-width often results in the need for larger \acp{ROM}.
 The drawback of these bases increasing in dimension is the simultaneous increase in computational cost, hence diminishing the (online) speedup obtained from reducing the model.
 The consequence of these findings is immediate: to preserve the speedup obtained from \ac{MOR}, we need to incorporate nonlinear parts into the construction of the \acp{ROM}.

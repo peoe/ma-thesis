@@ -32,12 +32,9 @@ To compare the results of both methods, we additionally compare them to the mode
 \itodo{consider smaller msd model}
 \itodo{plot data}
 
-% include dim 6 MSD matrices from morandin/gugercin source
 % in experiment use dim 100 as FOM and reduce to lower orders as needed
-% quadratic models are prob only feasible upto 10/12, beyond that we overfit
 % compute more LROM instances to compare the decay to equivalent QROM dims (i.e. LROM dim 6 -> QROM dim 27 -> compare to another LROM of dim 27)
 % mention drawbacks in comparison to phirka/prbt lroms (data-based in general is much worse due to reduced amounts of informaiton availbale)
-% try to run SOBMOR on the inferred LROM :)
 
 \section{Damped Wave Equation}\label{sec:damped-wave-equation}
 
@@ -51,7 +48,7 @@ To this end we consider the unit interval $\Omega = \interval{0}{1}$ as well as 
     \pd[t]{2} \omega + \alpha \pd[t]{} \omega = c^2 \lapl[\omega],
 \end{equation}
 where $\omega \colon \Omega \times I \to \bb{R}$ denotes the amplitude of our medium in space, $\lapl$ is the Laplace operator, $n \in \bb{R}$ is the unit outer normal of the spatial domain $\Omega$, and $\alpha, c > 0$ describe the damping coefficient and wave speed, respectively.
-Obviously, this is not yet a \ac{PH} system.
+Obviously, Equation~\eqref{eq:basic-damped-wave} is not yet a \ac{PH} system.
 In order to obtain a \ac{PH} formulation, we follow the the procedure described in~\cite{Serhani2019_2, HMS2022} in combination with the problems described in~\cite{Brugnoli2021, Poussot2023}.
 Instead of discretizing the entire equation in terms of the local function $\omega$, we consider the following subsitutive variables
 \begin{equation*}

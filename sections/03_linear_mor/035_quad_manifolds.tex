@@ -10,7 +10,7 @@ In the linear MOR framework, the full state variables $x \in \bb{R}^n$ are reduc
     x \approx x_\msc{ref} + V x_r,\quad V \in \bb{R}^{n \times r},
 \end{equation}
 where $x_\msc{ref} \in \bb{R}^n$ serves as a reference state to allow for normalization of the state data, the choice of which is dependent on the problem under consideration.
-There exist multiple options to construct the projection matrix $V \in \bb{R}^{n \times r}$; however, these methods are outside the scope of this thesis, which is why we refer the interested reader to~\cite{BOP2017, BCO2017} and the references contained therein.
+There exist multiple options to construct the projection matrix $V \in \bb{R}^{n \times r}$, however, these methods are outside the scope of this thesis, which is why we refer the interested reader to~\cite{BOP2017, BCO2017} and the references contained therein.
 We measure the reduction error for the state snapshot matrices $X \coloneqq (x_1, \dots, x_k), X_\msc{ref} \coloneqq {(x_\msc{ref})}_{i = 1}^k \in \bb{R}^{n \times k},k \in \bb{N}$, by computing the projection error of the reduced states
 \begin{equation}
     \mcl{E} \coloneqq (\id - V V\trans) (X - X_\msc{ref}) \in \bb{R}^{n \times k}.
@@ -25,7 +25,7 @@ Here, the operator $\odot$ denotes the Khatri--Rao product, also known as the co
 \begin{equation}\label{eq:redundant-khatri-rao}
     x_\msc{r} \odot x_\msc{r} \coloneqq {\left( \hat{x}_{(1)}^2, \hat{x}_{(1)}^{\phantom{1}} \hat{x}_{(2)}^{\phantom{1}}, \dots, \hat{x}_{(1)}^{\phantom{1}} \hat{x}_{(r)}^{\phantom{1}}, \hat{x}_{(2)}^{\phantom{1}} \hat{x}_{(1)}^{\phantom{1}}, \hat{x}_{(2)}^2, \dots, \hat{x}_{(r)}^2 \right)}\trans \in \bb{R}^{r^2}.
 \end{equation}
-In practice, this formulation contains many duplicate entries such as $x_{(1)}^{\phantom{1}} x_{(2)}^{\phantom{1}}$ and $x_{(2)}^{\phantom{1}} x_{(1)}^{\phantom{1}}$, thus we can omit these terms without losing any information in the quadratic state.
+In practice, this formulation contains many duplicate entries such as $\hat{x}_{(1)}^{\phantom{1}} \hat{x}_{(2)}^{\phantom{1}}$ and $\hat{x}_{(2)}^{\phantom{1}} \hat{x}_{(1)}^{\phantom{1}}$, thus we can omit these terms without losing any information in the quadratic state.
 This results in the reformulation of the Khatri--Rao product as the non-redundant version
 \begin{equation}\label{eq:khatri-rao}
     x_\msc{r} \odot x_\msc{r} \coloneqq {\left( \hat{x}_{(1)}^2, \hat{x}_{(1)}^{\phantom{1}} \hat{x}_{(2)}^{\phantom{1}}, \dots, \hat{x}_{(1)}^{\phantom{1}} \hat{x}_{(r)}^{\phantom{1}}, \hat{x}_{(2)}^2, \hat{x}_{(2)} \hat{x}_{(3)}, \dots, \hat{x}_{(r)}^2 \right)}\trans \in \bb{R}^{\frac{r (r + 1)}{2}}.
@@ -46,7 +46,7 @@ If we transpose all summands within the norm in~\eqref{eq:quadratic-least-square
 \end{equation}
 This problem is overdetermined if $Q$ has full row rank, meaning $\rank{Q} = q$, which means that as a necessary condition the quadratic data has to satisfy $k \geq q$.
 Practically, we can separate problem~\eqref{eq:quadratic-least-squares} into $n$ vector-valued problems through~\eqref{eq:quadratic-least-squares-sum}, allowing for a parallel solution algorithm of each individual \ac{LSQ} problem.
-In order to numerically stabilize problem~\eqref{eq:quadratic-least-squares}, we can introduce additional regularization terms as demonstrated in~\cite[Equation~15]{Geelen2023}.
+In order to numerically stabilize the problem~\eqref{eq:quadratic-least-squares}, we can introduce additional regularization terms as demonstrated in~\cite[Equation~15]{Geelen2023}.
 Some of the terms the authors discuss in~\cite{Geelen2023} use Frobenius norms, whereas others like the $2$-norm serve to induce sparsity by groups in the quadratic projection matrix, effectively creating column sparsity in $W$.
 
 Similar proposals have been made in~\cite{Peherstorfer2016}, covering \ac{LTI} systems that, additionally to the formulation in Definition~\ref{def:lti}, depend on the quadratically embedded system states.

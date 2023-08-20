@@ -4,9 +4,9 @@ As detailed in~\cite{Kunkel2006}, a \acf{DAE} can be expressed as
 \begin{equation}\label{eq:general-dae}
     F(t, x, \dot{x}) = 0,
 \end{equation}
-where for natural numbers $n, m$ the function $F \colon I \times \Omega_x \times \Omega_{\dot{x}} \to \bb{C}^m$ operates on an interval $I \sse \bb{R}_{\ge 0}$ and two open spatial domains $\Omega_x, \Omega_{\dot{X}} \sse \bb{C}^n$.
+where for natural numbers $n, m$ the function $F \colon I \times \Omega_x \times \Omega_{\dot{x}} \to \bb{C}^m$ operates on an interval $I \sse \bb{R}_{\ge 0}$ and two open spatial domains $\Omega_x, \Omega_{\dot{x}} \sse \bb{C}^n$.
 The meaning of $\dot{x}$ in~\cite{Kunkel2006} is purposefully ambiguous, allowing $\dot{x}$ to refer to either the derivative of a function with respect to time $x$ or as an independent variable in the formulation.
-For the purposes of this thesis, however, we only consider $\dot{x}$ to be the time derivative $\frac{\dif}{\dif t} x$.
+For the purposes of this thesis, however, we only consider $\dot{x}$ to be the time derivative~$\frac{\dif}{\dif t} x$.
 
 In the case of linear \acp{DAE} with constant coefficients, we can express the implicit formulation of Equation~\eqref{eq:general-dae} as the explicit formula
 \begin{equation}\label{eq:lin-const-coeff-dae}
@@ -41,7 +41,7 @@ This output too takes the shape of a time dependent function $y \colon I \to \bb
 
 \begin{remark}
     Definition~\ref{def:lti} constitutes a continuous dynamical system.
-    If we instead sample the trajectory of $x$ at fixed sample points $0 \leq t_1 \dots \leq t_k = T < \infty$, then we can rephrase $\Sigma_\msc{lti}$ in discrete form
+    If we instead sample the trajectory of $x$ at fixed sample points $0 \leq t_1 \leq \cdots \leq t_k = T < \infty$, then we can rephrase $\Sigma_\msc{lti}$ in discrete form
     \begin{equation*}
         \Sigma_\msc{lti}^\msc{d} \colon \left\lbrace
         \begin{aligned}
@@ -81,11 +81,10 @@ We then define the following functions as variables of the complex frequency $\o
 \begin{equation}
     X(\omega) \coloneqq \mcl{L}[x](\omega),\quad \dot{X}(\omega) \coloneqq \mcl{L}[\dot{x}](\omega),\quad U(\omega) \coloneqq \mcl{L}[u](\omega),\quad Y(\omega) \coloneqq \mcl{L}[y](\omega).
 \end{equation}
-Next, we use the crucial property that the Laplace transform of a function's derivative can be expressed in terms of the function itself with the equation
+Next, we use the crucial property that the Laplace transform of a function's derivative can be expressed in terms of the function itself, cf.~\cite[Theorem~9.1]{Doetsch1974}, with the equation
 \begin{equation*}
-    \mcl{L}[\dot{x}](\omega) = \omega \mcl{L}[x](\omega) - \lim\limits_{t \searrow 0} x(t);
+    \mcl{L}[\dot{x}](\omega) = \omega \mcl{L}[x](\omega) - \lim\limits_{t \searrow 0} x(t).
 \end{equation*}
-cf.~\cite[Theorem~9.1]{Doetsch1974}.
 Therefore, under the assumption that the matrix pencil $\omega E - A$ is regular, we compute from the \ac{LTI} system's first equation
 \begin{alignat*}{3}
      & & E \dot{X}(\omega) &= A X(\omega) + B U(\omega) \\
@@ -105,7 +104,7 @@ Notably, the last equality of~\eqref{eq:frequency-output} contains a summand tha
 For ease of notation, we assume that this time domain state value $x(t)$ initially is zero: $x(0) = x_0 = 0$.
 This restriction is a sensible assumption because it corresponds to a system that initially contains no energy and can only be interacted with through the control.
 Equation~\eqref{eq:frequency-output} thus shows how we can directly compute the output of a system under the influence of a control without having to consider the internal state representation.
-More general definitions can also incorporate the initial state dependency in the transfer function; however, this is not necessary in the context of this thesis, thus we refer the interested reader to the introductory chapter in~\cite{Benner2017} for a detailed explanation.
+More general definitions can also incorporate the initial state dependency in the transfer function but this is not necessary in the context of this thesis, thus we refer the interested reader to the introductory chapter in~\cite{Benner2017} for a detailed explanation.
 From now on, we access the frequency domain control-output relation by defining the intermediate $\tfunc$ such that $Y(\omega) = \tfunc(\omega) U(\omega)$.
 
 \begin{definition}\label{def:transfer-function}
@@ -121,8 +120,12 @@ From now on, we access the frequency domain control-output relation by defining 
     For any transfer function $\tfunc$, multiple tuples of system matrices can exist that produce the same output $\tfunc(\omega)$ for identical frequencies $\omega \in \bb{C}$.
     Any such tuple is called a realization of the transfer function.
     We can create an arbitrary amount of realizations by considering the coordinate transformation matrices $T \in \bb{C}^{n \times n}$.
-    If $T$ is regular, then we can obtain a different realization of $\tfunc$ by substituting $\tilde{E} \coloneqq T E T\inv, \tilde{A} \coloneqq T A T\inv, \tilde{B} \coloneqq T B, \tilde{C} \coloneqq C T\inv, \tilde{D} \coloneqq D$.
-    This is evident if we compute
+    If $T$ is regular, then we can obtain a different realization of $\tfunc$ by substituting
+    \begin{equation*}
+        \tilde{E} \coloneqq T E T\inv,\quad \tilde{A} \coloneqq T A T\inv,\quad \tilde{B} \coloneqq T B,\quad \tilde{C} \coloneqq C T\inv,\quad \tilde{D} \coloneqq D
+    \end{equation*}
+    into the original system~eqref{eq:lti}.
+    This is evident if we compute~\eqref{eq:transfer-function} for these new matrices
     \begin{align*}
         &\tilde{C} {\left( \omega \tilde{E} - \tilde{A} \right)}\inv \tilde{B} + \tilde{D} \\
         = &C T\inv {\left( \omega T E T\inv - T A T\inv \right)}\inv T B + D \\
@@ -159,6 +162,6 @@ In order to discuss these algorithms, we yet require a notion of a transfer func
 
 \begin{definition}[{Cf.~\cite[Section~2]{Benner2017}}]\label{def:lti-stability}
     Let $(A, B, C, D, E)$ be a realization of the \ac{LTI} system $\Sigma_\msc{lti}$.
-    Then, $\Sigma_\msc{lti}$ is stable if all finite eigenvalues of the matrix pencil $\omega E - A$ lie within the open left complex half-plane $\bb{C}_{-} \coloneqq \iset{\sigma \in \bb{C}}{\fk{Re}(\sigma) < 0}$.
+    Then $\Sigma_\msc{lti}$ is stable if all finite eigenvalues of the matrix pencil $\omega E - A$ lie within the open left complex half-plane $\bb{C}_{-} \coloneqq \iset{\sigma \in \bb{C}}{\fk{Re}(\sigma) < 0}$.
     Any stable system under the control $u(t) \equiv 0$ tends to the zero state for $t \to \infty$ and is henceforth asymptotically stable.
 \end{definition}

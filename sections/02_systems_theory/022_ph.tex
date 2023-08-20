@@ -39,7 +39,7 @@ Furthermore, we require that all these matrices conform to the additional struct
     \in \mcl{S}_{\curlyeqsucc}^{(n + q) \times (n + q)},\quad -N = N\trans \in \bb{R}^{q \times q},\quad G \in \bb{R}^{n \times q}.
 \end{equation*}
 
-We could now rephrase~\eqref{eq:lti} in terms of these matrices; however, there is one more aspect to the \ac{PH} formulation we yet lack: the Hamiltonian, sometimes also referred to as (energy) storage function.
+We could now rephrase~\eqref{eq:lti} in terms of these matrices, however, there is one more aspect to the \ac{PH} formulation we yet lack: the Hamiltonian, sometimes also referred to as (energy) storage function.
 This function is motivated in Physics to model the total amount of energy within a system.
 In our case, we restrict ourselves to a quadratic Hamiltonian formulation
 \begin{equation}\label{eq:quadratic-hamiltonian}
@@ -206,14 +206,14 @@ To alleviate this restriction, we use the final part of this chapter to highligh
         \right.
     \end{equation}
     with the quadratic Hamiltonian $\mcl{H}(t, x) \coloneqq \frac{1}{2} x\trans Q(t)\trans E(t) x(t)$.
-    The \ac{PH} constraints on the dissipative elements $P, R$, and $S$ stay the same as for the time-invariant system $\Sigma_{\msc{ph}}$; however, the condition imposed on the previously only skew-symmetric $\begin{pmatrix}
+    The \ac{PH} constraints on the dissipative elements $P, R$, and $S$ stay the same as for the time-invariant system $\Sigma_{\msc{ph}}$, however, the condition imposed on the previously only skew-symmetric $\begin{pmatrix}
         J & G \\
         -G\trans & N
     \end{pmatrix}$ transforms to the need for the differential operator $Q\trans E \frac{\dif}{\dif t} - (Q\trans J Q - Q\trans E K)$ to be skew-adjoint; cf.~\cite[Definition~4.8]{Mehrmann2023}.
 \end{remark}
 
 \begin{remark}
-    The second approach is very similar to~\eqref{eq:lph}; however, in addition to the time dependency, we also allow for the system's operators to change based on the system state as a parameter.
+    The second approach is very similar to~\eqref{eq:lph} but in addition to the time dependency, we also allow for the system's operators to change based on the system state as a parameter.
     After some generalizations of the state formulations, which are further detailed in~\cite{Mehrmann2023}, this extension results in a nonlinear \ac{PH} system of the form
     \begin{equation}\label{eq:nlph}
         \Sigma_{\msc{nlph}} \colon \left\lbrace
