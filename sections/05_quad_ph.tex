@@ -4,70 +4,259 @@
 }\label{chap:quadratically-embedded-manifolds-ph-systems}
 
 In this chapter, we discuss how we can construct reduced \ac{PH} systems with quadratically embedded manifolds.
-In essence, we combine the theory of quadratically embedded state variables from Section~\ref{sec:mor-quadratically-embedded-manifolds} with the \ac{SOBMOR} method from Section~\ref{sec:optimization-based-inference} by creating a linear and a quadratically embedded \ac{ROM} and then interconnecting both systems' outputs.
+In essence, we combine the theory of quadratically embedded state variables from Section~\ref{sec:mor-quadratically-embedded-manifolds} with the \ac{PHDMD} algorithm from Section~\ref{sec:optimization-based-inference} by creating a linear and a quadratically embedded \ac{ROM} and then coupling both systems' outputs.
+Our proposed procedure takes the following steps:
+\begin{enumerate}
+    \item Construct the linear reduced order \ac{PH} system $\Sigma_\msc{l}$ with \ac{PHDMD} from the data gathered by simulating the \ac{FOM} with implicit midpoint time stepping.
+    \item Simulate the \ac{PH} \ac{ROM} $\Sigma_\msc{l}$ to compute the necessary data for fitting the quadratic model.
+    \item Use the quadratic data to compute a realization of the quadratic system $\Sigma_\msc{q}$.
+    \item Couple both \acp{ROM} to approximate the \ac{FOM}'s output behaviour.
+\end{enumerate}
 
-We begin the construction with the usual description of a full order linear \ac{PH} system $\Sigma_\msc{ph}$ given by the realization $(E, \id, J, R, G, P, N, S)$ in the form
+We begin the construction with the usual description of a full order linear \ac{PH} system $\Sigma$ given by the realization $(E, \id, J, R, G, P, N, S)$ in the form
 \begin{equation*}
-    \Sigma_{\msc{ph}} \colon \left\lbrace
+    \Sigma \colon \left\lbrace
     \begin{aligned}
         E \dot{x} &= (J - R) x + (G - P) u, \\
         y &= {(G + P)}\trans x + (S - N) u.
     \end{aligned}
     \right.
 \end{equation*}
-Next, we follow one of the methods proposed in Section~\ref{sec:structure-preserving-mor} to construct a linear \ac{ROM} $\Sigma_\msc{ph}^\msc{l}$ with the realization $(E_\msc{l}, \id, J_\msc{l}, R_\msc{l}, G_\msc{l}, P_\msc{l}, N_\msc{l}, S_\msc{l})$ to which we apply the \ac{SOBMOR} algorithm to fit a quadratically embedded \ac{PH} realization $(E_\msc{q}, \id, J_\msc{q}, R_\msc{q}, G_\msc{q}, P_\msc{q}, N_\msc{q}, S_\msc{q})$.
-The ultimate goal of fitting a quadratic system $\Sigma_\msc{ph}^\msc{q}$ is to minimize the error in the output.
-This can be quantified by $\varepsilon(t) \coloneqq y_\msc{fom}(t) - y_\msc{rom}(t)$, the signed error of the \ac{ROM} output with respect to the \ac{FOM}.
-If we can fit a quadratic model such that the quadratic output mimics the signed error $y_\msc{quad}(t) = \varepsilon(t)$, then we can couple $\hat{\Sigma}_\msc{ph}$ and $\Sigma_\msc{ph}^\msc{q}$ by adding the individual outputs $y_\msc{total} = y_\msc{rom} + y_\msc{quad}$.
-The prbolem of fitting $\Sigma_\msc{ph}^\msc{q}$ now reduces to computing appropriate matrices $E^\msc{q}, J^\msc{q}, R^\msc{q}, G^\msc{q}, P^\msc{q}, N^\msc{q}, S^\msc{q}$ such that the quadratic transfer function $\tfunc^\msc{q}$ produces a good approximation of the signed error transfer function $\tfunc^\msc{fom} - \tfunc^\msc{l}$.
-Notationally, we once again use $U$ and $Y$ to refer to the Laplace transforms of $u, y$ as in Section~\ref{sec:ltis} as well as $\mcl{E}$ for the signed transfer function measurement error.
-Therefore, fitting $\Sigma^\msc{q}$ means choosing the system matrices in such a way that $\mcl{E}(\omega) = \tfunc^\msc{q}(\omega) U(\omega)$ is satisfied for a frequency input $\omega$.
-In practice, this approximation does not have to hold for all possible frequency ranges but rather for a select set of frequency domains depending on the problem and its underlying dynamic response.
-This specifically influences the choice of how we construct the system matrices.
+We simulate this system using the approximated implicit midpoint rule as mentioned in~\eqref{eq:ph-dmd-discrete-data} the description of the \ac{PHDMD} algorithm in Section~\ref{sec:optimization-based-inference}: we estimate $u(t + 1 / 2 \dif t) \approx 1 / 2 (u(t) + u(t + \dif t))$ and define the data matrices from $k + 1$ samples for the fixed time step $\dif t > 0$ as
+\begin{equation}\label{eq:quad-fom-discrete-data}
+    \begin{alignedat}{3}
+        X_\msc{f} &\coloneqq \frac{1}{2} {\left( x_{i + 1} + x_i \right)}_{i = 0}^k,\quad &\dot{X}_\msc{f} &\coloneqq \frac{1}{\dif t} {\left( x_{i + 1} - x_i \right)}_{i = 0}^k \in \bb{R}^{n \times k} \\
+        U &\coloneqq \frac{1}{2} {\left( u_{i + 1} + u_i \right)}_{i = 0}^k,\quad &Y &\coloneqq \frac{1}{2} {\left( y_{i + 1} + y_i \right)}_{i = 0}^k \in \bb{R}^{n \times k}.
+    \end{alignedat}
+\end{equation}
+Thereafter we use \ac{POD} to obtain the reduced state variables $X, \dot{X} \in \bb{R}^{r \times k}$ from $X_\msc{f}$ and $\dot{X}_\msc{f}$ for a reduced order $r < n$ and concatenate the individual data matrices to obtain, as in~\eqref{eq:ph-dmd-data-matrices}, the combined data matrices we intend to use in the \ac{PHDMD} algorithm to infer a linear reduced system $\Sigma_\msc{l}$
+\begin{equation*}
+    \mcl{Z} \coloneqq \begin{pmatrix}
+        E \dot{X} \\
+        -Y
+    \end{pmatrix} \text{ and } \mcl{T} \coloneqq \begin{pmatrix}
+        X \\
+        U
+    \end{pmatrix} \in \bb{R}^{(r + m) \times k}.
+\end{equation*}
+With these matrices we apply \ac{PHDMD} to $\mcl{T}$ and $\mcl{Z}$ such that the matrices resulting from the algorithm $\mcl{J}, \mcl{R} \in \bb{R}^{(r + m) \times k}$ satisfy $\mcl{Z} \approx (\mcl{J} - \mcl{R}) \mcl{T}$.
+Finally, we disassemble the block structure in $\mcl{J}$ and $\mcl{R}$ as detailed in Equation~\eqref{eq:ph-dmd-block-structure} to obtain the realization $(E_\msc{l}, \id, J_\msc{l}, R_\msc{l}, G_\msc{l}, P_\msc{l}, N_\msc{l}, S_\msc{l})$, where $E_\msc{l}$ is calculated from the full order matrix $E$ by projecting onto the reduced space of dimension $r$.
 
-% Besides the choice of procedure, using quadratic state variables also implies that we have to choose how to consider the $E^\msc{q}$ matrix in the quadratic system.
-% If $E^\msc{q}$ is chosen by computation from the linear system variables we get two options:
-% \itodo{the $E$ matrix is still open\dots}
+\begin{equation}\label{eq:ph-dmd-block-structure}
+    \mcl{J} =
+    \begin{tikzpicture}[baseline]
+        \matrix (jm) [supermatrix, nodes=submatrix] {
+            J_\msc{l} \& G_\msc{l} \\
+            G_\msc{l}\trans \& N_\msc{l} \\
+        };
+        \node[fit={(jm-1-1) (jm-1-1)}, topdelim, label={[label distance=3mm]above:$r$}] {};
+        \node[fit={(jm-1-2) (jm-1-2)}, topdelim, label={[label distance=3mm]above:$m$}] {};
+        \node[fit={(jm-1-2) (jm-1-2)}, rightdelim, label={[label distance=3mm]right:$r$}] {};
+        \node[fit={(jm-2-2) (jm-2-2)}, rightdelim, label={[label distance=3mm]right:$m$}] {};
+    \end{tikzpicture}
+    ,\quad \mcl{R} =
+    \begin{tikzpicture}[baseline]
+        \matrix (rm) [supermatrix, nodes=submatrix] {
+            R_\msc{l} \& P_\msc{l} \\
+            P_\msc{l}\trans \& S_\msc{l} \\
+        };
+        \node[fit={(rm-1-1) (rm-1-1)}, topdelim, label={[label distance=3mm]above:$r$}] {};
+        \node[fit={(rm-1-2) (rm-1-2)}, topdelim, label={[label distance=3mm]above:$m$}] {};
+        \node[fit={(rm-1-2) (rm-1-2)}, rightdelim, label={[label distance=3mm]right:$r$}] {};
+        \node[fit={(rm-2-2) (rm-2-2)}, rightdelim, label={[label distance=3mm]right:$m$}] {};
+    \end{tikzpicture}
+\end{equation}
 
-Additionally, the quadratic state does not directly affect the feedthrough term.
-Instead of inferring it in part from the existing system components, the procedure can compensate potential discrepancies in the state variables by adjusting the feedthrough appropriately.
-Finally, this results in the combined system
-\begin{equation}\label{eq:combined-quadratic-system}
+Afterwards we simulate the linear \ac{ROM} $\Sigma_\msc{l}$ analogously to the \ac{FOM} in~\eqref{eq:quad-fom-discrete-data} using the implicit midpoint rule.
+Thus, we obtain the linear system data $X_\msc{l}, \dot{X}_\msc{l}, U, Y_\msc{l}$, where, notably, we directly keep the control data $U$ from the \ac{FOM} data because it never changes across the different models we consider here.
+At this point we generate the quadratic data $X_\msc{q}, \dot{X}_\msc{q} \in \bb{R}^{q \times k}$, where $q = \frac{r (r + 1)}{2}$, as previously described in Equation~\eqref{eq:khatri-rao} by means of the Khatri--Rao product
+\begin{equation}\label{eq:quad-state-data}
+    X_\msc{q} = X_\msc{l} \odot X_\msc{l},\quad \dot{X}_\msc{q} = \dot{X}_\msc{l} \odot \dot{X}_\msc{l}.
+\end{equation}
+Besides the quadratic state we also replace the \ac{FOM} output $Y$ by the signed output error between the \ac{FOM} $\Sigma$ and the inferred linear \ac{ROM} $\Sigma_\msc{l}$ such that
+\begin{equation}\label{eq:signed-output-error}
+    Y_\msc{diff} \coloneqq Y - Y_\msc{l}.
+\end{equation}
+Repeating the application of the \ac{PHDMD} algorithm to $X_\msc{q}, \dot{X}_\msc{q}, U, Y_\msc{diff}$ we calculate the matrices $\mcl{J}_\msc{q}$ and $\mcl{R}_\msc{q}$, which we split across the matrix blocks similar to the decomposition in~\eqref{eq:ph-dmd-block-structure}, but this time for the quadratic model matrices
+\begin{equation*}
+    \mcl{J}_\msc{q} =
+    \begin{tikzpicture}[baseline]
+        \matrix (jm) [supermatrix, nodes=submatrix] {
+            J_\msc{q} \& G_\msc{q} \\
+            G_\msc{q}\trans \& N_\msc{q} \\
+        };
+        \node[fit={(jm-1-1) (jm-1-1)}, topdelim, label={[label distance=3mm]above:$q$}] {};
+        \node[fit={(jm-1-2) (jm-1-2)}, topdelim, label={[label distance=3mm]above:$m$}] {};
+        \node[fit={(jm-1-2) (jm-1-2)}, rightdelim, label={[label distance=3mm]right:$q$}] {};
+        \node[fit={(jm-2-2) (jm-2-2)}, rightdelim, label={[label distance=3mm]right:$m$}] {};
+    \end{tikzpicture}
+    ,\quad \mcl{R}_\msc{q} =
+    \begin{tikzpicture}[baseline]
+        \matrix (rm) [supermatrix, nodes=submatrix] {
+            R_\msc{q} \& P_\msc{q} \\
+            P_\msc{q}\trans \& S_\msc{q} \\
+        };
+        \node[fit={(rm-1-1) (rm-1-1)}, topdelim, label={[label distance=3mm]above:$q$}] {};
+        \node[fit={(rm-1-2) (rm-1-2)}, topdelim, label={[label distance=3mm]above:$m$}] {};
+        \node[fit={(rm-1-2) (rm-1-2)}, rightdelim, label={[label distance=3mm]right:$q$}] {};
+        \node[fit={(rm-2-2) (rm-2-2)}, rightdelim, label={[label distance=3mm]right:$m$}] {};
+    \end{tikzpicture}
+    .
+\end{equation*}
+This allows us to assemble the individual quadratic \ac{PH} model $\Sigma_\msc{q}$ with the associated realization $(E_\msc{q}, \id, J_\msc{q}, R_\msc{q}, G_\msc{q}, P_\msc{q}, N_\msc{q}, S_\msc{q})$.
+Unfortunately, \ac{PHDMD} does not provide us with a way to obtain the quadratic component matrix $E_\msc{q}$.
+The choice of this matrix remains an open question because there are multiple reasonable ways to view this problem.
+Firstly, if we just consider the system matrices $J_\msc{q}, R_\msc{q}, G_\msc{q}, P_\msc{q}, N_\msc{q}, S_\msc{q}$ as the objective of this procedure, choosing $E_\msc{q} = \id[q]$ is an obvious choice because it allows for easy simulation of the resulting \ac{PH} system.
+Secondly, when we consider $E_\msc{q}$ as part of the coupling of the quadratic state variables $q$, defining $E_\msc{q}$ as the (non-redundant) Kronecker product $E_\msc{q} = \kron{E_\msc{l}}$ appears useful because we use the same procedure to generate quadratic couplings as in the generation of the quadratic state data~\eqref{eq:quad-state-data}.
+Lastly, if we view the quadratic state as a function of the linear state $X_\msc{q} = f(X_\msc{l}) = X_\msc{l} \odot X_\msc{l}$, it is valid to argue that the derivative of $X_\msc{q}$ is calculated as $\dot{X}_\msc{q} = \pd[t]{} X_\msc{q}= \pd[t]{} f(X_\msc{l}) = \pd[t]{} X_\msc{l} \odot X_\msc{l} + X_\msc{l} \odot \pd[t]{} X_\msc{l}$, from which we can argue that the interaction of $E_\msc{q}$ and $\dot{X}_\msc{q}$ should reflect the one between $E_\msc{l}$ and $\dot{X}_\msc{l}$.
+Hence, our calculations result in $E_\msc{q} (\dot{X}_\msc{q}) = E_\msc{l} \dot{X}_\msc{l} \odot X_\msc{l} + X_\msc{l} \odot E_\msc{l} \dot{X}_\msc{l}$, which means that $E_\msc{q}$ no longer is a linear operator on $\dot{X}_\msc{q}$, therefore causing problems when we want to simulate the final quadratic model as an \ac{LTI} \ac{PH} system.
+For the purpose of this thesis we choose the second option and assume that $E_\msc{q} = \kron{E_\msc{l}}$ constitutes an appropriate coupling matrix.
+
+As the last step of this procedure, we now combine the outputs of both the linear system $\Sigma_\msc{l}$ and the quadratic system $\Sigma_\msc{q}$.
+If we naively simulate both systems independently, then we would simply add up the resulting outputs $Y_\msc{l}$ and $Y_\msc{q}$ such that we approximate the \ac{FOM}'s output $Y$ by $Y \approx Y_\msc{l} + Y_\msc{q}$.
+In an effort to produce a more succinct \ac{PH} model, we can also combine the individual system's matrices into a block formulation describing the combined model
+\begin{equation}\label{eq:quad-state-system-coupling}
     \Sigma_\msc{comb} \colon \left\lbrace
-    \begin{pmatrix}
-        E \dot{x} \\
-        E^\msc{q} \dot{q} \\
-        y
-    \end{pmatrix} = \begin{pmatrix}
-        (\hat{J} - \hat{R}) & 0 & (\hat{G} - \hat{P}) \\
-        0 & (J^\msc{q} - R^\msc{q}) & (G^\msc{q} - P^\msc{q}) \\
-        {(\hat{G} + \hat{P})}\trans & {(G^\msc{q} + P^\msc{q})}\trans & \hat{S} + S^\msc{q} - \hat{N} - N^\msc{q}
-    \end{pmatrix} \begin{pmatrix}
-        x \\
-        q \\
-        u
-    \end{pmatrix}.
+    \begin{aligned}
+        E_\msc{comb} \begin{pmatrix}
+            \dot{x} \\
+            \dot{q}
+        \end{pmatrix} &= (J_\msc{comb} - R_\msc{comb}) \begin{pmatrix}
+            x \\
+            q
+        \end{pmatrix} + (G_\msc{comb} - P_\msc{comb}) u, \\
+        y &= (G_\msc{comb} + P_\msc{comb})\trans \begin{pmatrix}
+            x \\
+            q
+        \end{pmatrix} + (S_\msc{comb} - N_\msc{comb}) u.
+    \end{aligned}
     \right.
 \end{equation}
-The entire algorithm can thus be expressed in four different steps:
-\begin{enumerate}
-    \item Reduce the full order \ac{PH} system $\Sigma_\msc{ph}$ with \ac{PHIRKA} to get a linear \ac{ROM} $\Sigma_\msc{ph}^\msc{l}$.
-    \item Use the \ac{PH} \ac{ROM} $\Sigma_\msc{ph}^\msc{l}$ to compute the necessary data for fitting the quadratic model.
-    \item Use the quadratic data to compute a realization of the quadratic system $\Sigma_\msc{ph}^\msc{q}$.
-    \item Add both \acp{ROM}' outputs to approximate the \ac{FOM}'s behaviour.
-\end{enumerate}
-The crucial step for this thesis lies in the third step, because many different methods are available and we have to choose among them according to the requirements of the model as well as the accessibility of system data.
+In this system formulation we use the following combined block matrix constructions
+\begin{equation*}
+    \begin{gathered}
+        E_\msc{comb} = \begin{tikzpicture}[baseline]
+            \matrix (rm) [supermatrix, nodes=submatrix] {
+                |[submatrix, minimum height=20pt, minimum width=20pt]| E_\msc{l} \&  \\
+                 \& E_\msc{q} \\
+            };
+        \end{tikzpicture}
+        ,\quad J_\msc{comb} =
+        \begin{tikzpicture}[baseline]
+            \matrix (rm) [supermatrix, nodes=submatrix] {
+                |[submatrix, minimum height=20pt, minimum width=20pt]| J_\msc{l} \&  \\
+                 \& J_\msc{q} \\
+            };
+        \end{tikzpicture}
+        ,\quad R_\msc{comb} =
+        \begin{tikzpicture}[baseline]
+            \matrix (rm) [supermatrix, nodes=submatrix] {
+                |[submatrix, minimum height=20pt, minimum width=20pt]| R_\msc{l} \&  \\
+                 \& R_\msc{q} \\
+            };
+        \end{tikzpicture}
+        , \\
+        G_\msc{comb} =
+        \begin{tikzpicture}[baseline]
+            \matrix (rm) [supermatrix, nodes=submatrix] {
+                |[submatrix, minimum height=20pt, minimum width=20pt]| G_\msc{l} \\
+                |[submatrix, minimum width=20pt]| G_\msc{q} \\
+            };
+        \end{tikzpicture}
+        ,\quad P_\msc{comb} =
+        \begin{tikzpicture}[baseline]
+            \matrix (rm) [supermatrix, nodes=submatrix] {
+                |[submatrix, minimum height=20pt, minimum width=20pt]| P_\msc{l} \\
+                |[submatrix, minimum width=20pt]| P_\msc{q} \\
+            };
+        \end{tikzpicture}
+        ,\quad S_\msc{comb} = S_\msc{l} + S_\msc{q}, \quad N_\msc{comb} = N_\msc{l} + N_\msc{q}.
+    \end{gathered}
+\end{equation*}
 
-\itodo{update necessary data and equations in step 2 of the enumeration}
+\itodo{To the reviewer: is the $J$ matrix stacking okay? Does it look bad?}
 
-For our approach, we use the \ac{SOBMOR} framework highlighted at the end of Subsection~\ref{sec:optimization-based-inference}.
-To apply this procedure, we have to generate a sequence of $\gamma$ values for the levelling of the \ac{LSQ} objective function~\eqref{eq:sobmor-objective}.
-As hinted at in the description of the \ac{SOBMOR} method, choosing appropriate values of $\gamma$ is essential in obtaining a lower bound for the error term of the approximation, but it also influences the performance of the \ac{SOBMOR} algorithm by stopping the optimization loop early if the value of $\gamma$ is large.
-For the following numerical experiments, we use two different approaches: first, a fixed sequence of $\gamma$ values, and then an adaptive bisection algorithm like the one in~\cite{SV2021} as a comparison.
-With respect to the initialization of the parametrized matrices $E^\msc{q}(\theta), J^\msc{q}(\theta), R^\msc{q}(\theta), G^\msc{q}(\theta), P^\msc{q}(\theta), N^\msc{q}(\theta)$, and $S^\msc{q}(\theta)$ we discuss several different methods ranging between the weighted \ac{PHDMD} \ac{LSQ} problem, randomized initial values, preparatory \ac{BFGS} optimizations, and fixed initial matrices.
+Another consideration we mention in this part of the thesis is the possibility for considering quadratic controls and by extension quadratic outputs.
+In effect, if we repeat the process described above but instead of using the quadratic state variables $X_\msc{q}, \dot{X}_\msc{q}$ when inferring the quadratic system we consider the quadratic control and output variables $\hat{U}_\msc{q} = U \odot U, \hat{Y}_\msc{q} = (Y - Y_\msc{l}) \odot (Y - Y_\msc{l}) \in \bb{R}^{m \times k}$, then we can repeat the \ac{PHDMD} algorithm to infer another quadratic model $\hat{\Sigma}_\msc{q}$.
+The coupling of the linear system $\Sigma_\msc{l}$ and the quadratic system $\hat{\Sigma}_\msc{q}$ for quadratic control and output variables $u_\msc{q}, y_\msc{q} \in \bb{R}^{\frac{m (m + 1)}{2}}$ then takes the form
+\begin{equation}\label{eq:quad-io-system-coupling}
+    \hat{\Sigma}_\msc{comb} \colon \left\lbrace
+    \begin{aligned}
+        E_\msc{comb} \dot{x} &= (J_\msc{comb} - R_\msc{comb}) x + (G_\msc{comb} - P_\msc{comb}) \begin{pmatrix}
+            u \\
+            u_\msc{q}
+        \end{pmatrix}, \\
+        \begin{pmatrix}
+            y \\
+            y_\msc{q}
+        \end{pmatrix}, \ &= (G_\msc{comb} + P_\msc{comb})\trans x + (S_\msc{comb} - N_\msc{comb}) \begin{pmatrix}
+            u \\
+            u_\msc{q}
+        \end{pmatrix},
+    \end{aligned}
+    \right.
+\end{equation}
+with the analogously changed assortment of combined system matrices
+\begin{equation*}
+    \begin{gathered}
+        E_\msc{comb} = E_\msc{l} + E_\msc{q},\quad J_\msc{comb} = J_\msc{l} + J_\msc{1},\quad R_\msc{comb} = R_\msc{l} + R_\msc{q},\quad G_\msc{comb} =
+        \begin{tikzpicture}[baseline]
+            \matrix (rm) [supermatrix, nodes=submatrix] {
+                |[submatrix, minimum height=20pt, minimum width=20pt]| G_\msc{l} \& |[submatrix, minimum height=20pt]| G_\msc{q} \\
+            };
+        \end{tikzpicture}
+        , \\
+        P_\msc{comb} =
+        \begin{tikzpicture}[baseline]
+            \matrix (rm) [supermatrix, nodes=submatrix] {
+                |[submatrix, minimum height=20pt, minimum width=20pt]| P_\msc{l} \& |[submatrix, minimum height=20pt]| P_\msc{q} \\
+            };
+        \end{tikzpicture}
+        ,
+        S_\msc{comb} =
+        \begin{tikzpicture}[baseline]
+            \matrix (rm) [supermatrix, nodes=submatrix] {
+                |[submatrix, minimum height=20pt, minimum width=20pt]| S_\msc{l} \&  \\
+                 \& S_\msc{q} \\
+            };
+        \end{tikzpicture}
+        , \quad N_\msc{comb} =
+        \begin{tikzpicture}[baseline]
+            \matrix (rm) [supermatrix, nodes=submatrix] {
+                |[submatrix, minimum height=20pt, minimum width=20pt]| N_\msc{l} \&  \\
+                 \& N_\msc{q} \\
+            };
+        \end{tikzpicture}
+        .
+    \end{gathered}
+\end{equation*}
+This way of constructing quadratically embedded models has several advantages.
+The first of these is that \ac{PH} systems are often only viewed through the lens of control-output interaction.
+Secondly, the increase in the dimensionality only depends on the number of controls and outputs, remaining constant for increasing \ac{ROM} orders instead of scaling quadratically like in the construction of the quadratically embedded systems detailed above.
+Lastly, this choice also resolves the issue of constructing an appropriate matrix $E_\msc{q}$ because we no longer need to couple quadratic internal states.
+Thus, constructing frequency-based quadratically embedded systems enriches the model in a meaningful way.
+In contrast hoewver, there are also some downsides to this.
+First of all, ignoring the internal states misses the original motivation of the quadratically embedded manifolds as described in Section~\ref{sec:mor-quadratically-embedded-manifolds} and thus ignores the order of the linear \ac{ROM}.
+Secondly, the final combined system does not share the same number of inputs and outputs as the \ac{FOM}.
+While this downside can easily be mitigated by selecting the relevant linear outputs of the coupled system, this still requires care when simulating the model.
 
-It is important to note that the quadratic system matrices cannot be computed from the linear system matrices.
-If we imagine a quadratic system $\Sigma_\msc{ph}^\msc{q}$ obtained from the linear \ac{ROM} by means of the Kronecker and Khatri-Rao products, then this could not contain any more information than the linear system on its own because the terms of the latter have been multiplied with each other without respecting changing dynamics and structural constraints.
+Besides the \ac{PHDMD} algorithm we can also use the \ac{SOBMOR} framework.
+Effectively, this moves the entire inference method from the time domain to the frequency domain while conserving large parts of the overall idea.
+Most importantly, we need to change the way we generate quadratic data.
+Instead of applying the Khatri--Rao product to the system's internal states, \ac{SOBMOR} allows us to specify the dimension of the state interaction matrices.
+Thus, we can easily increase the dimension of these matrices such that the final system supports operations on the quadratic internal states.
+We then use \ac{SOBMOR} to infer the quadratic system $\Sigma_\msc{q}$ as in the procedure that utilizes \ac{PHDMD}, concluding with the same system coupling described in Equation~\eqref{eq:quad-state-system-coupling}.
+It is immediately apparent that this approach suffers from the fact that we never used any quadratic data similar to~\eqref{eq:quad-state-data} to infer the new quadratic system, hence this method cannot be expected to produce reasonable results.
 
-As a further option, we may choose to incorporate quadratic input and output terms alongside the original linear ones in our model.
-In this case, we have to make sure that we only select the linear terms when coupling both of the \acp{ROM}' outputs.
+Instead of just increasing the dimension of the system matrices interacting with the internal states we can also try to create quadratic data samples to use with the \ac{SOBMOR} algorithm.
+We follow the same procedural outline given at the beginning of this chapter, but now we collect the samples of the \ac{FOM}'s and the inferred linear \ac{ROM}'s transfer functions $\zeta$ and $\zeta_\msc{l}$, respectively.
+Analogously to the signed output error~\eqref{eq:signed-output-error} we compute the signed error of the  measurements of the transfer functions
+\begin{equation*}
+    \zeta_\msc{diff}(\omega_i) \coloneqq \zeta(\omega_i) - \zeta_\msc{l}(\omega_i),
+\end{equation*}
+where $\omega_i \in \bb{C}, i = 0, \dots, k$, are the sample points used in the \ac{SOBMOR} algorithm.
+Crucially, we now consider these as our essential data and we apply the Kronecker product to calculate the quadratic measurements
+\begin{equation*}
+    \zeta_\msc{q}(\omega_i) = \kron{\zeta_\msc{diff}}.
+\end{equation*}
+Thereafter, we infer a quadratic system $\hat{\Sigma}_\msc{q}$ from these data and finally couple both the linear and the quadratic inferred system into the combined model $\hat{\Sigma}_\msc{comb}$ according to Equation~\eqref{eq:quad-io-system-coupling}.
