@@ -26,37 +26,168 @@ Besides this advantage, we can computate the cost function's gradient in the Fro
 \end{equation*}
 As far as initialization is concerned, the authors of~\cite{Gillis2018} propose two methods: initialize with the additional assumption $P = 0$ such that the optimal solution can be given analytically, or solve a \ac{LMI} to compute an initial \ac{PH} realization along the same line of arguments as previous links between \acp{LMI} and positive real systems have done.
 
-Another \ac{FGM} related method is the \ac{PHDMD} algorithm given in~\cite{Morandin2023}.
+\itodo{Changes from here!}
+
+Another \ac{FGM}-related method is the \ac{PHDMD} algorithm given in~\cite{Morandin2023}.
 As the name implies, this is closely linked to the \ac{DMD} method in that we want to minimize
 \begin{equation}\label{eq:ph-dmd-minimization-problem}
-    \norm*{\begin{pmatrix}
-        E \dot{X} \\
-        -Y
-    \end{pmatrix} - (\mcl{J} - \mcl{R}) \begin{pmatrix}
-        X \\
-        U
-    \end{pmatrix}}{F}^2
-\end{equation}
-under the constraints that the system block matrices fulfill $-\mcl{J} = \mcl{J}\trans$ and $\mcl{R} = \mcl{R}\trans \succcurlyeq 0$, where $X, \dot{X} \in \bb{R}^{n \times k}$ and $U, Y \in \bb{R}^{m \times k}$ are data matrices.
-This method distinguishes itself from the previous \ac{FGM} by the fact that \ac{PHDMD} does not allow restarting within iterations.
-Furthermore, the \ac{PHDMD} algorithm does not offer the ability of optimizing the $E$ matrix because in this setting it would lead to the trivial minimizer $0$ as shown in~\cite[Remark~3.3]{Morandin2023}.
-However, if either $\mcl{J}$ is given, then the $\mcl{R}$ can be explicitly computed from a constrained \ac{LSQ} problem, and vice versa.
-This allows for an iterative update of both matrices within the \ac{FGM} algorithm.
-Additionally, \ac{PHDMD} offers a directly related mode of initialization by considering the weighted \ac{LSQ} problem
-\begin{equation}\label{eq:weighted-ph-dmd}
     \min \norm*{\begin{pmatrix}
-        X & U
-    \end{pmatrix} \left( \begin{pmatrix}
         E \dot{X} \\
         -Y
     \end{pmatrix} - (\mcl{J} - \mcl{R}) \begin{pmatrix}
         X \\
         U
-    \end{pmatrix} \right)}{F}^2,\quad \suchthat \mcl{J} = - \mcl{J}\trans, \mcl{R} = \mcl{R}\trans \succcurlyeq 0.
+    \end{pmatrix}}{F}^2,\quad \suchthat \mcl{J} = - \mcl{J}\trans, \mcl{R} = \mcl{R}\trans \succcurlyeq 0
 \end{equation}
-Problem~\ref{eq:weighted-ph-dmd} provides an close form solution.
-Furthermore, the authors show that there exists an estimate bounding the error of the unweighted problem by the error of the weighted problem in~\cite[Lemma~3.11]{Morandin2023}.
-One downside of this method is that the formulation uses a fixed time stepping scheme: \ac{PHDMD} is based on implicit midpoint stepping, and choosing other time stepping schemes such as multistep methods like RK45 may decrease the performance of the algorithm despite the higher convergence order of the time stepping scheme.
+where $X, \dot{X} \in \bb{R}^{n \times k}$ and $U, Y \in \bb{R}^{m \times k}$ are data matrices computed from a sequence of snapshots ${(x_i, u_i, y_i)}_{i = 0}^{k + 1}$ with fixed step size $\dif t > 0$ by calculating
+\begin{equation}\label{eq:ph-dmd-discrete-data}
+    \begin{alignedat}{3}
+        X &\coloneqq \frac{1}{2} {\left( x_{i + 1} + x_i \right)}_{i = 0}^k,\quad &\dot{X} &\coloneqq \frac{1}{\dif t} {\left( x_{i + 1} - x_i \right)}_{i = 0}^k \\
+        U &\coloneqq \frac{1}{2} {\left( u_{i + 1} + u_i \right)}_{i = 0}^k,\quad &Y &\coloneqq \frac{1}{2} {\left( y_{i + 1} + y_i \right)}_{i = 0}^k.
+    \end{alignedat}
+\end{equation}
+This method distinguishes itself from the previous \ac{FGM} by the fact that \ac{PHDMD} does not allow restarting within iterations.
+Furthermore, the \ac{PHDMD} algorithm does not offer the ability of optimizing the $E$ matrix because in this setting it would lead to the trivial minimizers $\mcl{J} = \mcl{R} = 0$ as shown in~\cite[Remark~3.3]{Morandin2023}.
+Another downside of the \ac{PHDMD} algorithm is the fact that the entire procedure is based on a modified implicit midpoint time stepping scheme: instead of utilizing the proper midpoint control value in~\eqref{eq:ph-dmd-discrete-data}, we approximate it via the trapezoidal rule $u\left( t + \frac{1}{2} \dif t \right) \approx \frac{1}{2} \left( u(t) + u(t + \dif t) \right)$.
+Effectively, this codifies a restriction of the acceptable time steppers for the \ac{PHDMD} algorithm because using other time stepping methods such as Runge--Kutta does not result in the same accuracy as the implicit midpoint rule, as shown in~\cite[Section~4.1]{Morandin2023}.
+However, despite these drawbacks the \ac{PHDMD} algorithm is very practical for tackling the central problem of this thesis because we can easily adapt the problem formulation~\eqref{eq:ph-dmd-minimization-problem} to include higher order data terms.
+
+In order to derive a solution algorithm for the \ac{PHDMD} problem~\eqref{eq:ph-dmd-minimization-problem} we have to consider two steps into consideration:
+How do we compute an initial guess of the matrices $\mcl{J}$ and $\mcl{R}$?
+How can we successively update the initial guess to improve the matrices?
+In~\cite{Morandin2023}, the authors calculate the initialization of $\mcl{J}$ and $\mcl{R}$ using a weighted version of problem~\eqref{eq:ph-dmd-minimization-problem}.
+For ease of notation in further equations we define the combined data matrices
+\begin{equation}\label{eq:ph-dmd-data-matrices}
+    \mcl{Z} \coloneqq \begin{pmatrix}
+        E \dot{X} \\
+        -Y
+    \end{pmatrix} \text{ and } \mcl{T} \coloneqq \begin{pmatrix}
+        X \\
+        U
+    \end{pmatrix} \in \bb{R}^{(n + m) \times k}.
+\end{equation}
+To define the weighted problem we follow the intention of weighting the information contained within the data matrices $\mcl{Z}$ and $\mcl{T}$.
+Multiplying the inner terms in Equation~\eqref{eq:ph-dmd-minimization-problem} from the left by $\mcl{T}\trans$, we calculate the weighted \ac{PHDMD} optimization problem
+\begin{equation}\label{eq:weighted-ph-dmd}
+    \min \norm*{\mcl{T}\trans \left( \mcl{Z} - (\mcl{J} - \mcl{R}) \mcl{T} \right)}{F}^2,\quad \suchthat \mcl{J} = - \mcl{J}\trans, \mcl{R} = \mcl{R}\trans \succcurlyeq 0.
+\end{equation}
+The benefit of this formulation is immediate by the next result, and its effects on the solutions of the unweighted \ac{PHDMD} problem~\eqref{eq:ph-dmd-minimization-problem} by the one thereafter.
+
+\begin{lemma}[{Adapted from~\cite[Theorem~3.7]{Morandin2023}}]\label{lem:weighted-ph-dmd-solution}
+    Let $\mcl{T}, \mcl{Z} \in \bb{R}^{(n + m) \times k}$ be the two data matrices as defined in Equation~\eqref{eq:ph-dmd-data-matrices} and suppose that $\mcl{T}$ admits the skinny singular value decomposition
+    \begin{equation*}
+        \mcl{T} = V \Sigma W_1\trans,\quad V \in \bb{R}^{(n + m) \times r},\quad \Sigma \in \bb{R}^{r \times r},\quad W_1 \in \bb{R}^{k \times r},
+    \end{equation*}
+    where $r = \rank{\mcl{T}}$, $\Sigma$ is regular, and $V$ as well as $W_1$ satisfy $V\trans V = \id[r], W_1\trans W_1 = \id[r]$, respectively.
+    Further let $V_2 \in \bb{R}^{k \times k - r}$ extend $V_1$ such that $V = \begin{pmatrix}
+        V_1 & V_2
+    \end{pmatrix}$ satisfies $V\trans V = \id[k]$.
+    Then, the matrices
+    \begin{equation*}
+        \mcl{J}^\ast \coloneqq W \Sigma\inv \sksym{\Sigma W\trans \mcl{Z} V_1} \Sigma\inv W\trans,\quad \mcl{R}^\ast \coloneqq W \Sigma\inv \psd{- \Sigma W\trans \mcl{Z} V_1} \Sigma\inv W\trans
+    \end{equation*}
+    are the unique minimimizers of the weighted \ac{PHDMD} problem~\eqref{eq:weighted-ph-dmd} satisfying
+    \begin{equation*}
+        \norm*{\mcl{T}\trans \left( \mcl{Z} - (\mcl{J}^\ast - \mcl{R}^\ast) \mcl{T} \right)}{F}^2 = \norm*{\Sigma W\trans \mcl{Z} V_2}{F}^2 + \norm*{\Lambda_+(\Sigma W\trans \mcl{Z} V_1)}{F}^2,
+    \end{equation*}
+    where for a quadratic matrix $A$ we denote its skew-symmetric projection as $\sksym{A}$, its symmetric positive semidefinite projection as $\psd{A}$, and the diagonal matrix made up of the positive eigenvalues of its symmetric part as $\Lambda_+(A)$.
+\end{lemma}
+
+\begin{proof}
+    For a detailed proof, see~\cite[Proof of Theorem~3.7 and Lemma~3.10]{Morandin2023}.
+\end{proof}
+
+\begin{lemma}[{Adapted from~\cite[Theorem~3.11]{Morandin2023}}]\label{lem:relation-ph-dmd-problems}
+    Let $\mcl{T}, \mcl{Z} \in \bb{R}^{(n + m) \times k}$ be the two data matrices as defined in Equation~\eqref{eq:ph-dmd-data-matrices} with $\rank{\mcl{T}} = n + m$.
+    Then, there exists a constant $c > 0$ such that for all matrices $\mcl{J}, \mcl{R} \in \bb{R}^{(n + m) \times (n + m)}$ it holds that
+    \begin{equation*}
+        \norm*{\mcl{Z} - (\mcl{J} - \mcl{R}) \mcl{T}}{F}^2 \leq c^2 \norm*{\mcl{T}\trans \left( \mcl{Z} - (\mcl{J} - \mcl{R}) \mcl{T} \right)}{F}^2.
+    \end{equation*}
+\end{lemma}
+
+\begin{proof}
+    Consider the singular value decomposition $\mcl{T} = V \Sigma W\trans$ and define the pseudoinverse of $\mcl{T}$ in terms of its SVD by calculating $\mcl{T}^\dagger \coloneqq W \Sigma^\dagger V\trans$.
+    We use the fact that $\rank{\mcl{T}} = n + m$ and therefore observe $\Sigma^\dagger \Sigma = \id[n + m]$.
+    Next we use that the matrices $V$ and $W$ are unitary and calculate the relation
+    \begin{equation*}
+        \norm*{\mcl{Z} - ( \mcl{J} - \mcl{R}) \mcl{T}}{F}^2 = \norm*{{\left( \mcl{T}\trans \right)}^\dagger \mcl{T}\trans \left( \mcl{Z} - ( \mcl{J} - \mcl{R}) \mcl{T} \right)}{F}^2 \leq \norm*{{\left( \mcl{T}\trans \right)}^\dagger}{F}^2 \norm*{\mcl{T}\trans \left( \mcl{Z} - ( \mcl{J} - \mcl{R}) \mcl{T} \right)}{F}^2,
+    \end{equation*}
+    which concludes the proof after setting $c^2 \coloneqq \norm*{{\left( \mcl{T}\trans \right)}^\dagger}{F}^2$.
+\end{proof}
+
+Next we use our current matrices $\mcl{J}$ and $\mcl{R}$ to construct updated versions of both.
+For this it is imperative to notice that once $\mcl{J}$ or $\mcl{R}$ are given, we can much more easily compute the remaining matrices when compared to the original \ac{PHDMD} problem~\eqref{eq:ph-dmd-minimization-problem} where we need to solve for both at the same time.
+To demonstrate the effect of $\mcl{R}$ being given before hand we consider the original optimization problem~\eqref{eq:ph-dmd-minimization-problem} in terms of the data matrices $\mcl{T}$ and $\mcl{Z}$ defined in~\eqref{eq:ph-dmd-data-matrices}.
+We simplify this problem by denoting the fixed contribution of $\mcl{R}$ as $\mcl{Q} \coloneqq \mcl{Z} + \mcl{R} \mcl{T}$ and inserting it into the problem formulation
+\begin{equation}\label{eq:ph-dmd-skew-sym-subproblem}
+    \min \norm*{\mcl{Z} - (\mcl{J} - \mcl{R}) \mcl{T}}{F}^2 = \min \norm*{\mcl{Q} - \mcl{J} \mcl{T}}{F}^2,\quad \suchthat \mcl{J} = - \mcl{J}\trans;
+\end{equation}
+the case for a given $\mcl{J}$ follows analogously.
+Solutions to the subproblem~\eqref{eq:ph-dmd-skew-sym-subproblem} are given by the following result.
+
+\begin{theorem}
+    Let $\mcl{T}, \mcl{Z} \in \bb{R}^{(n + m) \times k}$ be the two data matrices as defined in Equation~\eqref{eq:ph-dmd-data-matrices}, and let $\mcl{T} = V \Sigma W\trans$ denote the singular value decomposition with $r = \rank{\mcl{T}}$ and
+    \begin{equation*}
+        \Sigma = \begin{pmatrix}
+            \Sigma_1 & 0 \\
+            0 & 0
+        \end{pmatrix},\quad \Sigma_1 = \diag{\sigma_1, \dots, \sigma_r} \in \bb{R}^{r \times r}.
+    \end{equation*}
+    Next, we define the matrices $\Phi = {\varphi_{i, j}}_{i, j = 1}^r \in \bb{R}^{r \times r}$, where $\varphi_{i, j} = \frac{1}{\sigma_i^2 + \sigma_j^2}$, and
+    \begin{equation*}
+        A = \begin{pmatrix}
+            \id[r] & 0
+        \end{pmatrix} V \mcl{Z} W\trans \begin{pmatrix}
+            \id[r] \\
+            0
+        \end{pmatrix} \in \bb{R}^{r \times r},\quad B = \begin{pmatrix}
+            0 & \id[n + m - r]
+        \end{pmatrix} V \mcl{Z} W\trans \begin{pmatrix}
+            \id[r] \\
+            0
+        \end{pmatrix} \in \bb{R}^{(n + m - r) \times r},
+    \end{equation*}
+    with which we further calculate $J_1 = 2 \Phi \odot \sksym{A \Sigma_1}, J_2 = B \Sigma_1\inv$, where the matrix operator $\odot$ denotes the usual Hadamard product and $\sksym{\cdot}$ is the projection onto the set of skew-symmetric matrices as mentioned in Lemma~\ref{lem:weighted-ph-dmd-solution}.
+    Then, for any skew-symmetric matrix $J_4 \in \bb{R}^{(n + m - r) \times (n + m - r)}$, the matrix
+    \begin{equation*}
+        \mcl{J} \coloneqq V\trans \begin{pmatrix}
+            J_1 & -J_2\trans \\
+            J_2 & J_4
+        \end{pmatrix}
+    \end{equation*}
+    is a solution of the subproblem~\eqref{eq:ph-dmd-skew-sym-subproblem}.
+    Further, the solution $\mcl{J}$ of~\eqref{eq:ph-dmd-skew-sym-subproblem} is unique if and only if the condition $\rank{\mcl{T}} = n + m$ is satisfied.
+\end{theorem}
+
+\begin{proof}
+    Consider~\cite[Lemma~2.1]{Deng2003}.
+\end{proof}
+
+To solve these individual optimization problems, we have to consider the direct method for the case that $\mcl{R}$ is given, see~\cite[Theorem~3.4]{Morandin2023}, and the algorithmic solution via an \ac{FGM} if we already computed $\mcl{J}$.
+Continuing this line of thought we can formulate an iterative algorithm that alternatingly updates $\mcl{J}$ and $\mcl{R}$ using these solution mechanisms.
+We show this semianalytical \ac{FGM} in Algorithm~\ref{alg:semianalytical-fgm}.
+Notably, this algorithm is very sensitive to initial conditions: if we use an inappropriate initialization, the algorithm is expected to take a long time to complete --- this is a noticeable problem for obtaining quadratically embedded models.
+
+\begin{algorithm}\label{alg:semianalytical-fgm}
+    \caption{Semianalytical \ac{FGM} Algorithm, adapted from~\cite[Algorithm~1]{Morandin2023}}
+    \KwData{Model data $\mcl{T}, \mcl{Z} \in \bb{R}^{(n + m) \times k}$, initial guess $\mcl{R}_0 = \mcl{R}_0\trans \succcurlyeq 0$}
+    $L \coloneqq \sigma_1^2(\mcl{T}),\quad \ell \coloneqq \sigma_r^2(\mcl{T}),\quad q \coloneqq \ell / L$\;
+    $\alpha_0 \in \interval[open]{0}{1},\quad Q \coloneqq \mcl{R}_0$\;
+    $k \coloneqq 0$\;
+    \While{not converged}{
+        Solve subproblem~\eqref{eq:ph-dmd-skew-sym-subproblem} with $\mcl{R}_0$ to get $\mcl{J}_{k + 1}$\;
+        $E \coloneqq \mcl{J}_{k + 1} \mcl{T} - \mcl{Z}$\;
+        $\nabla \coloneqq Q \mcl{T} \mcl{T}\trans - E \mcl{T}$\;
+        $\mcl{R}_{k + 1} \coloneqq \psd{Q - \frac{1}{L} \nabla}$\;
+        $\alpha_{k + 1} \coloneqq \frac{1}{2} \left( q - \alpha_k^2 + \sqrt{{(q - \alpha_k^2)}^2 + 4 \alpha_k^2} \right)$\;
+        $\beta_{k + 1} \coloneqq \frac{\alpha_k (1 - \alpha_k)}{\alpha_k^2 + \alpha_{k + 1}}$\;
+        $Q \coloneqq \mcl{R}_{k + 1} + \beta_{k + 1} \left( \mcl{R}_{k + 1} - \mcl{R}_k \right)$\;
+        $k \coloneqq k + 1$\;
+    }
+    $\mcl{J} \coloneqq \mcl{J}_k,\quad \mcl{R} \coloneqq \mcl{R}_k$\;
+\end{algorithm}
+
+\itodo{Changes up to here!}
 
 Instead of choosing an \ac{LSQ} approach which fits both the output data and the state data, we can also consider a calibration problem
 \begin{equation}\label{eq:günther-calibration-objective}
@@ -76,7 +207,10 @@ We deconstruct the matrix blocks $\mcl{J}$ and $\mcl{R}$ of a \ac{PH} system in 
     \begin{pmatrix}
         \dot{x} \\
         y
-    \end{pmatrix} = (\mcl{J} - \mcl{R}) \begin{pmatrix}
+    \end{pmatrix} = \begin{pmatrix}
+        J - R & G - P \\
+        (G + P)\trans & S - N
+    \end{pmatrix} \begin{pmatrix}
         x \\
         u
     \end{pmatrix}.
