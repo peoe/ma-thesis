@@ -25,24 +25,24 @@ It is important to note that some \ac{BT} literature employs \ac{LTI} systems th
 If $E$ is regular, then any system $(A, B, C, D, E)$ can easily be transformed into a system of the form $(\tilde{A}, \tilde{B}, \tilde{C}, \tilde{D}, \id)$ by applying $E\inv$ to the state equation in~\eqref{eq:lti}.
 Henceforth, we refer to our \ac{LTI} system $\Sigma_\msc{lti}$ by the matrices $(A, B, C, D, \id)$.
 
-\begin{definition}[{Adapted from~\cite[Definition~6.2]{BB2017}}]\label{def:controllability}
+\begin{definition}[{Adapted from~\cite[Definition~6.2]{BB2017}}]
     The system $(A, B, C, D, \id)$ is controllable if for all states $x_0, x_1 \in \bb{R}^n$ and a final time $T \geq 0$ there exists an admissible control $u \colon \interval{0}{T} \to \bb{R}^q$ such that the system's solution $x(t)$ satisfies $x(0) = x_0$ and $x(T) = x_1$.
 \end{definition}
 
-\begin{definition}[{Adapted from~\cite[Definition~6.3]{BB2017}}]\label{def:observability}
+\begin{definition}[{Adapted from~\cite[Definition~6.3]{BB2017}}]
     The state $x_1 \in \bb{R}^n$ of a system $(A, B, C, D, \id)$ is unobservable if the output of the system with the initial condition $x(0) = x_1$ is constant $y(t) \equiv 0$ for all points in time.
     In particular, a state $x_1$ being unobservable means that $x_1$ cannot be distinguished from the zero state no matter the control applied to the system.
     A system is observable if the set of all unobservable states consists of only the trivial zero state.
 \end{definition}
 
 To characterize which system states are observable and which system states are controllable, we define the system's infinite Controllability Gramian as given in~\cite[Equation~6.8]{BB2017}
-\begin{equation}\label{eq:controllability-gramian}
+\begin{equation*}
     P = \int\limits_0^\infty \exp{(A t)} B B\trans \exp \left( A\trans t \right) \dif t \in \bb{R}^{n \times n}
-\end{equation}
+\end{equation*}
 alongside the corresponding infinite Observability Gramian
-\begin{equation}\label{eq:observability-gramian}
+\begin{equation*}
     Q = \int\limits_0^\infty \exp \left( A\trans t \right) C\trans C \exp{(A t)} \dif t \in \bb{R}^{n \times n}.
-\end{equation}
+\end{equation*}
 For asymptotically stable and minimal systems as defined in Definitions~\ref{def:minimal-system} and~\ref{def:lti-stability}, these matrices satisfy the Lyapunov equalities
 \begin{equation}\label{eq:lyapunov-equations}
     \begin{aligned}
@@ -77,7 +77,7 @@ This reduction even yields the following estimate of the $\mcl{H}_\infty$ projec
 	\norm{\tfunc - \hat{\tfunc}}{\mcl{H}_\infty} \coloneqq \sup\limits_{\omega \in \bb{R}} \sigma_{\max} \left( \tfunc(\iu \omega) - \hat{\tfunc}(\iu \omega) \right).
 \end{equation*}
 
-\begin{theorem}[{Adapted from~\cite[Theorem~6.4]{BB2017}}]\label{thm:h-inf-error}
+\begin{theorem}[{Adapted from~\cite[Theorem~6.4]{BB2017}}]
     Let $(A_\msc{b}, B_\msc{b}, C_\msc{b}, D_\msc{b}, \id)$ be a balanced realization of an asymptotically stable and minimal system as defined in Definitions~\ref{def:minimal-system} and~\ref{def:lti-stability} with an ordered sequence of real numbers $\sigma_1 > \cdots > \sigma_k > 0$ such that the Gramians read $P = Q = \diag{\sigma_1 \id, \dots, \sigma_k \id}$.
     Then the reduced system $\hat{\Sigma}_\msc{lti}$ obtained by truncating $\Sigma_\msc{lti}$ is asymptotically stable, minimal, balanced, and fulfills
     \begin{equation*}
@@ -106,9 +106,9 @@ Following~\cite[Theorem~3.1]{Gugercin2008}, this results in an subset of $\mcl{H
 As a consequence of~\cite[Theorem~3.1]{Gugercin2008}, if we interpolate the \ac{FOM} transfer function $\tfunc$ at the mirror images $\hat{\sigma} = -a + \iu b$ of its poles $\sigma = a + \iu b$, the subspace transfer function $\tfunc_\msc{r} \in \mcl{M}(\mu)$ is $\mcl{H}_2$-optimal among all \acp{ROM} with the same reduced poles $\mu$.
 
 For any local minimizer we can formulate the following necessary optimality conditions of the $\mcl{H}_2$ bestapproximation problem with the interpolation points $\sigma_i \in \bb{C}$ and the corresponding tangential directions $b_i, c_i \in \bb{C}^{m}$ for an \ac{LTI} system with $m \in \bb{N}$ inputs and outputs
-\begin{equation}\label{eq:h2-optimality-conditions}
+\begin{equation*}
     \tfunc_\msc{r}(- \sigma_i) b_i = \tfunc(- \sigma_i) b_i,\quad c_i\trans \tfunc_\msc{r}(- \sigma_i) = c_i\trans \tfunc(- \sigma_i),\quad c_i\trans \tfunc'_\msc{r}(- \sigma_i) b_i = c_i\trans \tfunc(- \sigma_i) b_i.
-\end{equation}
+\end{equation*}
 
 While these conditions are very useful, solving the optimal approximation problem remains complicated.
 To combat this difficulty, the authors of~\cite{Gugercin2008} propose an algorithm derived from the standard Newton update formula.
@@ -132,8 +132,8 @@ Algorithm~\ref{alg:irka} shows how this Newton step is used in the \acf{IRKA} as
 This algorithm heavily relies on a realization-based formulation; however, there are some variants independent of specific realizations using the Loewner framework such as~\cite[Algorithm~7.2]{Beattie2017}.
 It is further notable, that, due to the complex conjugates in the interpolation points, the updated subspaces $V_\msc{r}$ and $W_\msc{r}$ can be chosen as real-valued as explained in~\cite[Remark~4]{Gugercin2012}.
 
-\begin{algorithm}\label{alg:irka}
-    \caption{\ac{IRKA}, adapted from~\cite[Algorithm~7.1]{Beattie2017}}
+\begin{algorithm}
+    \caption{\ac{IRKA}, adapted from~\cite[Algorithm~7.1]{Beattie2017}}\label{alg:irka}
     \KwData{Initial interpolation points ${\sset{\sigma_i^{(0)}}}_{i = 1}^r$ and initial tangent directions ${\sset{r_i^{(0)}}}_{i = 1}^r, {\sset{\ell_i^{(0)}}}_{i = 1}^r$ closed under complex conjugation, full order model $\Sigma$}
     \tcc{Initialize reduced subspaces}
     $V_r^{(0)} \coloneqq {\left( {(\sigma_i^{(0)} E - A)}\inv B r_i^{(0)} \right)}_{i = 1}^r,\quad W_r^{(0)} \coloneqq {\left( {(\sigma_i^{(0)} E - A\trans)}\inv C\trans \ell_i^{(0)} \right)}_{i = 1}^r$\;

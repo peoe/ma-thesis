@@ -14,7 +14,7 @@ The first algorithm we examine is \acf{PRBT}.
 This method relies on the fact that positive real systems are closely related to \ac{PH} systems by the fact that we can transform behaviourally controllable and behaviourally observable positive real systems into \ac{PH} systems as we will see at the end of this subsection in Equation~\eqref{eq:prbt-ph-system}.
 First of all, we require three additional definitions which relate to observability and controllability of the \ac{LTI} system as well as the positive realness property.
 
-\begin{definition}[{Adapted from~\cite[Theorem~6.2]{Freund2004} and~\cite[Equation~(8)]{CGH2022}}]\label{def:behaviourally-controllable-observable}
+\begin{definition}[{Adapted from~\cite[Theorem~6.2]{Freund2004} and~\cite[Equation~(8)]{CGH2022}}]
     An \ac{LTI} system with the realization $(A, B, C, D, E)$ is behaviourally controllable if for all $\lambda \in \bb{C}$ the following condition holds
     \begin{equation}\label{eq:behaviourally-controllable}
         \rank{\begin{matrix}
@@ -30,7 +30,7 @@ First of all, we require three additional definitions which relate to observabil
     is satisfied for all $\lambda \in \bb{C}$, then the system is behaviourally observable.
 \end{definition}
 
-\begin{definition}[{Adapted from~\cite[Definition~2.1]{Freund2004} and~\cite[Property~(PR)]{CGH2022}}]\label{def:positive-real}
+\begin{definition}[{Adapted from~\cite[Definition~2.1]{Freund2004} and~\cite[Property~(PR)]{CGH2022}}]
     An \ac{LTI} system $\Sigma_\msc{lti}$ is said to be positive real if the following conditions are satisfied:
     \begin{enumerate}
         \item The system's transfer function $\tfunc$ has no poles in the right complex halfplane $\bb{C}_+$,
@@ -42,7 +42,7 @@ First of all, we require three additional definitions which relate to observabil
 
 In order to extend the standard balancing procedure to result in positive real systems, we relate the passivity of an \ac{LTI} system and its accompanying realization $(A, B, C, D, E)$ to its positive real transfer function $\tfunc$ through the result of~\cite[Corollary~2.7]{CGH2022}.
 In addition, we can also formulate the condition $D + D\trans \succcurlyeq 0$ on the system's feedthrough term following~\cite[Definition~5]{Gugercin2007}.
-Similarly to the Lyapunov equations~\eqref{eq:lyapunov-equations}, it can be shown that an \ac{LTI} $(A, B, C, D, \id)$ is strictly positive real if and only if there exist symmetric positive definite matrices $K, L \in \bb{R}^{n \times n}$ such that the following \acp{ARE} are satisfied
+Similarly to the Lyapunov equations~\eqref{eq:lyapunov-equations}, it can be shown that an \ac{LTI} $(A, B, C, D, \id)$ is strictly positive real if and only if there exist symmetric positive definite matrices $K, L \in \bb{R}^{n \times n}$ such that the following algebraic Riccati equations are satisfied
 \begin{equation}\label{eq:riccati-equations}
     \begin{aligned}
         A\trans K + K A + (K B - C\trans) (D + D\trans)\inv (K B - C\trans)\trans &= 0, \\
@@ -54,7 +54,7 @@ For positive real systems, all solutions $K, L$ can be bounded by minimal and ma
     K_{\max} \succcurlyeq K \succcurlyeq K_{\min} \succcurlyeq 0,\quad L_{\max} \succcurlyeq L \succcurlyeq L_{\min} \succcurlyeq 0
 \end{equation*}
 as shown in~\cite[Proposition~5.1]{Ober1991} by the connection to bounded real systems.
-The solutions $K, L$ of the \acp{ARE}~\eqref{eq:riccati-equations} are related by $K = L\inv$, thus further implying that
+The solutions $K, L$ of the algebraic Riccati equations~\eqref{eq:riccati-equations} are related by $K = L\inv$, thus further implying that
 \begin{equation*}
     K_{\min} = L_{\max}\inv,\quad K_{\max} = L_{\min}\inv.
 \end{equation*}
@@ -192,7 +192,7 @@ In order to understand why the specific choice of $V_r^{(k)}$ and $W_r^{(k)}$ cr
     Additionally, the reduced transfer function $\tfunc_r$ interpolates the \ac{FOM} transfer function $\tfunc$ at all interpolation points $\sigma_i$ and all tangential directions $r_i$.
 \end{lemma}
 
-\begin{theorem}[{Adapted from~\cite[Theorem~11 and Remark~13]{Gugercin2012}}]\label{thm:ph-irka-subspace}
+\begin{theorem}[{Adapted from~\cite[Theorem~11 and Remark~13]{Gugercin2012}}]
     Let $\Sigma_\msc{ph}$ be an asymptotically stable \ac{PH} system with the transfer function $\tfunc$.
     If \ac{PHIRKA} converges to a reduced system $\hat{\Sigma}_\msc{ph}$ with the transfer function $\tfunc_r$, and $\tfunc_r$ admits the decomposition
     \begin{equation*}
@@ -213,8 +213,8 @@ In order to understand why the specific choice of $V_r^{(k)}$ and $W_r^{(k)}$ cr
     We discuss some more optimization-based \ac{OI} procedures in Chapter~\ref{chap:inferring-models} but the focus for these will be on how we can adapt them to allow the application of quadratically embedded manifolds.
 \end{remark}
 
-\begin{algorithm}[ht]\label{alg:ph-irka}
-    \caption{\ac{PHIRKA}, adapted from~\cite[Algorithm~1]{Gugercin2012}}
+\begin{algorithm}[ht]
+    \caption{\ac{PHIRKA}, adapted from~\cite[Algorithm~1]{Gugercin2012}}\label{alg:ph-irka}
     \KwData{Initial interpolation points $\sigma$ closed and initial tangent directions $r_1^{(0)}, \dots, r_r^{(0)}$ under complex conjugation, full order model $\Sigma$}
     \tcc{Initialize reduced subspaces}
     $V_r^{(0)} \coloneqq {\left( {(\sigma_i^{(0)} E - (J - R) Q)}\inv (G - P) r_i^{(0)} \right)}_{i = 1}^r,\quad W_r^{(0)} \coloneqq Q V_r^{(0)} \left( {V_r^{(0)}}\trans Q V_r^{(0)} \right)\inv$\;
@@ -253,8 +253,8 @@ For generic nonlinear functions $f \colon \bb{R}^n \to \bb{R}^n$, \ac{DEIM} calc
 The projection matrix $\bb{P}$ is constructed explicitly from $m \in \bb{N}$ linearly independent vectors ${\sset{u_i}}_{i = 1}^m \subseteq \bb{R}^n$ and a set of unit vectors ${\sset{e_{\gamma_i}}}_{i = 1}^m \subseteq \bb{R}^n$ selected from indices ${\sset{\gamma_i}}_{i = 1}^m \subseteq \bb{N}$.
 In order to compute the indices $\gamma_i$, we apply Algorithm~\ref{alg:deim}.
 
-\begin{algorithm}[ht]\label{alg:deim}
-    \caption{\ac{DEIM}, adapted from~\cite[Algorithm~1]{Chaturantabut2010} and~\cite[Algorithm~4]{Chaturantabut2016}}
+\begin{algorithm}[ht]
+    \caption{\ac{DEIM}, adapted from~\cite[Algorithm~1]{Chaturantabut2010} and~\cite[Algorithm~4]{Chaturantabut2016}}\label{alg:deim}
     \KwData{${\sset{}}_{i = 1}^m \subseteq \bb{R}^n$ linearly independent}
     \tcc{Compute initial index}
     $\gamma_1 \coloneqq \min\limits_{\gamma \in \bb{N}}{\abs{u_1^{(\gamma)}}{}},\quad U \coloneqq (u_1),\quad E \coloneqq (e_{\gamma_1})\quad \gamma \coloneqq (\gamma_1)$\;
@@ -276,9 +276,9 @@ In order to compute the indices $\gamma_i$, we apply Algorithm~\ref{alg:deim}.
 
 When it comes to applying \ac{DEIM} to the \ac{PH} system~\eqref{eq:nonquadratic-ph-system}, we want to consider the state coupling $Q(x)$ in place of the nonlinear function $f$, see~\cite[Section~3]{Chaturantabut2016}.
 First, we identify any linear components of $Q$ such that for a matrix $M \in \bb{R}^{n \times n}$ and a nonlinear function $q \colon \bb{R}^n \to \bb{R}^n$ it holds that
-\begin{equation}\label{eq:deim-decomposition}
+\begin{equation*}
     Q(x) = M x + q(x).
-\end{equation}
+\end{equation*}
 Thereafter, we select a new modelling basis orthonormalized with respect to $M$ so that the nonlinear part $q$ satisfies $\nabla_x q(x(t)) \approx U g(t)$ and $U\trans M U = \id$ for some $g(t) \in \bb{R}^m$.
 We then apply Algorithm~\ref{alg:deim}, compute $\bb{P} \in \bb{R}^{n \times n}$, and apply the projection to the nonlinear part $Q(x) \approx M x + \bb{P} q\left( \bb{P}\trans x \right)$.
 The projection step on $q$ reduces the number of nonlinear evaluations to $m$ components of $q$ on $m$ entries of $x$ each, thus allowing for a reduction in the overall computational effort.

@@ -3,19 +3,18 @@
 This thesis describes a combined approach that unifies recent advances in polynomially embedded manifolds for nonlinear \acl{MOR} and \acl{PH} Systems Theory.
 In particular, we will examine quadratically embedded manifolds for \acl{PH} reduced models combining two areas of \acl{MOR} that are as of yet unrelated.
 The inherent goal of this combination is to couple physically motivated descriptions of dynamical systems with ideas mitigating restrictions in linear approximation theory.
-Later on, we discuss how this foundation can be extended upon with adaptive optimization and hyperreduction methods.
 
-The necessary background in Systems Theory will focus on the class of \acl{PH} systems, a subset of dynamical systems incorporating both energy preserving and energy dissipating elements.
+To introduce the necessary background in Systems Theory, we will focus on the class of \acl{PH} systems, a subset of dynamical systems incorporating both energy preserving and energy dissipating elements.
 This description is particularly interesting because \acl{PH} systems consider two aspects of a model: the internal states, and ports through which the system and the outside environment can interact with each other by so-called controls and outputs.
 In this context, controls refer to outside forces and influences in interaction with the principle component of the dynamical system, whereas outputs model the effect of the system on this external domain.
 Modelling dynamical systems in this manner makes it incredibly easy to combine multiple systems into a complex large scale system by interconnection.
-We use this interconnectivity in combining linear and higher order approximations of \acl{PH} systems.
+We use this interconnectivity in combining linear and quadratically embedded approximations of \acl{PH} systems.
 
-Reducing \acl{PH} systems, unfortunately, is not as straightforward as reducing systems with no inherent physical structure; however, appropriate methods which originate from the unstructured approach are prevalent in literature.
+Reducing \acl{PH} systems, unfortunately, is not as straightforward as reducing \aclp{LTI} with no inherent physical structure; however, appropriate methods which originate from the unstructured approach are prevalent in literature.
 Usually, the structure-preserving procedures are more computationally involved compared to the basic model reduction algorithms from which they originate, because more caution has to be exercised in order to conserve matrix structure.
 The benefit of choosing one of these structure-preserving methods is that the system's overarching properties stay unchanged: energy dissipating system elements remain energy dissipating even after model reduction, and similarly, conservative components remain energy preserving.
 
-Most classical \acl{MOR} approaches suffer from the fact that the decay rate of the projection error between full order and reduced order model is linked to the kind of model and the specific initial conditions.
-This can result in very good decay rates of the so-called Kolmogorov $N\text{-width}$ for elliptic problems but also in very slow decay rates for models such as wave equations under non-sinusoidal initial conditions.
+Most classical \acl{MOR} approaches suffer from the fact that the decay rate of the projection error between full order and reduced order model is correlated with the kind of model and the specific initial conditions.
+This can result in very good decay rates of the so-called Kolmogorov $N\text{-width}$, a formal measure for the ability to approximate the solution manifold with linear subspaces, for elliptic problems but also in very slow decay rates for models such as wave equations under non-sinusoidal initial conditions.
 In mitigating these drawbacks, some authors have resorted to complex methods based on \aclp{NN} and autoencoders; however, these lose all sense of explainability due to their intransparent training process.
 The goal of this thesis is thus to incorporate explainability alongside the benefits of nonlinear \acl{MOR} by using polynomial terms in conjunction with conventionally reduced linear \acl{PH} models.

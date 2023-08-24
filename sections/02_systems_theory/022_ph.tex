@@ -5,7 +5,7 @@ This idea can be further extended upon by incorporating physical properties into
 We first give a detailed description of \ac{LTI} \ac{PH} \acp{DAE} before mentioning more generalized versions as additional context.
 In the process, we formalize the notion of passivity or energy conservation as mentioned in Chapter~\ref{chap:introduction}.
 Further, we explicitly note that from now on we consider the system matrices to be real-valued, in contrast to the complex-valued definitions in the previous section.
-The main difference here is that in the chapter on \ac{MOR} methods the algorithms guarantee a real reduced realization as long as we use complex conjugate sample points, and hence we can w.l.o.g.\ assume real matrices from now on, cf.~\cite{Gugercin2008}.
+The main difference here is that in the chapter on \ac{MOR} methods the algorithms guarantee a real reduced realization as long as we use complex conjugate sample points, and hence we can w.l.o.g.\ assume real matrices from now on, similarly to~\cite{Gugercin2008}.
 
 These following remarks closely follow~\cite[Definition~4.9]{Mehrmann2023}.
 In \ac{PH} systems, we split the state interaction matrix $A \in \bb{R}^{m \times n}$ into two matrices $J, R \in \bb{R}^{m \times m}$ and a state transformation matrix $Q \in \bb{R}^{m \times n}$.
@@ -46,7 +46,7 @@ In our case, we restrict ourselves to a quadratic Hamiltonian formulation
     \mcl{H} \colon I \times \bb{R}^{n} \to \bb{R},\quad \mcl{H}(t, x) \mapsto \frac{1}{2} x(t)\trans Q\trans E x(t).
 \end{equation}
 
-\begin{definition}[{Cf.~\cite[Definition~4.9]{Mehrmann2023}}]\label{def:phlti}
+\begin{definition}[{Adapted from~\cite[Definition~4.9]{Mehrmann2023}}]\label{def:phlti}
     A \acl{PH} \ac{LTI} system with quadratic Hamiltonian consists of a system of equations
     \begin{equation}\label{eq:phlti}
         \Sigma_{\msc{ph}} \colon \left\lbrace
@@ -165,9 +165,9 @@ Because \ac{PH} systems are directly motivated by the energy contained within th
 Considering the physical motivation, it is logical to bound $\frac{\dif}{\dif t} \mcl{H}$ by the values of the control $u$ and the output $y$: the system itself preserves energy, and thus a change in energy can only take place by influx through the control or dispersal by the system's output.
 In fact, we can derive a dissipation inequality due to the positive semidefinite system matrices as specified in~\eqref{eq:ph-matrix-structure}.
 Following the notation in~\cite[Theorem~6.1]{Mehrmann2023}, we write
-\begin{equation}\label{eq:dissipation-inequality}
+\begin{equation*}
     \mcl{H}(x(t_1)) - \mcl{H}(x(t_0)) \leq \int\limits_{t_0}^{t_1} u(\tau)\trans y(\tau) \dif \tau.
-\end{equation}
+\end{equation*}
 If the state $x(t_0) = x_0$ contains no energy i.e.\ $x_0 = 0$ and the initial time $t_0$ is $t_0 = 0$, then we can trivially transform the inequality to
 \begin{equation*}
     0 \leq \mcl{H}(x(t_1)) \leq \int\limits_0^t u(\tau)\trans y(\tau) \dif \tau
@@ -175,7 +175,7 @@ If the state $x(t_0) = x_0$ contains no energy i.e.\ $x_0 = 0$ and the initial t
 because the energy of the state $x(t_1)$ cannot be less than zero.
 Additionally, while we motivated the dissipation inequality as a property of \ac{PH} systems, it is by no means restricted to \ac{PH} systems, by itself only requiring the existence of an energy storage function $\mcl{H}$ to serve as a proxy for the total system energy.
 
-\begin{definition}\label{def:passivity}
+\begin{definition}
     A system $\Sigma_\msc{lti}$ with an energy storage function $\mcl{H}$ is said to be passive if it satisfies the dissipation inequality
     \begin{equation*}
         \mcl{H}(x(t_1)) - \mcl{H}(x(t_0)) \leq \int\limits_{t_0}^{t_1} u(\tau)\trans y(\tau) \dif \tau
@@ -184,11 +184,11 @@ Additionally, while we motivated the dissipation inequality as a property of \ac
 \end{definition}
 
 \begin{remark}
-    Passivity is a very important property for port-based modelling of dynamical systems because it allows for the coupling of any two passive systems through a power-conserving interconnection; cf.~\cite[Section~6.4]{Mehrmann2023}.
+    Passivity is a very important property for port-based modelling of dynamical systems because it allows for the coupling of any two passive systems through a power-conserving interconnection, as explained by~\cite[Section~6.4]{Mehrmann2023}.
 \end{remark}
 
 \begin{remark}
-    Any passive \ac{LTI} system $\Sigma_{\msc{lti}}$ with a realization $(A, B, C, D, E)$ and a quadratic Hamiltonian $\mcl{H}(x) = x\trans H x$ allows for a \ac{PH} representation $\Sigma_{\msc{ph}}$ if the matrix $H$ is positive semidefinite and if it satisfies $\knl{H} \subseteq \knl{A}$; cf.~\cite[Theorem~7.1]{VanDerSchaft2014}.
+    Any passive \ac{LTI} system $\Sigma_{\msc{lti}}$ with a realization $(A, B, C, D, E)$ and a quadratic Hamiltonian $\mcl{H}(x) = x\trans H x$ allows for a \ac{PH} representation $\Sigma_{\msc{ph}}$ if the matrix $H$ is positive semidefinite and if it satisfies $\knl{H} \subseteq \knl{A}$, see for example~\cite[Theorem~7.1]{VanDerSchaft2014}.
 \end{remark}
 
 Generally speaking, Definition~\ref{def:phlti} is too restrictive because the system in Equation~\eqref{eq:phlti} only allows for coefficients that are constant in time.
@@ -209,25 +209,25 @@ To alleviate this restriction, we use the final part of this chapter to highligh
     The \ac{PH} constraints on the dissipative elements $P, R$, and $S$ stay the same as for the time-invariant system $\Sigma_{\msc{ph}}$, however, the condition imposed on the previously only skew-symmetric $\begin{pmatrix}
         J & G \\
         -G\trans & N
-    \end{pmatrix}$ transforms to the need for the differential operator $Q\trans E \frac{\dif}{\dif t} - (Q\trans J Q - Q\trans E K)$ to be skew-adjoint; cf.~\cite[Definition~4.8]{Mehrmann2023}.
+    \end{pmatrix}$ transforms to the need for the differential operator $Q\trans E \frac{\dif}{\dif t} - (Q\trans J Q - Q\trans E K)$ to be skew-adjoint, we refer the reader to~\cite[Definition~4.8]{Mehrmann2023}.
 \end{remark}
 
 \begin{remark}
     The second approach is very similar to~\eqref{eq:lph} but in addition to the time dependency, we also allow for the system's operators to change based on the system state as a parameter.
     After some generalizations of the state formulations, which are further detailed in~\cite{Mehrmann2023}, this extension results in a nonlinear \ac{PH} system of the form
-    \begin{equation}\label{eq:nlph}
+    \begin{equation*}
         \Sigma_{\msc{nlph}} \colon \left\lbrace
         \begin{aligned}
             E(t, x) \dot{x}(t) + r(t, x) &= (J(t, x) - R(t, x)) \eta(t, x) + (G(t, x) - P(t, x)) u(t), \\
             y(t) &= (G(t, x) + P(t, x))\trans \eta(t, x) + (S(t, x) - N(t, x)) u(t),
         \end{aligned}
         \right.
-    \end{equation}
+    \end{equation*}
     where the Hamiltonian is implicitly defined through the differential equations
     \begin{equation*}
         \pd{} \mcl{H}(t, x) = E(t, x)\trans \eta(t, x)\quad \text{ and }\quad \pd[t]{} \mcl{H}(t, x) = \eta(t, x)\trans r(t, x)
     \end{equation*}
-    alongside similar constraints on the passive and dissipative components of the \ac{PH} system as were imposed in the \ac{LTI} case; cf.~\cite[Definition~4.1]{Mehrmann2023}.
+    alongside similar constraints on the passive and dissipative components of the \ac{PH} system as were imposed in the \ac{LTI} case, again described in~\cite[Definition~4.1]{Mehrmann2023}.
 \end{remark}
 
 \begin{remark}

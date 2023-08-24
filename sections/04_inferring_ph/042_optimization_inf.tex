@@ -1,6 +1,6 @@
 \section{Optimization-Based Inference}\label{sec:optimization-based-inference}
 
-This subsections deals with optimization-based \ac{PH} \ac{OI} methods.
+This subsection deals with optimization-based \ac{PH} \ac{OI} methods.
 In essence, all of these methods choose some parametrization of the underlying system matrices and then run an optimization algorithm to minimize the cost functional that enforces \ac{PH} structure.
 The choice of algorithm, the construction of the individual optimization objectives, and the inclusion of structural constraints reflecting~\eqref{eq:ph-matrix-structure} heavily varies between publications.
 Importantly, we have to consider the initialization of the matrices.
@@ -35,7 +35,7 @@ As the name implies, this is closely linked to the \ac{DMD} method in that we wa
     \end{pmatrix} - (\mcl{J} - \mcl{R}) \begin{pmatrix}
         X \\
         U
-    \end{pmatrix}}{F}^2,\quad \suchthat \mcl{J} = - \mcl{J}\trans, \mcl{R} = \mcl{R}\trans \succcurlyeq 0
+    \end{pmatrix}}{F}^2,\quad \suchthat \mcl{J} = - \mcl{J}\trans, \mcl{R} = \mcl{R}\trans \succcurlyeq 0,
 \end{equation}
 where $X, \dot{X} \in \bb{R}^{n \times k}$ and $U, Y \in \bb{R}^{m \times k}$ are data matrices computed from a sequence of snapshots ${(x_i, u_i, y_i)}_{i = 0}^{k + 1}$ with fixed step size $\dif t > 0$ by calculating
 \begin{equation}\label{eq:ph-dmd-discrete-data}
@@ -47,10 +47,10 @@ where $X, \dot{X} \in \bb{R}^{n \times k}$ and $U, Y \in \bb{R}^{m \times k}$ ar
 This method distinguishes itself from the previous \ac{FGM} by the fact that \ac{PHDMD} does not allow restarting within iterations.
 Furthermore, the \ac{PHDMD} algorithm does not offer the ability of optimizing the $E$ matrix because in this setting it would lead to the trivial minimizers $\mcl{J} = \mcl{R} = 0$ as shown in~\cite[Remark~3.3]{Morandin2023}.
 Another downside of the \ac{PHDMD} algorithm is the fact that the entire procedure is based on a modified implicit midpoint time stepping scheme: instead of utilizing the proper midpoint control value in~\eqref{eq:ph-dmd-discrete-data}, we approximate it via the trapezoidal rule $u\left( t + \frac{1}{2} \dif t \right) \approx \frac{1}{2} \left( u(t) + u(t + \dif t) \right)$.
-Effectively, this codifies a restriction of the acceptable time steppers for the \ac{PHDMD} algorithm because using other time stepping methods such as Runge--Kutta does not result in the same accuracy as the implicit midpoint rule, as shown in~\cite[Section~4.1]{Morandin2023}.
+Effectively, this codifies a restriction of the acceptable time steppers for the \ac{PHDMD} algorithm because using other time stepping methods such as Runge--Kutta does not result in the same accuracy as the implicit midpoint rule as shown in~\cite[Section~4.1]{Morandin2023}.
 However, despite these drawbacks the \ac{PHDMD} algorithm is very practical for tackling the central problem of this thesis because we can easily adapt the problem formulation~\eqref{eq:ph-dmd-minimization-problem} to include higher order data terms.
 
-In order to derive a solution algorithm for the \ac{PHDMD} problem~\eqref{eq:ph-dmd-minimization-problem} we have to consider two steps into consideration:
+In order to derive a solution algorithm for the \ac{PHDMD} problem~\eqref{eq:ph-dmd-minimization-problem} we have to take two steps into consideration:
 How do we compute an initial guess of the matrices $\mcl{J}$ and $\mcl{R}$?
 How can we successively update the initial guess to improve the matrices?
 In~\cite{Morandin2023}, the authors calculate the initialization of $\mcl{J}$ and $\mcl{R}$ using a weighted version of problem~\eqref{eq:ph-dmd-minimization-problem}.
@@ -64,12 +64,12 @@ For ease of notation in further equations we define the combined data matrices
         U
     \end{pmatrix} \in \bb{R}^{(n + m) \times k}.
 \end{equation}
-To define the weighted problem we follow the intention of weighting the information contained within the data matrices $\mcl{Z}$ and $\mcl{T}$.
+To define the weighted problem we weigh the approximation error of $\mcl{Z} - (\mcl{J} - \mcl{R}) \mcl{T}$ according to the information contained within the data matrices $\mcl{Z}$ and $\mcl{T}$.
 Multiplying the inner terms in Equation~\eqref{eq:ph-dmd-minimization-problem} from the left by $\mcl{T}\trans$, we calculate the weighted \ac{PHDMD} optimization problem
 \begin{equation}\label{eq:weighted-ph-dmd}
     \min \norm*{\mcl{T}\trans \left( \mcl{Z} - (\mcl{J} - \mcl{R}) \mcl{T} \right)}{F}^2,\quad \suchthat \mcl{J} = - \mcl{J}\trans, \mcl{R} = \mcl{R}\trans \succcurlyeq 0.
 \end{equation}
-The benefit of this formulation is immediate by the next result, and its effects on the solutions of the unweighted \ac{PHDMD} problem~\eqref{eq:ph-dmd-minimization-problem} by the one thereafter.
+The benefit of this formulation is immediate by the next result, and the effects of the reformulation on the solutions of the unweighted \ac{PHDMD} problem~\eqref{eq:ph-dmd-minimization-problem} are explained by the one thereafter.
 
 \begin{lemma}[{Adapted from~\cite[Theorem~3.7]{Morandin2023}}]\label{lem:weighted-ph-dmd-solution}
     Let $\mcl{T}, \mcl{Z} \in \bb{R}^{(n + m) \times k}$ be the two data matrices as defined in Equation~\eqref{eq:ph-dmd-data-matrices} and suppose that $\mcl{T}$ admits the skinny singular value decomposition
@@ -95,7 +95,7 @@ The benefit of this formulation is immediate by the next result, and its effects
     For a detailed proof, see~\cite[Proof of Theorem~3.7 and Lemma~3.10]{Morandin2023}.
 \end{proof}
 
-\begin{lemma}[{Adapted from~\cite[Theorem~3.11]{Morandin2023}}]\label{lem:relation-ph-dmd-problems}
+\begin{lemma}[{Adapted from~\cite[Theorem~3.11]{Morandin2023}}]
     Let $\mcl{T}, \mcl{Z} \in \bb{R}^{(n + m) \times k}$ be the two data matrices as defined in Equation~\eqref{eq:ph-dmd-data-matrices} with $\rank{\mcl{T}} = n + m$.
     Then there exists a constant $c > 0$ such that for all matrices $\mcl{J}, \mcl{R} \in \bb{R}^{(n + m) \times (n + m)}$ it holds that
     \begin{equation*}
@@ -105,23 +105,23 @@ The benefit of this formulation is immediate by the next result, and its effects
 
 \begin{proof}
     Consider the singular value decomposition $\mcl{T} = V \Sigma W\trans$ and define the pseudoinverse of $\mcl{T}$ in terms of its SVD by calculating $\mcl{T}^\dagger \coloneqq W \Sigma^\dagger V\trans$.
-    We use the fact that $\rank{\mcl{T}} = n + m$ and therefore observe $\Sigma^\dagger \Sigma = \id[n + m]$.
-    Next we use that the matrices $V$ and $W$ are unitary and calculate the relation
+    We consider that $\rank{\mcl{T}} = n + m$ implies that $\Sigma^\dagger \Sigma = \id[n + m]$ holds.
+    Next, we use that the matrices $V$ and $W$ are unitary and calculate the relation
     \begin{equation*}
         \norm*{\mcl{Z} - ( \mcl{J} - \mcl{R}) \mcl{T}}{F}^2 = \norm*{{\left( \mcl{T}\trans \right)}^\dagger \mcl{T}\trans \left( \mcl{Z} - ( \mcl{J} - \mcl{R}) \mcl{T} \right)}{F}^2 \leq \norm*{{\left( \mcl{T}\trans \right)}^\dagger}{F}^2 \norm*{\mcl{T}\trans \left( \mcl{Z} - ( \mcl{J} - \mcl{R}) \mcl{T} \right)}{F}^2,
     \end{equation*}
     which concludes the proof after setting $c^2 \coloneqq \norm*{{\left( \mcl{T}\trans \right)}^\dagger}{F}^2$.
 \end{proof}
 
-Next we use our current matrices $\mcl{J}$ and $\mcl{R}$ to construct updated versions of both.
-For this it is imperative to notice that once $\mcl{J}$ or $\mcl{R}$ are given, we can much more easily compute the remaining matrices when compared to the original \ac{PHDMD} problem~\eqref{eq:ph-dmd-minimization-problem} where we need to solve for both at the same time.
-To demonstrate the effect of $\mcl{R}$ being given before hand we consider the original optimization problem~\eqref{eq:ph-dmd-minimization-problem} in terms of the data matrices $\mcl{T}$ and $\mcl{Z}$ defined in~\eqref{eq:ph-dmd-data-matrices}.
-We simplify this problem by denoting the fixed contribution of $\mcl{R}$ as $\mcl{Q} \coloneqq \mcl{Z} + \mcl{R} \mcl{T}$ and inserting it into the problem formulation
+Next, we use our current matrices $\mcl{J}$ and $\mcl{R}$ to construct updated versions of both.
+For this it is imperative to notice that once $\mcl{J}$ or $\mcl{R}$ are given, we can much more easily compute the other remaining matrix when compared to the original \ac{PHDMD} problem~\eqref{eq:ph-dmd-minimization-problem} where we need to solve for both $\mcl{J}$ and $\mcl{R}$ at the same time.
+To demonstrate the effect of $\mcl{R}$ being given beforehand, we consider the original optimization problem~\eqref{eq:ph-dmd-minimization-problem} in terms of the data matrices $\mcl{T}$ and $\mcl{Z}$ defined in~\eqref{eq:ph-dmd-data-matrices}.
+We simplify this problem by denoting the fixed contribution of $\mcl{R}$ as $\mcl{Q} \coloneqq \mcl{Z} + \mcl{R} \mcl{T}$ and inserting it into the problem formulation~\eqref{eq:ph-dmd-minimization-problem} to compute
 \begin{equation}\label{eq:ph-dmd-skew-sym-subproblem}
     \min \norm*{\mcl{Z} - (\mcl{J} - \mcl{R}) \mcl{T}}{F}^2 = \min \norm*{\mcl{Q} - \mcl{J} \mcl{T}}{F}^2,\quad \suchthat \mcl{J} = - \mcl{J}\trans;
 \end{equation}
 the case for a given $\mcl{J}$ follows analogously.
-Solutions to the subproblem~\eqref{eq:ph-dmd-skew-sym-subproblem} are given by the following result.
+Some solutions to the subproblem~\eqref{eq:ph-dmd-skew-sym-subproblem} can be explicitly formulated by means of the following result.
 
 \begin{theorem}
     Let $\mcl{T}, \mcl{Z} \in \bb{R}^{(n + m) \times k}$ be the two data matrices as defined in Equation~\eqref{eq:ph-dmd-data-matrices}, and let $\mcl{T} = V \Sigma W\trans$ denote the singular value decomposition with $r = \rank{\mcl{T}}$ and
@@ -143,7 +143,7 @@ Solutions to the subproblem~\eqref{eq:ph-dmd-skew-sym-subproblem} are given by t
         \end{pmatrix} V \mcl{Z} W\trans \begin{pmatrix}
             \id[r] \\
             0
-        \end{pmatrix} \in \bb{R}^{(n + m - r) \times r},
+        \end{pmatrix} \in \bb{R}^{(n + m - r) \times r}
     \end{equation*}
     with which we further calculate $J_1 = 2 \Phi \odot \sksym{A \Sigma_1}, J_2 = B \Sigma_1\inv$, where the matrix operator $\odot$ denotes the usual Hadamard product and $\sksym{\cdot}$ is the projection onto the set of skew-symmetric matrices as mentioned in Lemma~\ref{lem:weighted-ph-dmd-solution}.
     Then for any skew-symmetric matrix $J_4 \in \bb{R}^{(n + m - r) \times (n + m - r)}$, the matrix
@@ -161,13 +161,13 @@ Solutions to the subproblem~\eqref{eq:ph-dmd-skew-sym-subproblem} are given by t
     Consider~\cite[Lemma~2.1]{Deng2003}.
 \end{proof}
 
-To solve these individual optimization problems, we have to consider the direct method for the case that $\mcl{R}$ is given, see~\cite[Theorem~3.4]{Morandin2023}, and the algorithmic solution via an \ac{FGM} if we already computed $\mcl{J}$.
-Continuing this line of thought we can formulate an iterative algorithm that alternatingly updates $\mcl{J}$ and $\mcl{R}$ using these solution mechanisms.
+To solve these individual optimization problems, we have to consider the direct method for the case that $\mcl{R}$ is given, see~\cite[Theorem~3.4]{Morandin2023}, and the algorithmic solution via an \ac{FGM} if we have already computed $\mcl{J}$.
+Continuing this line of thought, we can formulate an iterative algorithm that alternatingly updates $\mcl{J}$ and $\mcl{R}$ using these solution mechanisms.
 We show this semianalytical \ac{FGM} in Algorithm~\ref{alg:semianalytical-fgm}.
-Notably, this algorithm is very sensitive to initial conditions: if we use an inappropriate initialization, the algorithm is expected to take a long time to complete --- this is a noticeable problem for obtaining quadratically embedded models.
+Notably, this algorithm is very sensitive to initial conditions: if we use an inappropriate initialization, the algorithm is expected to take a long time to complete --- this is a important problem when trying to obtain quadratically embedded models because we cannot inherently have an appropriate initialization method.
 
-\begin{algorithm}\label{alg:semianalytical-fgm}
-    \caption{Semianalytical \ac{FGM} Algorithm, adapted from~\cite[Algorithm~1]{Morandin2023}}
+\begin{algorithm}
+    \caption{Semianalytical \ac{FGM} Algorithm, adapted from~\cite[Algorithm~1]{Morandin2023}}\label{alg:semianalytical-fgm}
     \KwData{Model data $\mcl{T}, \mcl{Z} \in \bb{R}^{(n + m) \times k}$, initial guess $\mcl{R}_0 = \mcl{R}_0\trans \succcurlyeq 0$}
     $L \coloneqq \sigma_1^2(\mcl{T}),\quad \ell \coloneqq \sigma_r^2(\mcl{T}),\quad q \coloneqq \ell / L$\;
     $\alpha_0 \in \interval[open]{0}{1},\quad Q \coloneqq \mcl{R}_0$\;
@@ -237,31 +237,33 @@ Analogously, in a similar fashion to~\eqref{eq:skew-symmetric-basis-decompositio
     \end{pmatrix}.
 \end{equation}
 Following~\cite{Najnudel2021} we can also parametrize the Hamiltonian $H$, represented solely by $E$ in our case, using a parametrized kernel estimation and calculate the gradient of the error $\norm{\Sigma_\msc{ph}(\theta) - \Sigma_\msc{ph}}{F}^2$ by analytical computations.
-The authors then use an Interior Points Method with an additional logarithmic barrier term in the objective function, where the barrier penalizes the matrix coefficients if they do not form a positive definite matrix; hence, this method relies on a weakly enforced constraint similar to the weak symplectic \ac{DCAE} from Section~\ref{sec:nn-mor}.
+The authors then use an Interior Points Method with an additional logarithmic barrier term in the objective function, where the barrier penalizes the matrix coefficients if they do not form a positive definite matrix; hence, this method relies on a weakly enforced constraint similar to the weak symplectic Deep Convolutional Autoencoder from Section~\ref{sec:nn-mor}.
 The biggest downside of this approach is the fact that the error measure requires an explicit reference system $\Sigma_\msc{ph}$, which is why it is not suitable for our problem.
 
 Unlike the approach from~\cite{Najnudel2021}, the authors of~\cite{Schwerdtner2021, SV2021, Schwerdtner2023, SV2023} parametrize the matrices analogously to~\eqref{eq:skew-symmetric-basis-decomposition} and~\eqref{eq:spsd-basis-decomposition}.
 To this end, we introduce the following vector-to-matrix functions
-\begin{alignat}{4}
-    &\vecmat \colon \bb{C}^{n \cdot m} \to \bb{C}^{m \times n},\quad &&\theta \mapsto \begin{pmatrix}
-        v_1 & \cdots & v_n \\
-        \vdots & \ddots & \vdots \\
-        v_{(n - 1) \cdot m + 1} & \cdots & v_{n \cdot m}
-    \end{pmatrix}, \label{eq:v2m}\\
-    &\vecupper \colon \bb{C}^{\frac{n (n + 1)}{2}} \to \bb{C}^{n \times n},\quad &&\theta \mapsto \begin{pmatrix}
-        v_1 & v_2 & \cdots & v_n \\
-        0 & v_{n + 1} & \cdots & v_{2n - 1} \\
-        0 & 0 & \ddots & \vdots \\
-        0 & 0 & 0 & v_{\frac{n (n + 1)}{2}}
-    \end{pmatrix}, \label{eq:v2u}\\
-    &\vecstrict \colon \bb{C}^{\frac{n (n - 1)}{2}} \to \bb{C}^{n \times n},\quad &&\theta \mapsto \begin{pmatrix}
-        0 & v_1 & v_2 & \cdots & v_{n - 1} \\
-        0 & 0 & v_n & \cdots & v_{2n - 3} \\
-        0 & 0 & 0 & \ddots & \vdots \\
-        0 & 0 & 0 & 0 & v_{\frac{n (n - 1)}{2}} \\
-        0 & 0 & 0 & 0 & 0
-    \end{pmatrix} \label{eq:v2s}
-\end{alignat}
+\begin{equation}\label{eq:v2m}
+    \begin{alignedat}{3}
+        \vecmat &\colon \bb{C}^{n \cdot m} \to \bb{C}^{m \times n},\quad &\theta \mapsto \begin{pmatrix}
+            v_1 & \cdots & v_n \\
+            \vdots & \ddots & \vdots \\
+            v_{(n - 1) \cdot m + 1} & \cdots & v_{n \cdot m}
+        \end{pmatrix}, \\
+        \vecupper &\colon \bb{C}^{\frac{n (n + 1)}{2}} \to \bb{C}^{n \times n},\quad &\theta \mapsto \begin{pmatrix}
+            v_1 & v_2 & \cdots & v_n \\
+            0 & v_{n + 1} & \cdots & v_{2n - 1} \\
+            0 & 0 & \ddots & \vdots \\
+            0 & 0 & 0 & v_{\frac{n (n + 1)}{2}}
+        \end{pmatrix},\\
+        \vecstrict &\colon \bb{C}^{\frac{n (n - 1)}{2}} \to \bb{C}^{n \times n},\quad &\theta \mapsto \begin{pmatrix}
+            0 & v_1 & v_2 & \cdots & v_{n - 1} \\
+            0 & 0 & v_n & \cdots & v_{2n - 3} \\
+            0 & 0 & 0 & \ddots & \vdots \\
+            0 & 0 & 0 & 0 & v_{\frac{n (n - 1)}{2}} \\
+            0 & 0 & 0 & 0 & 0
+        \end{pmatrix}
+    \end{alignedat}
+\end{equation}
 and their respective inverse matrix-to-vector functions, operating on general rectangular or quadratic matrices under the assumption that unnecessary matrix entries are simply ignored, given by
 \begin{equation}\label{eq:m2v-functions}
     \matvec \colon \bb{C}^{n \times m} \to \bb{C}^{n \cdot m},\quad \uppervec \colon \bb{C}^{n \times n} \to \bb{C}^{\frac{n (n + 1)}{2}}, \text{ and } \strictvec \colon \bb{C}^{n \times n} \to \bb{C}^{\frac{n (n - 1)}{2}}.
@@ -332,15 +334,15 @@ In order to compute the gradients of the inner functions $f_i$, we require the f
     Hence, both of the remaining cases follow analogously.
 \end{proof}
 
-\begin{theorem}[{Adapted from~\cite[Theorem~3.3]{SV2023},~\cite[Lemma~4]{Schwerdtner2021} and~\cite[Theorem~1]{Schwerdtner2023}}]\label{lem:inner-sobmor-gradient}
+\begin{theorem}[{Adapted from~\cite[Theorem~3.3]{SV2023},~\cite[Lemma~4]{Schwerdtner2021} and~\cite[Theorem~1]{Schwerdtner2023}}]
     Let $\theta \in \bb{R}^{N}$ be a parameter for the parametrization of the \ac{PH} realization $(E(\theta), J(\theta), R(\theta), G(\theta), P(\theta), S(\theta), N(\theta))$ with $\tfunc_\theta$ the corresponding parametrized transfer function, $\tfunc$ be the transfer function of the original system, $s \in \overline{\bb{C}_+}$ be a sample point in the closed right complex halfplane, $\sigma_j \in \bb{C}$ be the $j$-th largest singular value of $\tfunc(s) - \tfunc_\theta(s)$, and $l, r \in \bb{C}^m$ be the left and right singular vectors corresponding to $\sigma_j$.
     If the singular value $\sigma_i \neq 0$ is simple, then the function $\theta \mapsto \sigma_i(\tfunc(s) - \tfunc_\theta(s))$ is differentiable in an open neighbourhood of $\theta$.
     In particular, using the shorthand $\Sigma_\msc{ph}(\theta) = (E, J, R, G, P, S, N)$, we can define the additional terms
-    \begin{equation}\label{eq:inner-sobmor-gradient-helpers}
+    \begin{equation*}
         F \coloneqq (s E - (J - R)),\quad a \coloneqq F\inv (G - P) r,\quad b\herm \coloneqq \ell\herm {(G + P)}\trans F\inv
-    \end{equation}
+    \end{equation*}
     such that the gradient $\nabla_\theta \sigma_i(\tfunc(s) - \tfunc_\theta(s)) = {({dE}\trans, {dJ}\trans, {dR}\trans, {dG}\trans, {dP}\trans, {dS}\trans, {dN}\trans)}\trans \in \bb{R}^N$ with respect to $\theta$ is made up of the consituent vectors
-    \begin{equation}\label{eq:inner-sobmor-gradient-components}
+    \begin{equation*}
         \begin{aligned}
             dE &= \re{\uppervec\left( s \vecupper(\theta_\msc{E}) (a b\herm + {(a b\herm)}\trans) \right)}, \\
             dR &= \re{\uppervec\left( \vecupper(\theta_\msc{R}) (a b\herm + {(a b\herm)}\trans) \right)}, \\
@@ -350,7 +352,7 @@ In order to compute the gradients of the inner functions $f_i$, we require the f
             dG &= - \re{\matvec(a \ell\herm + {(r b\herm)}\trans)}, \text{ and} \\
             dP &= - \re{\matvec(a \ell\herm - {(r b\herm)}\trans)}.
         \end{aligned}
-    \end{equation}
+    \end{equation*}
 \end{theorem}
 
 \begin{proof}

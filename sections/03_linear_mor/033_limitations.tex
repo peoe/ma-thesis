@@ -1,12 +1,12 @@
 \section{Abstract Limitations of Linear MOR}\label{sec:limitations-linear-mor}
 
 This section is not directly linked to the scope of this thesis but it demonstrates an important motivation for the next chapter.
-We therefore think it reasonable to discuss the limitations of linear MOR for \acp{PDE}.
+We therefore think it reasonable to discuss the limitations of linear MOR for Partial Differential Equations.
 In effect, we want to carry this motivation onto the problem inherent in this manuscript, however, no similar results to the ones we present in this section are available at the time of writing.
 We therefore commence with the description of a greedy reduction algorithm and afterwards discuss what implications we derive for the abstract Kolmogorov $N$-width.
 
 Unlike the truncation-based or interpolation-based methods presented in Section~\ref{sec:system-mor}, greedy algorithms rely on a solution snapshot based linear subspace approximation, see e.g.~\cite{Grepl2005, Rozza2008, Buffa2012}.
-In this setting, solution snapshots are defined as individual solutions $u(\mu_i) \in \bb{R}^n$ of the parametric \ac{PDE}
+In this setting, solution snapshots are defined as individual solutions $u(\mu_i) \in \bb{R}^n$ of the parametric PDE
 \begin{equation}\label{eq:parametric-pde}
     A(\mu) u = L(\mu)
 \end{equation}
@@ -19,8 +19,8 @@ Because $u_\msc{r}(\mu_{r + 1})$ induces the largest error with respect to the p
 Still, this cannot be guaranteed to result in the optimal basis for every problem.
 An algorithmic depiction of the greedy method is given in Algorithm~\ref{alg:greedy}.
 
-\begin{algorithm}\label{alg:greedy}
-    \caption{Greedy Algorithm, adapted from~\cite[Algorithm~1]{Buffa2012}}
+\begin{algorithm}
+    \caption{Greedy Algorithm, adapted from~\cite[Algorithm~1]{Buffa2012}}\label{alg:greedy}
     \KwData{Parameter domain $\mcl{P}$, full order solution map $u \colon \mcl{P} \to \mcl{X}$}
     \tcc{Initialize greedy reduced basis}
     $\mu_1 \coloneqq \argmax\limits_{\mu \in \mcl{P}} \norm{u(\mu)}{\mcl{X}},\quad V_1 \coloneqq \lspn{u(\mu_1)} \subseteq \mcl{X},\quad r \coloneqq 1$\;
@@ -32,7 +32,7 @@ An algorithmic depiction of the greedy method is given in Algorithm~\ref{alg:gre
 \end{algorithm}
 
 With the greedy basis ${\sset{u_i = u(\mu_i)}}_{i = 1}^r$ computed with Algorithm~\ref{alg:greedy} we form the projection matrix $U = \left( u_1, \dots, u_r \right) \in \bb{R}^{n \times r}$ spanning the reduced space $V_r$ through linear combinations of its columns.
-Using this matrix to project the full order space $\bb{R}^n$ onto the linear subspace $\bb{R}^r$, we can transform an exemplary full order discretized \ac{PDE} such as~\eqref{eq:parametric-pde} to a \ac{ROM} by projecting the operators
+Using this matrix to project the full order space $\bb{R}^n$ onto the linear subspace $\bb{R}^r$, we can transform an exemplary full order discretized PDE such as~\eqref{eq:parametric-pde} to a \ac{ROM} by projecting the operators
 \begin{equation*}
     \tilde{A} = U\trans A U,\quad \tilde{L} = U\trans L.
 \end{equation*}
@@ -42,7 +42,7 @@ This is achieved by bounding the \ac{ROM} projection error with the Kolmogorov N
 \begin{equation}\label{eq:kolmogorov-n-width}
     \kolm{\mcl{M}} \coloneqq \eqinf\limits_{\substack{V_\msc{r} \subseteq V,\\\dim{(V_\msc{r})} = r}} \sup\limits_{u \in \mcl{M}} \eqinf\limits_{u_\msc{r} \in V_N} \norm{u - u_\msc{r}}{}.
 \end{equation}
-For greedy algorithms applied to linear coercive elliptic \acp{PDE} with sufficiently smooth initial conditions, a fast decay of the Kolmogorov $N$-width~\eqref{eq:kolmogorov-n-width} is observed; for an introduction into the approximation theory see e.g.~\cite{Binev2011, DeVore2013}.
+For greedy algorithms applied to linear coercive elliptic PDEs with sufficiently smooth initial conditions, a fast decay of the Kolmogorov $N$-width~\eqref{eq:kolmogorov-n-width} is observed; for an introduction into the approximation theory see e.g.~\cite{Binev2011, DeVore2013}.
 It can be shown that if the solutions $u(\mu)$ depend analytically on $\mu$, then there exist constants $\alpha, c > 0$ such that the Kolmogorov $N$-width is bounded from above by exponential decay
 \begin{equation*}
     \kolm{\mcl{M}} \leq c \exp{(-N^\alpha)}.

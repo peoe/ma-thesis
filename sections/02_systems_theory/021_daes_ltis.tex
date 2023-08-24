@@ -22,9 +22,9 @@ We explicitly formulate the control in terms of yet another linear matrix produc
 for some natural number $q$, a matrix $B \in \bb{C}^{n \times q}$, and a control variable $u \colon I \to \bb{C}^q$.
 Lastly, we introduce an output component $y$ to our modelled system.
 This output too takes the shape of a time dependent function $y \colon I \to \bb{C}^q$ and, keeping in line with Equations~\eqref{eq:lin-const-coeff-dae} and~\eqref{eq:control-substitution}, we write it as the linear combination of the state $x$ and the control $u$ with the matrices $C \in \bb{C}^{q \times n}, D \in \bb{C}^{q \times q}$
-\begin{equation}\label{eq:output-definition}
+\begin{equation*}
     y(t) = C x(t) + D u(t).
-\end{equation}
+\end{equation*}
 
 \begin{definition}\label{def:lti}
     A \acl{LTI} $\Sigma_{\msc{lti}}$ is a system of equations
@@ -76,12 +76,12 @@ We compute this frequency formulation by applying the Laplace transform
 \begin{equation*}
     \mcl{L}[f](\omega) = \int\limits_0^\infty \exp{(- \omega t)} f(t) \dif t,\quad \omega \in \bb{C},
 \end{equation*}
-to the states, the control, and the output in the \ac{LTI} system~\eqref{eq:lti}; cf.~\cite{Arendt2011}.
+to the states, the control, and the output in the \ac{LTI} system~\eqref{eq:lti}, similarly to~\cite{Arendt2011}.
 We then define the following functions as variables of the complex frequency $\omega$ such that
-\begin{equation}
+\begin{equation*}
     X(\omega) \coloneqq \mcl{L}[x](\omega),\quad \dot{X}(\omega) \coloneqq \mcl{L}[\dot{x}](\omega),\quad U(\omega) \coloneqq \mcl{L}[u](\omega),\quad Y(\omega) \coloneqq \mcl{L}[y](\omega).
-\end{equation}
-Next, we use the crucial property that the Laplace transform of a function's derivative can be expressed in terms of the function itself, cf.~\cite[Theorem~9.1]{Doetsch1974}, with the equation
+\end{equation*}
+Next, we use the crucial property that the Laplace transform of a function's derivative can be expressed in terms of the function itself, as stated in~\cite[Theorem~9.1]{Doetsch1974}, with the equation
 \begin{equation*}
     \mcl{L}[\dot{x}](\omega) = \omega \mcl{L}[x](\omega) - \lim\limits_{t \searrow 0} x(t).
 \end{equation*}
@@ -140,11 +140,11 @@ Next, we consider what it means that a dynamical system is minimal.
 This directly leads us to structure-preserving \ac{MOR} algorithms.
 In order to discuss these algorithms, we yet require a notion of a transfer function's poles and their relation to the stability of the underlying dynamical system.
 
-\begin{definition}[Cf.~\cite{CGH2022}]\label{def:minimal-system}
+\begin{definition}[Adapted from~\cite{CGH2022}]\label{def:minimal-system}
     The realization $(A, B, C, D, E)$ of an \ac{LTI} system with its associated transfer function $\tfunc$ is said to be minimal if the state dimension $n \in \bb{N}$ in the realization is minimal.
 \end{definition}
 
-\begin{definition}[{Cf.~\cite[Section~2]{Benner2017}}]\label{def:transfer-function-poles}
+\begin{definition}[{Adapted from~\cite[Section~2]{Benner2017}}]
     Given a transfer function $\tfunc(\omega)$, we decompose it as the rational function $\tfunc(\omega) = \frac{N(\omega)}{d(\omega)}$, where $N \colon \bb{C} \to \bb{C}^{q \times n}$ is a matrix-valued polynomial and $d \colon \bb{C} \to \bb{C}$ is a scalar polynomial representing the least common denominator of $\tfunc(\omega)$'s $q \cdot m$ entries.
     We then define the transfer function's poles as the set of complex numbers
     \begin{equation*}
@@ -157,10 +157,10 @@ In order to discuss these algorithms, we yet require a notion of a transfer func
     \begin{align*}
         {(\omega E - A)}^m x_m = 0,\quad {(\omega E - A)}^{m - 1} x_m \neq 0.
     \end{align*}
-    However, if the realization $(A, B, C, D, E)$ is minimal as defined in Definition~\ref{def:minimal-system}, then both sets are equal, cf.~\cite[Section~2]{Benner2017}.
+    However, if the realization $(A, B, C, D, E)$ is minimal as defined in Definition~\ref{def:minimal-system}, then both sets are equal, see~\cite[Section~2]{Benner2017}.
 \end{remark}
 
-\begin{definition}[{Cf.~\cite[Section~2]{Benner2017}}]\label{def:lti-stability}
+\begin{definition}[{Adapted from~\cite[Section~2]{Benner2017}}]\label{def:lti-stability}
     Let $(A, B, C, D, E)$ be a realization of the \ac{LTI} system $\Sigma_\msc{lti}$.
     Then $\Sigma_\msc{lti}$ is stable if all finite eigenvalues of the matrix pencil $\omega E - A$ lie within the open left complex half-plane $\bb{C}_{-} \coloneqq \iset{\sigma \in \bb{C}}{\fk{Re}(\sigma) < 0}$.
     Any stable system under the control $u(t) \equiv 0$ tends to the zero state for $t \to \infty$ and is henceforth asymptotically stable.

@@ -6,15 +6,15 @@ Most importantly, the inference approaches described in these publications allow
 For this section, we focus on the formulation introduced in~\cite{Geelen2023} as a foundational device to derive \ac{PH} applications later on.
 
 In the linear MOR framework, the full state variables $x \in \bb{R}^n$ are reduced by linear projection onto the span of a low-dimensional subspace $V_\msc{r} \subseteq \bb{R}^r$ such that we can approximate
-\begin{equation}\label{eq:linear-state-reduction}
+\begin{equation*}
     x \approx x_\msc{ref} + V x_r,\quad V \in \bb{R}^{n \times r},
-\end{equation}
+\end{equation*}
 where $x_\msc{ref} \in \bb{R}^n$ serves as a reference state to allow for normalization of the state data, the choice of which is dependent on the problem under consideration.
 There exist multiple options to construct the projection matrix $V \in \bb{R}^{n \times r}$, however, these methods are outside the scope of this thesis, which is why we refer the interested reader to~\cite{BOP2017, BCO2017} and the references contained therein.
 We measure the reduction error for the state snapshot matrices $X \coloneqq (x_1, \dots, x_k), X_\msc{ref} \coloneqq {(x_\msc{ref})}_{i = 1}^k \in \bb{R}^{n \times k},k \in \bb{N}$, by computing the projection error of the reduced states
-\begin{equation}
+\begin{equation*}
     \mcl{E} \coloneqq (\id - V V\trans) (X - X_\msc{ref}) \in \bb{R}^{n \times k}.
-\end{equation}
+\end{equation*}
 In order to construct the polynomially embedded manifold model, we compare the full order and the reduced states at every sample point in time $t_i \in I \subseteq \bb{R}_{\geq 0}$ through the signed error
 \begin{equation}\label{eq:linear-signed-error}
     \varepsilon(t_i) \coloneqq x(t_i) - x_\msc{ref} - V x_\msc{r}(t_i),\quad i = 1, \dots, k.
