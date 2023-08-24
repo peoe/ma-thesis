@@ -1,6 +1,9 @@
 %        Tikz Styles        %
 \usepackage{tikz}
 \usetikzlibrary{spy, arrows, arrows.meta, calc, decorations.pathmorphing, decorations.pathreplacing, fit, matrix, patterns, shapes, shapes.multipart, shapes.misc, positioning}
+\usepackage{pgfplots}
+\usepackage{caption}       % support for subfigures
+\usepackage{subcaption}    % support for subfigures
 
 \tikzset{cross/.style={cross out, draw=black, minimum size=2*(#1-\pgflinewidth), inner sep=0pt, outer sep=0pt}, cross/.default={1pt}}
 
@@ -43,3 +46,6 @@
 \tikzstyle{sensor} = [cross, fill=black, minimum size=5pt, inner sep=0pt]
 \tikzstyle{control} = [circle, fill=black, minimum size=3pt, inner sep=0pt]
 \tikzstyle{bounded domain} = [rectangle, draw=black]
+
+%        pgf Config        %
+\pgfplotsset{compat=1.18}
