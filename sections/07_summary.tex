@@ -1,9 +1,5 @@
 \chapter{Summary}\label{chap:summary}
 
-% TODO: consult tims diss for hints/ideas! (simple stuff, possibly phrases, maybe even structural ideas!)
-
-%%% RECAP %%%
-
 In this thesis we presented a way to combine \ac{PH} systems and quadratically embedded manifolds to mitigate limitations of linear \ac{MOR} procedures.
 In Chapter~\ref{chap:systems-theory} we introduced the concepts \ac{LTI} and \ac{PH} models in Systems Theory.
 Thereafter, we discussed basic and structure-preserving linear \ac{MOR} techniques in Sections~\ref{sec:system-mor} and~\ref{sec:structure-preserving-mor}.
@@ -13,63 +9,31 @@ In order to extend the notion of quadratically embedded manifolds to \ac{PH} sys
 Afterwards, in Chapter~\ref{chap:quadratically-embedded-manifolds-ph-systems}, we detailed how to apply \ac{PHDMD} and \ac{SOBMOR} to construct \ac{PH} models based on quadratically embedded manifolds.
 Lastly, we demonstrated the capabilities of quadratic control and output variables in combination with the \ac{PHDMD} algorithm for an \ac{MSD} system and a \ac{PH} formulation of a damped wave equation in Chapter~\ref{chap:numerical-experiments}.
 
-%%%  DISCUSSION %%%
-
 In total, we layed out four different theoretical approaches to the inference of models including quadratically embedded data.
 Two of these methods relied on the \ac{PHDMD} algorithm while the other two required the \ac{SOBMOR} framework.
 The first two are the more substantial proposals because they directly include the higher order data in the matrices used to infer the quadratic model.
-Of the latter only one is practical: as there is no way of directly modelling a quadratically embedded internal state, calculating a quadratically embedded model from the Kronecker products of transfer function measurements appears to be the only reasonable option instead of fitting a higher order linear \ac{ROM} by adjusting the system matrices' dimensions.
+Of the latter only one is practical: calculating a quadratically embedded model from the Kronecker products of transfer function measurements appears to be the only reasonable option because there is no way of directly modelling a quadratically embedded internal state, as would be necessary when fitting a quadratic \ac{ROM} by adjusting the system matrices' dimensions to the appropriate quadratic dimensions $q$.
 
 Throughout the numerical experiments it became clear that adding quadratically embedded data terms into \ac{PH} systems is more difficult than incorporating them into unstructured models like in~\cite{Geelen2023}.
-This is, most likely, due to the numerical effects incurred either when computing the Khatri--Rao and Kronecker products or when subtracting output terms of similar order to obtain the signed output error in the data matrices.
+This is most likely due to the numerical effects incurred either when computing the Khatri--Rao and Kronecker products or when subtracting output terms of similar order to obtain the signed output error in the data matrices.
 Particularly, this affects the runtimes of the \ac{PHDMD} algorithm because the initial guess for the solution matrices $\mcl{J}$ and $\mcl{R}$ is much worse than the result of the weighted \ac{PHDMD} problem of the linear counterpart when put into direct comparison.
 Most importantly, this renders \ac{PHDMD} impractical for the inference of models with quadratically embedded internal states due to the exponentially growing quadratic model orders exacerbating the numerical effect.
 Additionally, quadratically embedded state variables quickly run into the overfitting domain, meaning that the overall ``reduced'' order is larger than that of the \ac{FOM}: for a \ac{FOM} of order $100$ it suffices to choose the order of the linear \ac{ROM} as $r = 14$ such that the quadratic system of order $q = \frac{r (r + 1)}{2} = 105$ contains more data terms than the \ac{FOM}, thus introducing many unnecessary variables.
-% TODO: is this underdetermined?
 In contrast, when we infer models with quadratically embedded controls and outputs, this effect is much less pronounced because the quadratic model's order scales linearly with the linear \ac{ROM}'s order.
-This results in faster convergence of the \ac{PHDMD} algorithm as well as better results with the inferred systems.
-Nevertheless, the combination of multiplying terms of the signed output error when computing the Khatri--Rao product as well as the small absolute values of the singular values of the measurements can cause more numerical elimination and thus diminish the efficiency of this approach.
-
-% drawbacks of quadratic state phdmd:
-%  - long runtimes (use small model to compare; 4?)
-%  - bad results in simulation, may be due to needing separate time steppers???
-%  - scales very badly! (for msd 100, r = 14 is easily overfitting...)
-%  - cannot be extended to SOBMOR
-
-% benefits of quadratic i/o phdmd:
-%  - good scaling (linear!)
-%  - better results (improvements all around with good choice in sampling control)
-%  - easy to simulate and interpret
-%  - no fear of overfitting :)
-%  - can potentially be extended to SOBMOR
-%  - much faster to compute
-% drawback of quadratic i/o phdmd:
-%  - not directly involved in quadratic internal states (Geelen etc)
-%  - cannot deal with quadratic terms in states
-%  - large scale systems are bad for PHDMD :(
-%  - multiplying small terms may degenerate in the subtractions involved \Lightning
+This results in a faster convergence of the \ac{PHDMD} algorithm as well as better results with the inferred systems.
+Nevertheless, the combination of multiplying terms of the signed output error when computing the Khatri--Rao product and the small absolute values of the singular values of the measurements can cause more numerical elimination and thus diminish the efficiency of this approach.
 
 With regards to the \ac{SOBMOR} algorithm, further investigations are necessary.
 When testing the individual approaches, the \ac{SOBMOR}-based methods performed significantly worse than the \ac{PHDMD} procedures.
 We think it most likely that this is due to the effect of a bad initialization strategy because we observed a similar behaviour of the initialization step in the \ac{PHDMD} methods, though the effects were not as debilitating as in the \ac{SOBMOR} cases.
-This is moreover supported by the observations in~\cite[Section~4.1]{SV2023} which discuss the effect of three different initialization strategies.
-Contrastingly, we cannot totally rely on $\mcl{H}_\infty$ norm minimizing algorithms such as the one introduced by~\cite{Beddig2019} because not only is the calculation of the $\mcl{H}_\infty$ norm computationally expensive but we also incure more costs when constructing the quadratic transfer function samples from \acp{FOM} or linear \acp{ROM}.
+This is, moreover, supported by the observations in~\cite[Section~4.1]{SV2023} which discuss the effect of three different initialization strategies.
+Contrastingly, we cannot completely rely on $\mcl{H}_\infty$ norm minimizing algorithms such as the one introduced by~\cite{Beddig2019} because not only is the calculation of the $\mcl{H}_\infty$ norm computationally expensive but we also incur more costs when constructing the quadratic transfer function samples from \acp{FOM} or linear \acp{ROM}.
 
-% benefits of SOBMOR:
-%  - results look promising
-% drawbacks of SOBMOR:
-%  - reality is bad, lol
-%  - results are heavily relying on a good optimization phase
-%    -> our problem most likely suffers from bad singular values at some point (considering the error of outputs/states doesn't help either!)
-%    -> multiplying low amplitude tf measurements rapidly degenerates
-
-%%% OUTLOOK %%%
-
-In summary, quadratically embedded manifolds for \ac{PH} systems are theoretically easy to conceptualize, however none of the current methods allow for satisfactory results.
-The optimizational constraints in particular are difficult to work around and come with drawbacks for both quadratically embedded internal states as well as quadratic control and output variables.
-In practice, the approach as detailed in this thesis is not suited for large scale applications due to its reliance on the \ac{PHDMD} algorithm.
-If we could replace this algorithm with a more stable version or a variant with an improved initialization procedure, then quadratically embedded manifolds for \ac{PH} systems may enable justifiable applications in \ac{MOR}.
-Continuing with \ac{PHDMD}, regularization techniques may improve the performance of the optimization iterations, however \ac{PHDMD} does not yet contain a rigorous framework for this.
+In summary, quadratically embedded manifolds for \ac{PH} systems are theoretically easy to conceptualize, however, none of the current methods allow for satisfactory results.
+The optimizational constraints in particular are difficult to work around and come with drawbacks for both quadratically embedded internal states and quadratic control and output variables.
+In practice, the approach detailed in this thesis is not suited for large scale applications due to its reliance on the \ac{PHDMD} algorithm.
+If we could replace this algorithm's linear initialization strategy with a more stable version adapted to quadratically embedded variables, then quadratically embedded manifolds for \ac{PH} systems might enable justifiable applications in \ac{MOR} settings.
+Continuing with \ac{PHDMD}, regularization techniques could improve the performance of the optimization iterations, however, \ac{PHDMD} does not yet contain a rigorous framework for this.
 Alternatively, more research into the \ac{SOBMOR} method may yield more general forms with optimizers stable enough to infer the operators necessary for \ac{PH} systems with quadratically embedded manifolds.
 Unfortunately, \ac{SOBMOR}-derived algorithms are likely to require an extensive amount of hyper-parameter tuning.
 For the moment, the computational costs and the lack of significant results do not give reasonable cause to include quadratic data fits in applications of \ac{PH} systems.

@@ -1,9 +1,10 @@
 %        Tikz Styles        %
 \usepackage{tikz}
-\usetikzlibrary{spy, arrows, arrows.meta, calc, decorations.pathmorphing, decorations.pathreplacing, fit, matrix, patterns, shapes, shapes.multipart, shapes.misc, positioning}
+\usetikzlibrary{spy, arrows, arrows.meta, calc, decorations.pathmorphing, decorations.pathreplacing, fit, matrix, patterns, shapes, shapes.multipart, shapes.misc, positioning, plotmarks}
 \usepackage{pgfplots}
-\usepackage{caption}       % support for subfigures
-\usepackage{subcaption}    % support for subfigures
+\usepackage[margin=.75cm]{caption}       % support for subfigures
+\usepackage[margin=.5cm, labelformat=simple]{subcaption}    % support for subfigures
+\usepackage{csvsimple}
 
 \tikzset{cross/.style={cross out, draw=black, minimum size=2*(#1-\pgflinewidth), inner sep=0pt, outer sep=0pt}, cross/.default={1pt}}
 
@@ -49,3 +50,6 @@
 
 %        pgf Config        %
 \pgfplotsset{compat=1.18}
+
+%        Subfigure References        %
+\renewcommand\thesubfigure{(\alph{subfigure})}

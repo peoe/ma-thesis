@@ -1,36 +1,45 @@
 \chapter{Numerical Experiments}\label{chap:numerical-experiments}
 
-In this chapter, we demonstrate the effect of our procedure for a set of example problems.
+In this chapter, we apply our procedure to a set of example problems.
+The code to the individual experiments is available on GitHub\footnote{\href{https://www.github.com/peoe/quad-ph-mor}{github.com/peoe/quad-ph-mor}}.
 In Section~\ref{sec:msd-systems} we commence with a model problem for the \ac{PHDMD} algorithm, the \ac{MSD} system.
-Thereafter, we apply the same procedures to the damped wave equation, showing how we can transform wave equations into \ac{PH} systems and testing our method on a more difficult problem in Section~\ref{sec:damped-wave-equation}.
+Thereafter, we demonstrate the same procedure for the damped wave equation, showing how we can transform wave equations into \ac{PH} systems and testing our method on a more difficult problem in Section~\ref{sec:damped-wave-equation}.
 For both models we compare the performance of the quadratic models inferred with \ac{PHDMD} from quadratically embedded control and output data to other, more basic and non-structure-preserving methods.
-Additionally, we briefly discuss the feasibility of the proposed approach before concluding with a summary of this thesis in Chapter~\ref{chap:summary}.
+In doing so, we notice that the initialization strategy of the linear \ac{PHDMD} algorithm is not sophisticated enough to allow for large improvements in the performance of the underlying quadratic \ac{PH} models.
 
 \section{Mass-Spring-Damper Systems}\label{sec:msd-systems}
 
-In this section we demonstrate and discuss numerical experiments for an \ac{MSD} system.
+In this section we discuss numerical experiments for an \ac{MSD} system.
 In particular, we want to generalize the system from Example~\ref{ex:ms-system} to consist of a fixed number of mass, spring, and damper components arranged successively, closely following~\cite{Gugercin2012, Morandin2023}.
 For our model problem, we consider a system containing $50$ mass-spring-damper pairs, resulting in a totel \ac{FOM} order of $100$.
 Additionally, we introduce two separate controls that act on the first and the second mass, respectively, thus mimicking the model investigated in~\cite[Section~4.3]{Morandin2023}.
 
 We apply the quadratic control and output adaptation of the \ac{PHDMD} algorithm described in Chapter~\ref{chap:quadratically-embedded-manifolds-ph-systems} to the \ac{MSD} system.
-\itodo{mention why only 100 time steps not 10000 as in Morandin}
-To compute the data used in the inference step we first simulate the \ac{FOM} for $100$ time steps, a final time of $4$ and the following jump control variable
+To compute the data used in the inference step we first simulate the \ac{FOM} for $1000$ time steps, a final time of $4$, and the following jump control variable
 \begin{equation*}
     u(t) \coloneqq \begin{pmatrix}
         \mathbbm{1}_{t < \frac{1}{2}} \\
         - \mathbbm{1}_{t < \frac{1}{2}}
     \end{pmatrix},
 \end{equation*}
-\itodo{final time 4 missing}
-where $\mathbbm{1}$ is the canonical indicator function, and obtain the full order data $X \in \bb{R}^{100 \times 101}, U, Y \in \bb{R}^{2 \times 101}$.
-Thereafter, we use \ac{POD} to reduce the state samples to $X \in \bb{R}^{r \times 101}$, where $r \in \bb{N}$ is the corresponding intended reduced order of the linear \ac{ROM} $\Sigma_\msc{l}$.
-Importantly, we obtain $101$ data points because we also have an initial condition to consider; later in the application of the \ac{PHDMD} algorithm we average the data and thus reduce to the $100$ data points used when inferring the models.
+where $\mathbbm{1}$ is the canonical indicator function, and obtain the full order data $X \in \bb{R}^{100 \times 1001}$ as well as $U, Y \in \bb{R}^{2 \times 1001}$.
+Here, compared to the experiments in~\cite{Morandin2023}, we only use $1000$ time steps instead of $10000$ because, in addition to the linear model, we also have to infer a quadratic model with a significantly worse initialization when compared to the linear one.
+This quadratic inference requires considerably more time, thus rendering the quadratic approach impractical for a large number of data points.
+Moreover, we consider a jump type control variable in place of to the exponentially scaled sine wave
+\begin{equation*}
+    u(t) = \exp{(-t/2)} \begin{pmatrix}
+        \sin{(t^2)} \\
+        \cos{(t^2)}
+    \end{pmatrix}
+\end{equation*}
+because we want to keep the control consistent between the \ac{MSD} and the damped wave equation experiments, which means that the wave would turn out much less interesting when observed in interaction with a smooth control without jumps.
+Afterwards, we use \ac{POD} in order to reduce the state samples to $X \in \bb{R}^{r \times 1001}$, where $r \in \bb{N}$ is the corresponding intended reduced order of the linear \ac{ROM} $\Sigma_\msc{l}$.
+Importantly, we obtain $1001$ data points because we also have an initial condition to consider; later in the application of the \ac{PHDMD} algorithm we average the data and thus reduce to the $1000$ data points used when inferring the models.
 Next, we use the \ac{PHDMD} algorithm to infer a \ac{PH} \ac{LTI} system that serves as our fundamental linear \ac{ROM} $\Sigma_\msc{l}$.
-In a similar way as with the \ac{FOM} we sample the linear system $\Sigma_\msc{l}$ and obtain the linear data $X_\msc{l} \in \bb{R}^{r \times 101}, Y_\msc{l} \in \bb{R}^{2 \times 101}$.
+In a similar way as with the \ac{FOM} we sample the linear system $\Sigma_\msc{l}$ and obtain the linear data $X_\msc{l} \in \bb{R}^{r \times 1001}, Y_\msc{l} \in \bb{R}^{2 \times 1001}$.
 Penultimately, we calculate the quadratic fitting data $U_\msc{q}$ and $Y_\msc{q}$ by applying the Khatri--Rao product to both $U$ and the signed output error $Y - Y_\msc{l}$, resulting in
 \begin{equation*}
-    U_\msc{fit} \coloneqq U \odot U,\quad Y_\msc{fit} \coloneqq (Y - Y_\msc{l}) \odot (Y - Y_\msc{l}) \in \bb{R}^{3 \times 101}.
+    U_\msc{fit} \coloneqq U \odot U,\quad Y_\msc{fit} \coloneqq (Y - Y_\msc{l}) \odot (Y - Y_\msc{l}) \in \bb{R}^{3 \times 1001}.
 \end{equation*}
 Finally, the quadratic \ac{PH} system $\Sigma_\msc{q}$ is the result of applying \ac{PHDMD} with the internal combined data matrices $\mcl{T}$ and $\mcl{Z}$ obtained from the implicit midpoint procedure described in Equation~\eqref{eq:quad-fom-discrete-data}
 \begin{equation*}
@@ -40,12 +49,16 @@ Finally, the quadratic \ac{PH} system $\Sigma_\msc{q}$ is the result of applying
     \end{pmatrix},\quad \mcl{T} \coloneqq \begin{pmatrix}
         X_\msc{l} \\
         U_\msc{fit}
-    \end{pmatrix} \in \bb{R}^{(r + 3) \times 100}.
+    \end{pmatrix} \in \bb{R}^{(r + 3) \times 1000}.
 \end{equation*}
 
 To evaluate the performance of the inferred models we then construct the combined model $\Sigma_\msc{comb}$ as given in Equation~\eqref{eq:quad-io-system-coupling}.
-To compare the results of both methods we additionally contrast them with models generated by using \ac{IODMD} and a simple \ac{OI} method derived from \ac{IODMD}.
-For these models we, analogously to the procedure using the \ac{PHDMD} algorithm, first compute a baseline linear model and afterwards update it with an inferred quadratic model to obtain a combined model.
+To compare the results of both methods we additionally contrast them with models generated by using a simple \ac{OI} method derived from \ac{IODMD}.
+For these models, analogously to the procedure using the \ac{PHDMD} algorithm, we first compute a baseline linear model and afterwards update it with an inferred quadratic model to obtain a combined model.
+We compare the relative $\mcl{H}_\infty$ and $\mcl{H}_2$ errors with respect to the \ac{FOM} $\Sigma$, meaning that for the current reduced system $\Sigma_\msc{r}$ we compute
+\begin{equation}\label{eq:rel-errors}
+    \varepsilon_\infty \coloneqq \frac{\norm{\Sigma - \Sigma_\msc{r}}{\mcl{H}_\infty}}{\norm{\Sigma}{\mcl{H}_\infty}},\quad \varepsilon_2 \coloneqq \frac{\norm{\Sigma - \Sigma_\msc{r}}{\mcl{H}_2}}{\norm{\Sigma}{\mcl{H}_2}}.
+\end{equation}
 
 \begin{figure}[ht]
     \centering
@@ -57,27 +70,26 @@ For these models we, analogously to the procedure using the \ac{PHDMD} algorithm
                     xmin = 1,
                     xmax = 21,
                     xtick distance = 2,
-                    ymax = 1.1,
+                    ymax = 1.05,
                     ytick distance = 10^(0.1),
                     tick pos = bottom,
-                    xlabel = {Reduced Order},
-                    ylabel = {Rel. $\mcl{H}_\infty$ Error},
+                    xlabel = {Reduced Order $r$},
+                    ylabel = {Rel. $\mcl{H}_\infty$ Error $\varepsilon_\infty$},
                     ylabel shift = 2pt,
                     cycle list name=exotic,
                     legend style={
                         legend cell align=left,
                     },
                     legend pos=north east,
-                    legend style={nodes={scale=1.5, transform shape}},
+                    legend style={nodes={scale=1.2, transform shape}},
                 ]
-                \addplot table[col sep=comma, x=ord, y=rlhinf]{sections/06_numerical_experiments/msd/msd_io_phdmd_err.csv};
-                \addlegendentry{$\Sigma_\msc{l}$}
-                \addplot table[col sep=comma, x=ord, y=rqhinf]{sections/06_numerical_experiments/msd/msd_io_phdmd_err.csv};
-                \addlegendentry{$\Sigma_\msc{comb}$}
+                \addplot table[col sep=comma, x=ord, y=rlhinf]{sections/06_numerical_experiments/msd/jump/msd_phdmd_err.csv};
+                \addlegendentry{Linear}
+                \addplot table[col sep=comma, x=ord, y=rqhinf]{sections/06_numerical_experiments/msd/jump/msd_phdmd_err.csv};
+                \addlegendentry{Combined}
             \end{semilogyaxis}
         \end{tikzpicture}
-
-        \caption{asdf}\label{fig:plot}
+        \caption{Relative $\mcl{H}_\infty$ error comparison.}\label{fig:msd-lc-comp-hinf}
     \end{subfigure}%
     \begin{subfigure}[t]{.45 \textwidth}
         \begin{tikzpicture}[scale=.65, auto, swap]
@@ -90,19 +102,29 @@ For these models we, analogously to the procedure using the \ac{PHDMD} algorithm
                     ymax = 1.1,
                     ytick distance = 10^(0.1),
                     tick pos = bottom,
-                    xlabel = {Reduced Order},
-                    ylabel = {Rel. $\mcl{H}_2$ Error},
+                    xlabel = {Reduced Order $r$},
+                    ylabel = {Rel. $\mcl{H}_2$ Error $\varepsilon_2$},
                     ylabel shift = 2pt,
                     cycle list name=exotic,
+                    legend style={
+                        legend cell align=left,
+                    },
+                    legend pos=north east,
+                    legend style={nodes={scale=1.2, transform shape}},
                 ]
-                \addplot table[col sep=comma, x=ord, y=rlh2]{sections/06_numerical_experiments/msd/msd_io_phdmd_err.csv};
-                \addplot table[col sep=comma, x=ord, y=rqh2]{sections/06_numerical_experiments/msd/msd_io_phdmd_err.csv};
+                \addplot table[col sep=comma, x=ord, y=rlh2]{sections/06_numerical_experiments/msd/jump/msd_phdmd_err.csv};
+                \addlegendentry{Linear}
+                \addplot table[col sep=comma, x=ord, y=rqh2]{sections/06_numerical_experiments/msd/jump/msd_phdmd_err.csv};
+                \addlegendentry{Combined}
             \end{semilogyaxis}
         \end{tikzpicture}
-
-        \caption{PHDMD lin/quad comparison}\label{fig:plot2}
+        \caption{Relative $\mcl{H}_2$ error comparison.}\label{fig:msd-lc-comp-h2}
     \end{subfigure}
+    \caption{Comparison of relative $\mcl{H}_\infty$ and $\mcl{H}_2$ errors for linear \ac{PH} and combined linear-quadratic \ac{PH} models inferred using the \ac{PHDMD} algorithm.}\label{fig:msd-lc-comp}
 \end{figure}
+
+In Subfigure~\ref{fig:msd-lc-comp-hinf} we can see that while the approximation with the quadratic model is better when compared to the linear \ac{PH} \ac{ROM}, the improvement is only marginal and after a certain reduced order is surpassed, further improvements appear to stagnate.
+The $\mcl{H}_2$ error in Subfigure~\ref{fig:msd-lc-comp-h2}, however, shows a completely different picture: the linear model achieves a much better result for decreasing orders before eventually plateauing below the quadratic model approximation error.
 
 \begin{figure}[ht]
     \centering
@@ -117,55 +139,26 @@ For these models we, analogously to the procedure using the \ac{PHDMD} algorithm
                     ymax = 1.1,
                     ytick distance = 10^1,
                     tick pos = bottom,
-                    xlabel = {Reduced Order},
-                    ylabel = {Rel. $\mcl{H}_\infty$ Error},
+                    xlabel = {Reduced Order $r$},
+                    ylabel = {Rel. $\mcl{H}_2$ Error $\varepsilon_2$},
                     ylabel shift = 2pt,
                     cycle list name=exotic,
                     legend style={
                         legend cell align=left,
                     },
                     legend pos=south west,
-                    legend style={nodes={scale=1.5, transform shape}},
+                    legend style={nodes={scale=1.2, transform shape}},
                 ]
-                \addplot table[col sep=comma, x=ord, y=rlhinf]{sections/06_numerical_experiments/msd/msd_io_phdmd_err.csv};
-                \addlegendentry{$\Sigma_\msc{l}$}
-                \addplot table[col sep=comma, x=ord, y=rqhinf]{sections/06_numerical_experiments/msd/msd_io_phdmd_err.csv};
-                \addlegendentry{$\Sigma_\msc{comb}$}
-                \addplot table[col sep=comma, x=ord, y=rPHIRKAhinf]{sections/06_numerical_experiments/msd/msd_io_phdmd_err.csv};
-                \addlegendentry{$\Sigma_\msc{phirka}$}
+                \addplot table[col sep=comma, x=ord, y=rlh2]{sections/06_numerical_experiments/msd/jump/msd_phdmd_err.csv};
+                \addlegendentry{Linear}
+                \addplot table[col sep=comma, x=ord, y=rqh2]{sections/06_numerical_experiments/msd/jump/msd_phdmd_err.csv};
+                \addlegendentry{Combined}
+                \addplot+[mark=diamond*] table[col sep=comma, x=ord, y=rPHIRKAh2]{sections/06_numerical_experiments/msd/jump/msd_phdmd_err.csv};
+                \addlegendentry{\ac{PHIRKA}}
             \end{semilogyaxis}
         \end{tikzpicture}
-
-        \caption{asdf}\label{fig:plotqwer}
-    \end{subfigure}%
-    \begin{subfigure}[t]{.45 \textwidth}
-        \begin{tikzpicture}[scale=.65, auto, swap]
-            \begin{semilogyaxis}%
-                [
-                    scale only axis,
-                    xmin = 1,
-                    xmax = 21,
-                    xtick distance = 2,
-                    ymax = 1.1,
-                    ytick distance = 10^1,
-                    tick pos = bottom,
-                    xlabel = {Reduced Order},
-                    ylabel = {Rel. $\mcl{H}_2$ Error},
-                    ylabel shift = 2pt,
-                    cycle list name=exotic,
-                ]
-                \addplot table[col sep=comma, x=ord, y=rlh2]{sections/06_numerical_experiments/msd/msd_io_phdmd_err.csv};
-                \addplot table[col sep=comma, x=ord, y=rqh2]{sections/06_numerical_experiments/msd/msd_io_phdmd_err.csv};
-                \addplot table[col sep=comma, x=ord, y=rPHIRKAh2]{sections/06_numerical_experiments/msd/msd_io_phdmd_err.csv};
-            \end{semilogyaxis}
-        \end{tikzpicture}
-
-        \caption{PHIRKA lin comparison}\label{fig:plotqwer2}
+        \caption{Comparison of relative $\mcl{H}_2$ errors for inferred linear and combined linear-quadratic \ac{PH} systems calculated with the \ac{PHDMD} algorithm and a linear model reduced with the intrusive \ac{PHIRKA} method.}\label{fig:msd-method-comp-intrusive}
     \end{subfigure}
-\end{figure}
-
-\begin{figure}[ht]
-    \centering
     \begin{subfigure}[t]{.45 \textwidth}
         \begin{tikzpicture}[scale=.65, auto, swap]
             \begin{semilogyaxis}%
@@ -174,134 +167,125 @@ For these models we, analogously to the procedure using the \ac{PHDMD} algorithm
                     xmin = 1,
                     xmax = 21,
                     xtick distance = 2,
-                    ymax = 1.1,
                     ytick distance = 10^(0.1),
                     tick pos = bottom,
-                    xlabel = {Reduced Order},
-                    ylabel = {Rel. $\mcl{H}_\infty$ Error},
+                    xlabel = {Reduced Order $r$},
+                    ylabel = {Rel. $\mcl{H}_2$ Error $\varepsilon_2$},
                     ylabel shift = 2pt,
                     cycle list name=exotic,
                     legend style={
                         legend cell align=left,
                     },
                     legend pos=north east,
-                    legend style={nodes={scale=1.5, transform shape}},
+                    legend style={nodes={scale=1.2, transform shape}},
                 ]
-                \addplot table[col sep=comma, x=ord, y=rlhinf]{sections/06_numerical_experiments/msd/msd_io_phdmd_err.csv};
-                \addlegendentry{$\Sigma_\msc{phdmd}$}
-                \addplot table[col sep=comma, x=ord, y=rlhinf]{sections/06_numerical_experiments/msd/msd_io_iodmd_err.csv};
-                \addlegendentry{$\Sigma_\msc{iodmd}$}
-                \addplot table[col sep=comma, x=ord, y=rlhinf]{sections/06_numerical_experiments/msd/msd_io_oi_err.csv};
-                \addlegendentry{$\Sigma_\msc{oi}$}
+                \addplot table[col sep=comma, x=ord, y=rqh2]{sections/06_numerical_experiments/msd/jump/msd_phdmd_err.csv};
+                \addlegendentry{\ac{PHDMD}}
+                \addplot table[col sep=comma, x=ord, y=rqh2]{sections/06_numerical_experiments/msd/jump/msd_oi_err.csv};
+                \addlegendentry{\ac{OI}}
             \end{semilogyaxis}
         \end{tikzpicture}
-
-        \caption{asdf}\label{fig:plotasdf}
-    \end{subfigure}%
-    \begin{subfigure}[t]{.45 \textwidth}
-        \begin{tikzpicture}[scale=.65, auto, swap]
-            \begin{semilogyaxis}%
-                [
-                    scale only axis,
-                    xmin = 1,
-                    xmax = 21,
-                    xtick distance = 2,
-                    ymax = 1.1,
-                    ytick distance = 10^(0.1),
-                    tick pos = bottom,
-                    xlabel = {Reduced Order},
-                    ylabel = {Rel. $\mcl{H}_2$ Error},
-                    ylabel shift = 2pt,
-                    cycle list name=exotic,
-                ]
-                \addplot table[col sep=comma, x=ord, y=rlh2]{sections/06_numerical_experiments/msd/msd_io_phdmd_err.csv};
-                \addplot table[col sep=comma, x=ord, y=rlh2]{sections/06_numerical_experiments/msd/msd_io_iodmd_err.csv};
-                \addplot table[col sep=comma, x=ord, y=rlh2]{sections/06_numerical_experiments/msd/msd_io_oi_err.csv};
-            \end{semilogyaxis}
-        \end{tikzpicture}
-
-        \caption{PHDMD/IODMD/OI lin comparison}\label{fig:plotasdf2}
+        \caption{Comparison of relative $\mcl{H}_2$ errors for combined linear-quadratic systems inferred from the structure-preserving \ac{PHDMD} algorithm and an unstructured \ac{OI} method.}\label{fig:msd-method-comp-unstructured}
     \end{subfigure}
+    \caption{Comparison between different methods for obtaining reduced linear and combined linear-quadratic systems for intrusive and data-driven, and unstructured and structure-preserving algorithms.}
 \end{figure}
 
-\begin{figure}[ht]
-    \centering
-    \begin{subfigure}[t]{.45 \textwidth}
-        \begin{tikzpicture}[scale=.65, auto, swap]
-            \begin{semilogyaxis}%
-                [
-                    scale only axis,
-                    xmin = 1,
-                    xmax = 21,
-                    xtick distance = 2,
-                    ymax = 1.1,
-                    ytick distance = 10^(0.1),
-                    tick pos = bottom,
-                    xlabel = {Reduced Order},
-                    ylabel = {Rel. $\mcl{H}_\infty$ Error},
-                    ylabel shift = 2pt,
-                    cycle list name=exotic,
-                    legend style={
-                        legend cell align=left,
-                    },
-                    legend pos=north east,
-                    legend style={nodes={scale=1.5, transform shape}},
-                ]
-                \addplot table[col sep=comma, x=ord, y=rqhinf]{sections/06_numerical_experiments/msd/msd_io_phdmd_err.csv};
-                \addlegendentry{$\Sigma_\msc{phdmd}$}
-                \addplot table[col sep=comma, x=ord, y=rqhinf]{sections/06_numerical_experiments/msd/msd_io_iodmd_err.csv};
-                \addlegendentry{$\Sigma_\msc{iodmd}$}
-                \addplot table[col sep=comma, x=ord, y=rqhinf]{sections/06_numerical_experiments/msd/msd_io_oi_err.csv};
-                \addlegendentry{$\Sigma_\msc{oi}$}
-            \end{semilogyaxis}
-        \end{tikzpicture}
-
-        \caption{asdf}\label{fig:plotzxcv}
-    \end{subfigure}%
-    \begin{subfigure}[t]{.45 \textwidth}
-        \begin{tikzpicture}[scale=.65, auto, swap]
-            \begin{semilogyaxis}%
-                [
-                    scale only axis,
-                    xmin = 1,
-                    xmax = 21,
-                    xtick distance = 2,
-                    ymax = 1.1,
-                    ytick distance = 10^(0.1),
-                    tick pos = bottom,
-                    xlabel = {Reduced Order},
-                    ylabel = {Rel. $\mcl{H}_2$ Error},
-                    ylabel shift = 2pt,
-                    cycle list name=exotic,
-                ]
-                \addplot table[col sep=comma, x=ord, y=rqh2]{sections/06_numerical_experiments/msd/msd_io_phdmd_err.csv};
-                \addplot table[col sep=comma, x=ord, y=rqh2]{sections/06_numerical_experiments/msd/msd_io_iodmd_err.csv};
-                \addplot table[col sep=comma, x=ord, y=rqh2]{sections/06_numerical_experiments/msd/msd_io_oi_err.csv};
-            \end{semilogyaxis}
-        \end{tikzpicture}
-
-        \caption{PHDMD/IODMD/OI quad comparison}\label{fig:plotzxcv2}
-    \end{subfigure}
-\end{figure}
-
-\itodo{explain error measures}
-
-\itodo{Compare performance to larger linear ROMs}
-
-\itodo{evaluate experiment}
-
-In (lin-quad comparison for H inf) we can see that while the approximation with the quadratic model is better when compared to the linear \ac{PH} \ac{ROM}, the improvement is only marginal and after a certain reduced order is surpassed, further improvements appear to stagnate.
-The (h2) error however shows a completely different picture: the linear model acheives a much better result for decreasing orders before eventually plateauing below the quadratic model approximation error.
-As expected, both approaches pale in comparison to an intrusive \ac{MOR} technique such as \ac{PHIRKA}.
-The lack of system matrix information other than that inferred from the provided sample data results in an overall worse performance for both the linear and the quadratic models calculated with \ac{PHDMD}.
-
-Further, in comparison to \ac{IODMD}, the structure-preserving \ac{PHDMD} gains a clear advantage after even only a few iterations.
-When compared to the similarly \ac{OI}-based but non-structure-preserving method, we observe that the model $\Sigma_\msc{oi}$ acheives comparable though slightly worse and far less stable results than the \ac{PHDMD} algorithm.
+As expected, both data-driven inferred models pale in comparison to an intrusive \ac{MOR} technique such as \ac{PHIRKA}, which is apparent from Subfigure~\ref{fig:msd-method-comp-intrusive}.
+The lack of system matrix information other than the one inferred from the provided sample data results in an overall worse performance for both the linear and the quadratic models calculated with \ac{PHDMD}.
+When contrasting the \ac{PHDMD} inference approach with the \ac{OI}-based non-structure-preserving method, we observe in Subfigure~\ref{fig:msd-method-comp-unstructured} that the combined linear-quadratic model achieves comparable though slightly worse and far less stable results than the \ac{PHDMD} algorithm.
 This difference is most likely due to the missing structural constraints and the coupled benefits such as the stability of the resulting problem.
 
-\itodo{Compare runtimes for quad state PHDMD models (separate plot?)}
+\begin{table}[ht]
+    \centering
+    \begin{tabularx}{.925 \textwidth}{%
+        >{\centering\arraybackslash}X|c|>{\centering\arraybackslash}X|>{\centering\arraybackslash}X%
+        }
+        \bfseries Method & \bfseries Order & \bfseries $t_\msc{l}$ in seconds & \bfseries $t_\msc{q}$ in seconds
+        \csvreader[head to column names]{sections/06_numerical_experiments/msd/quad_state_comp.csv}{}%
+        {\\\method & \ord & \ltime & \qtime}%
+    \end{tabularx}
+    \caption{Comparison of exemplary runtimes for linear and combined linear-quadratic models inferred using the \ac{PHDMD} algorithm; ``PHDMD'' denotes models based upon a quadratically embedded internal state variable, ``FrequencyPHDMD'' describes models with quadratically embedded control and output variables; $t_\msc{l}$ is the computational time for the linear \ac{PH} system, $t_\msc{q}$ stands for the computational time of the quadratic \ac{PH} model.}\label{tab:msd-time-comp}
+\end{table}
 
-Importantly, we do not compare the results of the quadratic models to those obtained from applying the \ac{PHDMD} algorithm to quadratic internal states because the runtime of \ac{PHDMD} in combination with the expected results were much worse in our trial runs.
+Importantly, we do not compare the results of the quadratic models to those obtained from applying the \ac{PHDMD} algorithm to quadratic internal states because the runtime of \ac{PHDMD} and the obtained results were much worse than for the models with quadratically embedded control and output variables in our trial runs.
+The table in Figure~\ref{tab:msd-time-comp} shows the times necessary to calculate both the linear and the quadratic \acp{ROM} with the \ac{PHDMD} algorithm for a small sample set of orders.
+We note in particular that the scaling of the temporal needs of the inference step depends on the underlying dimensions of the input data.
+Thus, the quadratically embedded control and output variables result in calculations that are much more consistent in their runtimes in contrast to the quadratically embedded internal states.
+
+\begin{figure}[ht]
+    \centering
+    \begin{subfigure}[t]{.45 \textwidth}
+        \begin{tikzpicture}[scale=.65, auto, swap]
+            \begin{semilogyaxis}%
+                [
+                    scale only axis,
+                    xmin = 1,
+                    xmax = 11,
+                    xtick distance = 2,
+                    ymax = 1.1,
+                    ytick distance = 10^(0.1),
+                    tick pos = bottom,
+                    xlabel = {Reduced Order $r$},
+                    ylabel = {Rel. $\mcl{H}_\infty$ Error $\varepsilon_\infty$},
+                    ylabel shift = 2pt,
+                    cycle list name=exotic,
+                    legend style={
+                        legend cell align=left,
+                    },
+                    legend pos=north east,
+                    legend style={nodes={scale=1.2, transform shape}},
+                ]
+                \addplot table[col sep=comma, x=ord, y=rlhinf]{sections/06_numerical_experiments/msd/init_diff.csv};
+                \addlegendentry{Linear final}
+                \addplot table[col sep=comma, x=ord, y=rilhinf]{sections/06_numerical_experiments/msd/init_diff.csv};
+                \addlegendentry{Linear initial}
+                \addplot+[mark=diamond*] table[col sep=comma, x=ord, y=rqhinf]{sections/06_numerical_experiments/msd/init_diff.csv};
+                \addlegendentry{Combined final}
+                \addplot+[mark=triangle*] table[col sep=comma, x=ord, y=riqhinf]{sections/06_numerical_experiments/msd/init_diff.csv};
+                \addlegendentry{Combined initial}
+            \end{semilogyaxis}
+        \end{tikzpicture}
+        \caption{Relative $\mcl{H}_\infty$ error comparison.}
+    \end{subfigure}
+    \begin{subfigure}[t]{.45 \textwidth}
+        \begin{tikzpicture}[scale=.65, auto, swap]
+            \begin{semilogyaxis}%
+                [
+                    scale only axis,
+                    xmin = 1,
+                    xmax = 11,
+                    xtick distance = 2,
+                    ymin = .4,
+                    ytick distance = 10^(0.1),
+                    tick pos = bottom,
+                    xlabel = {Reduced Order $r$},
+                    ylabel = {Rel. $\mcl{H}_2$ Error $\varepsilon_2$},
+                    ylabel shift = 2pt,
+                    cycle list name=exotic,
+                    legend style={
+                        legend cell align=left,
+                    },
+                    legend pos=south west,
+                    legend style={nodes={scale=1.2, transform shape}},
+                ]
+                \addplot table[col sep=comma, x=ord, y=rlh2]{sections/06_numerical_experiments/msd/init_diff.csv};
+                \addlegendentry{Linear final}
+                \addplot table[col sep=comma, x=ord, y=rilh2]{sections/06_numerical_experiments/msd/init_diff.csv};
+                \addlegendentry{Linear initial}
+                \addplot+[mark=diamond*] table[col sep=comma, x=ord, y=rqh2]{sections/06_numerical_experiments/msd/init_diff.csv};
+                \addlegendentry{Combined final}
+                \addplot+[mark=triangle*] table[col sep=comma, x=ord, y=riqh2]{sections/06_numerical_experiments/msd/init_diff.csv};
+                \addlegendentry{Combined initial}
+            \end{semilogyaxis}
+        \end{tikzpicture}
+        \caption{Relative $\mcl{H}_2$ error comparison.}
+    \end{subfigure}
+    \caption{Comparison of relative $\mcl{H}_\infty$ and $\mcl{H}_2$ errors for initial and final realizations of linear and combined linear-quadratic models inferred with the \ac{PHDMD} algorithm.}\label{fig:msd-init-comp}
+\end{figure}
+
+Crucially, Figure~\ref{fig:msd-init-comp} shows that the initialization step in the \ac{PHDMD} algorithm is essential for the quality of the final model.
+Whereas the linear model fluctuates noticeably depending on the initial matrices calculated from the weighted \ac{PHDMD} problem described in Equation~\eqref{eq:weighted-ph-dmd}, the combined linear-quadratic system exhibits only small changes after running the \ac{PHDMD} algorithm.
+In combination with the mediocre results seen in Figure~\ref{fig:msd-lc-comp}, this hints at a larger underlying issue: the current weighted initialization may be suitable for the linear model inference problem posed in~\cite{Morandin2023} but it is insufficient for significant improvements with the more complex quadratically embedded data manifold setting that we follow.
 
 \section{Damped Wave Equation}\label{sec:damped-wave-equation}
 
@@ -402,9 +386,9 @@ Ultimately, we can substitute the block matrices~\eqref{eq:damped-wave-blocks} i
 \end{equation}
 
 \begin{remark}
-    The block matrix $R$ in Equation~\eqref{eq:damped-wave-blocks} is singular which causes problems when simulating the model~\eqref{eq:damped-wave-ph} or when applying the \ac{PHDMD} algorithm to the system.
+    The block matrix $R$ in Equation~\eqref{eq:damped-wave-blocks} is singular, which causes problems when simulating the model~\eqref{eq:damped-wave-ph} or when applying the \ac{PHDMD} algorithm to the system.
     We mitigate this issue by regularizing the upper left block such that we use
-    \begin{equation*}
+    \begin{equation}\label{eq:damped-wave-regularization}
         \tilde{R} =
         \begin{tikzpicture}[baseline]
             \matrix[supermatrix, nodes=submatrix] {
@@ -412,31 +396,64 @@ Ultimately, we can substitute the block matrices~\eqref{eq:damped-wave-blocks} i
                 \& \alpha \cdot C \\
             };
         \end{tikzpicture}
-    \end{equation*}
+    \end{equation}
     for some regularization parameter $\lambda > 0$ instead.
-    For our simulations in particular we choose $\lambda = $.
+    For our simulations in particular we choose $\lambda = 2 \cdot 10^{-3}$ because this parameter yielded the best result among a set of fixed sample parameters we compared among each other.
 \end{remark}
-\itodo{Add the final $\lambda$ value here! it's somewhere around 1e-2 or 1e-3\dots Right now 2e-3!}
 
-Similarly to the \ac{MSD} problem from Section~\eqref{sec:msd-systems}, we first simulate the \ac{PH} \ac{FOM} of order $100$ representing the damped wave equation~\ref{eq:damped-wave-ph} and reduce the computed internal states with \ac{POD}.
+Similarly to the \ac{MSD} problem from Section~\ref{sec:msd-systems}, we first simulate the \ac{PH} \ac{FOM} of order $100$ representing the damped wave equation~\eqref{eq:damped-wave-ph} and reduce the computed internal states with \ac{POD}.
 As before, we use the jump control
 \begin{equation*}
     u(t) \coloneqq \begin{pmatrix}
         \mathbbm{1}_{t < \frac{1}{2}} \\
         - \mathbbm{1}_{t < \frac{1}{2}}
-    \end{pmatrix},
+    \end{pmatrix}
 \end{equation*}
 because it is known that the Kolmogorov $N$-width of wave equations with jumps in their initial conditions cannot be bounded by an exponentially decaying term depending on the reduced order.
-Thereafter, we follow the same process as with the \ac{MSD} model from before: calculate a basic linear \ac{ROM} $\Sigma_\msc{l}$ with \ac{PHDMD}, sample the linear model $\Sigma_\msc{l}$, infer a quadratic \ac{ROM} $\Sigma_\msc{q}$ by applying the \ac{PHDMD} algorithm to the quadratic data $U_\msc{q}, Y_\msc{q} \in \bb{R}^{3 \times 101}$, and finally assemble the combined model $\Sigma_\msc{comb}$ in accordance with the relations layed out in Equation~\eqref{eq:quad-io-system-coupling}.
-Further, we once more construct comparable models from the \ac{IODMD} and \ac{OI} algorithms by first inferring a linear \ac{ROM} and afterwards updating it with a quadratic model to obtain a combined model.
+Thereafter, we follow the same process as with the \ac{MSD} model from before: we calculate a basic linear \ac{ROM} $\Sigma_\msc{l}$ with \ac{PHDMD}, sample the linear model $\Sigma_\msc{l}$, infer a quadratic \ac{ROM} $\Sigma_\msc{q}$ by applying the \ac{PHDMD} algorithm to the quadratic data $U_\msc{q}, Y_\msc{q} \in \bb{R}^{3 \times 1001}$, and finally assemble the combined model $\Sigma_\msc{comb}$ in accordance with the relations layed out in Equation~\eqref{eq:quad-io-system-coupling}.
+Further, we once more construct comparable models from the \ac{OI} algorithm by first inferring a linear \ac{ROM} and afterwards updating it with a quadratic model to obtain a combined model.
+As before, we compare the relative $\mcl{H}_2$ errors of the reduced models with respect to the $\mcl{H}_2$ norm of the \ac{FOM}, see Equation~\eqref{eq:rel-errors}.
 
-\itodo{explain error measures}
+\begin{figure}[ht]
+    \centering
+    \begin{tikzpicture}[scale=.65, auto, swap]
+        \begin{semilogyaxis}%
+            [
+                scale only axis,
+                xmin = 1,
+                xmax = 21,
+                xtick distance = 2,
+                ymin = 10^(-0.011),
+                ytick = {10^0, 10^(-0.01)},
+                tick pos = bottom,
+                xlabel = {Reduced Order $r$},
+                ylabel = {Rel. $\mcl{H}_2$ Error $\varepsilon_2$},
+                ylabel shift = 2pt,
+                cycle list name=exotic,
+                legend style={
+                    legend cell align=left,
+                },
+                legend pos=south west,
+                legend style={nodes={scale=1.5, transform shape}},
+            ]
+            \addplot table[col sep=comma, x=ord, y=rlh2]{sections/06_numerical_experiments/wave1d/jump/wave1d_phdmd_err.csv};
+            \addlegendentry{Linear}
+            \addplot table[col sep=comma, x=ord, y=rqh2]{sections/06_numerical_experiments/wave1d/jump/wave1d_phdmd_err.csv};
+            \addlegendentry{Combined}
+        \end{semilogyaxis}
+    \end{tikzpicture}
+    \caption{Comparison of relative $\mcl{H}_2$ errors for linear and combined linear-quadratic models generated with the \ac{PHDMD} method and the linear intrusively constructed model from the \ac{PHIRKA} algorithm.}\label{fig:wave-methods-comp}
+\end{figure}
 
-\itodo{evaluate experiment}
+Similarly to the \ac{MSD} experiment in Section~\ref{sec:msd-systems}, we do not compare the results of the quadratic models to ones calculated with \ac{PHDMD} applied to quadratic internal state variables because the scaling behaviour of the computation times is akin to the one presented for the \ac{MSD} model in Table~\ref{tab:msd-time-comp} and the results obtained in our trial runs were inferior to the ones presented here.
 
-\itodo{plot data}
-
-\itodo{plot errors compared to phirka (they're much worse!)}
-
-Similarly to the \ac{MSD} experiment in Section~\ref{sec:msd-systems}, we do not compare the results of the quadratic models to ones calculated with \ac{PHDMD} applied to quadratic internal state variables because the computation times scaled very badly and the results obtained in our trial runs were inferior to the ones presented here.
-It remains to be investigated whether different initialization or regularization strategies could improve these results.
+Analogously to the \ac{MSD} model, the initialization of the system matrices plays an important role.
+Unlike in Section~\ref{sec:msd-systems}, however, both the linear and the combined model do not result in a satisfactory reduction of the error measures with respect to the \ac{FOM}.
+To conclude this experiment, we reiterate the difficulties in constructing \ac{PH} models with quadratically embedded manifolds:
+\begin{itemize}
+    \item The results of the simulation rely on the regularization parameter introduced in Equation~\eqref{eq:damped-wave-regularization}, therefore requiring lots of hyper-parameter optimization.
+    \item The quadratic data embeddings via the Kronecker and Khatri--Rao products are numerically ill-conditioned depending on the approximative quality of the underlying linear model.
+    \item The initialization via the weighted \ac{PHDMD} problem~\eqref{eq:weighted-ph-dmd} is not adapted to respect quadratic data terms.
+    \item The model's control variables can influence the quality of the final inferred model, because they directly link to the system's behaviour: in the case of the damped wave equation~\eqref{eq:damped-wave-ph} the jump control on the boundary results in similar observations as an initial condition containing a jump.
+    \item Analogously to similar approaches for symplectic problems such as~\cite{Sharma2023}, certain parameter combinations can lead to the overfitting of the model on the provided data.
+\end{itemize}
